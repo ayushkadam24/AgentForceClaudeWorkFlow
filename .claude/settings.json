@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./ANSWER-KEY-intentional-gaps.md)",
+      "Edit(./00-inputs/**)",
+      "Write(./00-inputs/**)",
+      "Edit(./ANSWER-KEY-intentional-gaps.md)",
+      "Write(./ANSWER-KEY-intentional-gaps.md)"
+    ]
+  }
+}
