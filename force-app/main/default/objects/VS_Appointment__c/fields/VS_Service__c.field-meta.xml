@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Service__c</fullName>
+    <label>Service</label>
+    <description>Lookup (not Master-Detail) to VS_Service__c, denormalized off VS_Session__c for sharing/reporting convenience (design §2.3) -- lets dashboards/reporting filter appointments by service (e.g. which vaccine) without joining through Session. Lookup because Service is shared catalogue reference data that must never cascade-delete its bookings. Set by VS_BookingService.book() (VS-09) -- not defaulted or automated by this ticket. deleteConstraint=Restrict so a service with existing appointments cannot be deleted out from under its booking history.</description>
+    <type>Lookup</type>
+    <referenceTo>VS_Service__c</referenceTo>
+    <relationshipLabel>Appointments</relationshipLabel>
+    <relationshipName>VS_Appointments</relationshipName>
+    <required>false</required>
+    <deleteConstraint>Restrict</deleteConstraint>
+</CustomField>

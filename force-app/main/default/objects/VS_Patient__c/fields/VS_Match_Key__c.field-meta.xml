@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Match_Key__c</fullName>
+    <label>Match Key</label>
+    <description>De-dup identity key enforcing D-011's exact-match rule (full name + DOB + mobile = same patient, no fuzzy matching) at the database via a unique External ID constraint (D-017). Format: normalize(VS_Full_Name__c)|VS_Date_Of_Birth__c|VS_Mobile__c (normalize = trim + collapse whitespace + case-fold, exact algorithm owned by VS-10). THIS FIELD IS DEFINED BUT DELIBERATELY NOT POPULATED BY THIS TICKET (VS-07) — no before-save flow or default-value formula sets it here. It is populated exclusively by VS_PatientService.findOrCreate() (VS-10, Apex, dev-senior) via upsert-by-external-id, which is what makes the de-dup check race-safe (a duplicate insert fails the unique constraint instead of relying on a non-locked SOQL existence check). Case-insensitive so callers do not need to pre-normalize case before upserting.</description>
+    <type>Text</type>
+    <length>255</length>
+    <externalId>true</externalId>
+    <unique>true</unique>
+    <caseSensitive>false</caseSensitive>
+    <required>false</required>
+</CustomField>

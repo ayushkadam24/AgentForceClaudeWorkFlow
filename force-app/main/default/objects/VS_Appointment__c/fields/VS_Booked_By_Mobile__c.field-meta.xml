@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Booked_By_Mobile__c</fullName>
+    <label>Booked By Mobile</label>
+    <description>The authenticated mobile number of the person who MADE this booking (the booker), which may differ from the patient's own VS_Patient__c.VS_Mobile__c -- e.g. a family member booking for an elderly relative from one shared/verified mobile (design §2.5, REQ-004). The booker is deliberately not modeled as a person record; only their mobile is captured here, consistent with C1 data-minimization (no extra booker attributes are collected). Set by VS_BookingService.book() (VS-09) from the OTP-verified session -- no automation in this ticket. This is a booker contact field, not health data or Aadhaar-shaped data, and is explicitly allowed per this ticket's compliance guidance (rules/10 -- the booker's contact number, distinct from the patient's own mobile, is not restricted).</description>
+    <type>Phone</type>
+    <required>false</required>
+</CustomField>

@@ -3,11 +3,11 @@
     <label>Walk-In Reserve Pct</label>
     <protected>false</protected>
     <values>
-        <field>Value__c</field>
+        <field>VS_Value__c</field>
         <value xsi:type="xsd:double">25</value>
     </values>
     <values>
-        <field>Value_Text__c</field>
+        <field>VS_Value_Text__c</field>
         <value xsi:nil="true"/>
     </values>
 </CustomMetadata>

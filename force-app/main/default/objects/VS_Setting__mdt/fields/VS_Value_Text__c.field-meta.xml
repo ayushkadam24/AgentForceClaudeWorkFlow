@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Value_Text__c</fullName>
+    <label>Value (Text)</label>
+    <description>Text/multi-value form of this configurable tunable, used only when the setting is inherently non-numeric or list-valued and VS_Value__c does not fit (e.g. ReminderOffsetsHours holds a comma-separated list of hour offsets, "24,3", per OQ-005). Left blank on the purely numeric setting records, which use VS_Value__c instead. Consuming Flow/Apex must parse this field's contents (e.g. split on comma) rather than assume a single number.</description>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+</CustomField>

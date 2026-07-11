@@ -94,7 +94,7 @@ required (nothing in the flow can fail — it's a single field assignment). Depl
 per flow-patterns skill: "deploy ACTIVE... note activation state in the review packet" — noted
 here). Description field on the flow carries entry criteria + purpose + VS-01 per rules/20.
 
-### 4. `VS_Session__c` — 11 fields (the capacity spine / future §3.4 lock target)
+### 4. `VS_Session__c` — 12 fields (the capacity spine / future §3.4 lock target)
 Path: `force-app/main/default/objects/VS_Session__c/`
 OWD: `ControlledByParent` (inherits Facility's Read). Retention (C4): **bookings 3 yr**.
 
@@ -106,7 +106,7 @@ OWD: `ControlledByParent` (inherits Facility's Read). Retention (C4): **bookings
 | `VS_Start_Time__c` | DateTime, required | Session window start (D-007) |
 | `VS_End_Time__c` | DateTime, required | Session window end |
 | `VS_Total_Capacity__c` | Number(6,0), required | MO-set total capacity (REQ-010/011) |
-| `VS_Walk_In_Reserve_Count__c` | **Formula** Number(6,0) | `CEILING(VS_Total_Capacity__c * $CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c / 100)` — see dependency note below |
+| `VS_Walk_In_Reserve_Count__c` | **Formula** Number(6,0) | `CEILING(VS_Total_Capacity__c * $CustomMetadata.VS_Setting__mdt.WalkInReservePct.VS_Value__c / 100)` — see dependency note below (field renamed `Value__c`→`VS_Value__c` 2026-07-11, VS-02 review Option A, rules/20 VS_ prefix compliance) |
 | `VS_Bookable_Capacity__c` | **Formula** Number(6,0) | `VS_Total_Capacity__c - VS_Walk_In_Reserve_Count__c` |
 | `VS_Walk_In_Used_Count__c` | Number(6,0), default 0, required | Incremented only inside the VS-09 session lock (D-019/D-020) — no automation here |
 | `VS_Status__c` | Picklist (Open, Closed, Cancelled; default Open) | Session lifecycle |
@@ -127,18 +127,20 @@ OWD: Public Read Only. Retention (C4): permanent reference.
 
 Name field relabeled "Holiday Name" (Text).
 
-**Total: 5 objects, 32 custom fields, 1 flow.** All 38 object/field metadata XML files (5
-object-meta.xml + 33 field-meta.xml — includes the 5 nameField definitions embedded in each
-object-meta.xml, not separate files) plus the 1 flow-meta.xml file were checked for tag
-balance/well-formedness in this environment (no XML parser available, so a manual tag-stack check
-was run instead — see Deploy/verify status below).
+**Total: 5 objects, 33 custom fields, 1 flow.** (Corrected 2026-07-12, N-1 fix per human VS-01
+verdict: `VS_Session__c` has 12 fields, not 11 — the table above lists all 12; the object-set total
+is 33 custom fields, not 32. Metadata on disk was always correct; only this packet's tally was off
+by one.) All 38 object/field metadata XML files (5 object-meta.xml + 33 field-meta.xml — includes
+the 5 nameField definitions embedded in each object-meta.xml, not separate files) plus the 1
+flow-meta.xml file were checked for tag balance/well-formedness in this environment (no XML parser
+available, so a manual tag-stack check was run instead — see Deploy/verify status below).
 
 ## AC checklist (against VS-01's acceptance criteria in `02-build/jira-log.md`)
 
 | # | Acceptance criterion | Status | Notes |
 |---|---|---|---|
 | 1 | Given no F-001 objects exist, when this ticket deploys, then all five objects exist with described fields per §2.3 | **PASS (metadata drafted)** | All 5 objects + 32 fields built, every one with a `<description>`. NOT yet deployed — see honesty note below. |
-| 2 | Given `VS_Session__c.VS_Total_Capacity__c` is set, when the record saves, then `VS_Walk_In_Reserve_Count__c`/`VS_Bookable_Capacity__c` formulas compute per §2.1 (CEILING against `VS_Setting__mdt.WalkInReservePct`) | **PASS (metadata drafted), BLOCKED on VS-02 at deploy time** | Formula text matches design §2.3 exactly, referencing `$CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c` — **not hardcoded**. This formula will fail deploy/save validation until `VS_Setting__mdt` and its `WalkInReservePct` record (VS-02) exist in the org. **Deploy order dependency (unchanged, still correct): VS-01 and VS-02 MUST be deployed in the same `sf project deploy start` pass (or VS-02 first)**, or the `VS_Session__c` object deploy will fail formula validation. |
+| 2 | Given `VS_Session__c.VS_Total_Capacity__c` is set, when the record saves, then `VS_Walk_In_Reserve_Count__c`/`VS_Bookable_Capacity__c` formulas compute per §2.1 (CEILING against `VS_Setting__mdt.WalkInReservePct`) | **PASS (metadata drafted), BLOCKED on VS-02 at deploy time** | Formula text matches design §2.3, referencing `$CustomMetadata.VS_Setting__mdt.WalkInReservePct.VS_Value__c` — **not hardcoded**. (Updated 2026-07-11, VS-02 review Option A: the CMDT field was renamed `Value__c`→`VS_Value__c` for rules/20 VS_ prefix compliance, applied here to match — both objects were still draft/undeployed so the contract was renamed rather than documented as an exception.) This formula will fail deploy/save validation until `VS_Setting__mdt` and its `WalkInReservePct` record (VS-02) exist in the org. **Deploy order dependency (unchanged, still correct): VS-01 and VS-02 MUST be deployed in the same `sf project deploy start` pass (or VS-02 first)**, or the `VS_Session__c` object deploy will fail formula validation. |
 | 3 | Given `VS_Facility_Service__c`, when two records are created for the same facility+service, then the `VS_External_Id__c` unique constraint rejects the duplicate | **PASS (corrected this run)** | **Original mechanism was a confirmed deploy-blocking defect** (a formula field cannot be `externalId`/`unique`, and default values cannot reference sibling fields — caught in VS-01 review, fixed before formal `/dev-review`). Corrected: `VS_External_Id__c` is now a plain Text(60) field (`externalId`+`unique`, no formula), populated by a new before-save record-triggered flow `VS_FacilityService_BeforeSave_SetExternalId` (`force-app/main/default/flows/`) that sets it to `VS_Facility__c & "-" & VS_Service__c` on CREATE, before the Unique constraint evaluates. This is mechanically sound (not just declaratively plausible); remaining verification is deploy-time only (see A-008 amendment). |
 
 **Overall: 3/3 ACs met in the drafted metadata. AC2 carries a hard cross-ticket deploy-order
@@ -231,9 +233,35 @@ to VS-02 and **batch** the two fixes below (do not re-open VS-01 now).
   M-2 fix is applied.
 
 **M-1 (Major, deploy-order) → devops runbook, NOT a code fix:** `VS_Session__c` capacity formulas
-reference `$CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c`, so VS-01 cannot deploy
-standalone. Deploy VS-01 + VS-02 in ONE pass, and VS-02 must expose the value via a field named
-exactly `Value__c`. Owned by the devops Deployment Package (DP-001), not reworked in VS-01.
+reference `$CustomMetadata.VS_Setting__mdt.WalkInReservePct.VS_Value__c` (renamed 2026-07-11 from
+`Value__c` — see MIN-1 resolution below), so VS-01 cannot deploy standalone. Deploy VS-01 + VS-02 in
+ONE pass, and VS-02 must expose the value via a field named exactly `VS_Value__c`. Owned by the
+devops Deployment Package (DP-001), not reworked in VS-01.
+
+**MIN-1 (Minor, naming) — RESOLVED by rename (2026-07-11, VS-02 review verdict, Option A):** the
+CMDT field was originally named `Value__c` (no `VS_` prefix), a deviation from rules/20 naming.
+Since neither VS-01 nor VS-02 was deployed, the human chose to fix this properly rather than
+document an exception: `Value__c`→`VS_Value__c` and `Value_Text__c`→`VS_Value_Text__c` across both
+tickets' draft metadata, including this ticket's `VS_Walk_In_Reserve_Count__c` formula (above).
+Full rename detail and grep-verified contract confirmation in
+`02-build/review-notes/VS-02-review.md`.
 
 **N-2 (info):** a few fields marked `required` beyond design §2.3 — benign strengthening; recorded as an
 intentional, acknowledged deviation for BA_ARCH_CONFIRM.
+
+## Batched fixes applied (2026-07-12, dev-mid, Bucket A)
+
+- **M-2 — APPLIED.** `VS_FacilityService_BeforeSave_SetExternalId.flow-meta.xml`
+  `<recordTriggerType>` changed `Create` → `CreateAndUpdate`; the flow now recomputes
+  `VS_External_Id__c` on every save (create or update), so editing `VS_Service__c` on an existing
+  junction row no longer leaves a stale composite key — the Unique constraint keeps catching
+  duplicate (facility, service) pairs after an edit, not just at create. Flow description updated
+  to state it fires on create AND update. Assignment logic unchanged. Re-verified well-formed
+  (`python xml.dom.minidom`, 0 failures) after this fix — this pass also caught and corrected a
+  pre-existing unescaped `&` in the flow's `<description>` text (`VS_Facility__c & "-" &
+  VS_Service__c` written as literal ampersands instead of `&amp;`), which was an XML defect present
+  since the original VS-01 fix-forward and is unrelated to M-2 itself but was flagged by the IDE's
+  XML diagnostics while editing this file.
+- **N-1 — APPLIED.** Field-count tally corrected above: `VS_Session__c` section header now reads
+  12 fields; the object-set total line now reads 33 custom fields. No metadata changed (it was
+  always correct); only the doc counts were wrong.

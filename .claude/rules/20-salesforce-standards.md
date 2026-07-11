@@ -33,3 +33,18 @@
 
 ## Deep best-practice skills
 Apex/triggers: skills/sf-apex-patterns (incl. references/) · LWC+SLDS2: skills/lwc-slds2 · Flows: skills/flow-patterns. Binding rules here win on any conflict.
+
+## Platform limits & deploy-readiness (added 2026-07-12 from Sprint-1 post-mortem — binding)
+1. Metadata descriptions stay under the platform caps: 255 (CustomPermission, PermissionSet),
+   1000 (CustomObject, CustomField). The long rationale belongs in the review packet, never the XML.
+   Full checklist: skills/sf-data-model/references/metadata-deploy-limits.md.
+2. Run `node scripts/metadata-lint.js` before ANY review packet is written; a lint FAIL is a
+   defect, same as a failing test.
+3. When an org is authenticated, a per-ticket `sf project deploy start --dry-run` (delta manifest)
+   is MANDATORY before the packet may say "buildable". No org = the packet carries a prominent
+   "UNVERIFIED — NO ORG CONNECTED" banner. "XML well-formed" is never evidence of deployability.
+4. Build to the DESIGN SECTION ("per technical-design §2.3"), not to a paraphrased restriction.
+   If an instruction conflicts with the design text, flag it in the packet — never silently drop
+   a designed field/element to satisfy a narrower instruction.
+5. Fix in batches: after a failed dry-run is triaged, fix ALL captured failures, then dry-run
+   once — never one-defect-per-round.

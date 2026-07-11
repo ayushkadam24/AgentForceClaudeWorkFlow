@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Email__c</fullName>
+    <label>Email</label>
+    <description>Patient email address — Annexure C1.1 explicitly OPTIONAL person attribute (design §2.3: "Email, optional"). Not part of the de-dup match key (D-011 uses name+DOB+mobile only) and not required to register or book.</description>
+    <type>Email</type>
+    <required>false</required>
+</CustomField>

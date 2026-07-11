@@ -26,6 +26,12 @@ Produce `01-discovery/technical-design.md` per the `sf-data-model` skill:
 6. **Epics** — break the design into epics (EP-##) with scope statements in the design doc
    (mirrored to Jira by pm-planner, not you).
 
+## Deploy-mode design review (both modes)
+Weigh deploy-time constraints, not just runtime correctness: does any formula read
+$CustomMetadata (checkOnly cannot validate w/ same-transaction CMDT — choose two-phase deploy
+or Apex read, and say which)? Do any *.settings enums come from memory rather than docs?
+See skills/sf-data-model/references/metadata-deploy-limits.md.
+
 ## Mode 2 — Drift check (phase BA_ARCH_CONFIRM, via /arch-confirm)
 Read everything under `force-app/` changed during the build plus `02-build/jira-log.md`.
 Produce `04-confirmations/F-001-drift-check.md`: design element vs. as-built, verdict per element

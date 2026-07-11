@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
-    <description>VS-01 (EP-01, dev-mid). Entry criteria: fires before-save on every VS_Facility_Service__c CREATE only (no additional filter — VS_Facility__c is a required Master-Detail and VS_Service__c is a required Lookup, so both are always populated at create). What it does: sets VS_External_Id__c = VS_Facility__c & "-" & VS_Service__c so the field's Unique constraint genuinely rejects a duplicate facility+service pairing (design §2.3 composite key, VS-01 AC-3) — a before-save flow runs before the unique-index check, unlike a default-value formula (which cannot reference sibling fields at all, and is not legal on a field also marked externalId/unique). Field-only assignment on $Record, no DML action and therefore no fault path needed (flow-patterns skill).</description>
+    <description>VS-01 (EP-01, dev-mid). Entry criteria: fires before-save on every VS_Facility_Service__c CREATE AND UPDATE (no additional filter — VS_Facility__c is a required Master-Detail and VS_Service__c is a required Lookup, so both are always populated on every save). What it does: sets VS_External_Id__c = VS_Facility__c &amp; &quot;-&quot; &amp; VS_Service__c so the field's Unique constraint genuinely rejects a duplicate facility+service pairing (design §2.3 composite key, VS-01 AC-3) — a before-save flow runs before the unique-index check, unlike a default-value formula (which cannot reference sibling fields at all, and is not legal on a field also marked externalId/unique). Fix M-2 (2026-07-12, batched per human VS-01 verdict): trigger widened from Create-only to CreateAndUpdate so that if VS_Service__c (an editable Lookup) is changed on an existing junction row, the composite key is recomputed before-save rather than going stale — closing the gap where the unique constraint would stop catching duplicate (facility, service) pairs after an edit. Field-only assignment on $Record, no DML action and therefore no fault path needed (flow-patterns skill); a before-save recompute on every save is safe and cheap (idempotent for unchanged records).</description>
     <environments>Default</environments>
     <interviewLabel>VS Facility Service Before Save Set External Id {!$Flow.CurrentDateTime}</interviewLabel>
     <label>VS Facility Service Before Save Set External Id</label>
@@ -14,7 +14,7 @@
             <targetReference>VS_Set_External_Id</targetReference>
         </connector>
         <object>VS_Facility_Service__c</object>
-        <recordTriggerType>Create</recordTriggerType>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
         <triggerType>RecordBeforeSave</triggerType>
     </start>
     <formulas>

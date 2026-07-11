@@ -24,6 +24,11 @@ Separation of duties is your identity: you have no Write/Edit access to force-ap
      visibility, audit-relevant reads attributable, synthetic seed data only.
    - STANDARDS (rules/20 + skills): naming, bulkification, trigger pattern, flow fault paths,
      SLDS 2 styling rules (global hooks only), descriptions on fields/flows.
+   - DEPLOYABILITY: run `node scripts/metadata-lint.js`; check descriptions vs platform caps
+     (255 CustomPermission/PermissionSet, 1000 CustomObject/CustomField), __mdt illegal elements,
+     flow XSD element order, $CustomMetadata-in-formula deploy coupling — per
+     skills/sf-data-model/references/metadata-deploy-limits.md. When an org is available, run the
+     delta dry-run yourself; an APPROVE on metadata that cannot deploy is a defective review.
    - TESTS: run `sf apex run test` for the classes when an org is available (else dry-run/static
      read); assert quality (state asserts, negative paths, capacity-exhaustion test where relevant),
      not just the coverage number.

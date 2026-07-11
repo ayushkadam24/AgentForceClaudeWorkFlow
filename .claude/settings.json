@@ -19,13 +19,39 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "node .claude/hooks/pretool-guard.js" }
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pretool-guard.js"
+          }
         ]
       },
       {
         "matcher": "Write|Edit|MultiEdit|NotebookEdit",
         "hooks": [
-          { "type": "command", "command": "node .claude/hooks/pretool-guard.js" }
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pretool-guard.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/stop-guard.js"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/stop-guard.js"
+          }
         ]
       }
     ]

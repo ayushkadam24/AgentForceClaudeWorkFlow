@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>VS_BookingException</members>
+        <members>VS_BookingService</members>
+        <members>VS_BookingServiceTest</members>
+        <members>VS_ReferenceGenerator</members>
+        <members>VS_SlotGenBatch</members>
+        <members>VS_SlotGenBatchTest</members>
+        <members>VS_SlotGenException</members>
+        <members>VS_SlotGenerationService</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>VS_Appointment__c.VS_Booked_By_Mobile__c</members>
+        <members>VS_Appointment__c.VS_Booked_Channel__c</members>
+        <members>VS_Appointment__c.VS_Booking_Reference__c</members>
+        <members>VS_Appointment__c.VS_Cancelled_At__c</members>
+        <members>VS_Appointment__c.VS_Dose_Number__c</members>
+        <members>VS_Appointment__c.VS_Facility__c</members>
+        <members>VS_Appointment__c.VS_Patient__c</members>
+        <members>VS_Appointment__c.VS_Service__c</members>
+        <members>VS_Appointment__c.VS_Session__c</members>
+        <members>VS_Appointment__c.VS_Slot__c</members>
+        <members>VS_Appointment__c.VS_Status__c</members>
         <members>VS_Facility_Service__c.VS_External_Id__c</members>
         <members>VS_Facility_Service__c.VS_Facility__c</members>
         <members>VS_Facility_Service__c.VS_Is_Active__c</members>
@@ -16,6 +38,17 @@
         <members>VS_Holiday__c.VS_Description__c</members>
         <members>VS_Holiday__c.VS_Facility__c</members>
         <members>VS_Holiday__c.VS_Holiday_Date__c</members>
+        <members>VS_Patient__c.VS_Consent_Given__c</members>
+        <members>VS_Patient__c.VS_Consent_Timestamp__c</members>
+        <members>VS_Patient__c.VS_Date_Of_Birth__c</members>
+        <members>VS_Patient__c.VS_Email__c</members>
+        <members>VS_Patient__c.VS_Full_Name__c</members>
+        <members>VS_Patient__c.VS_Gender__c</members>
+        <members>VS_Patient__c.VS_Locality__c</members>
+        <members>VS_Patient__c.VS_Match_Key__c</members>
+        <members>VS_Patient__c.VS_Mobile__c</members>
+        <members>VS_Patient__c.VS_No_Show_Count__c</members>
+        <members>VS_Patient__c.VS_Pincode__c</members>
         <members>VS_Service__c.VS_Dose_Count__c</members>
         <members>VS_Service__c.VS_External_Id__c</members>
         <members>VS_Service__c.VS_Is_Active__c</members>
@@ -34,8 +67,14 @@
         <members>VS_Session__c.VS_Total_Capacity__c</members>
         <members>VS_Session__c.VS_Walk_In_Reserve_Count__c</members>
         <members>VS_Session__c.VS_Walk_In_Used_Count__c</members>
-        <members>VS_Setting__mdt.Value_Text__c</members>
-        <members>VS_Setting__mdt.Value__c</members>
+        <members>VS_Setting__mdt.VS_Value_Text__c</members>
+        <members>VS_Setting__mdt.VS_Value__c</members>
+        <members>VS_Slot__c.VS_Booked_Count__c</members>
+        <members>VS_Slot__c.VS_Capacity__c</members>
+        <members>VS_Slot__c.VS_Session__c</members>
+        <members>VS_Slot__c.VS_Slot_End__c</members>
+        <members>VS_Slot__c.VS_Slot_Start__c</members>
+        <members>VS_Slot__c.VS_Status__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -48,17 +87,37 @@
         <name>CustomMetadata</name>
     </types>
     <types>
+        <members>VS_Appointment__c</members>
         <members>VS_Facility_Service__c</members>
         <members>VS_Facility__c</members>
         <members>VS_Holiday__c</members>
+        <members>VS_Patient__c</members>
         <members>VS_Service__c</members>
         <members>VS_Session__c</members>
         <members>VS_Setting__mdt</members>
+        <members>VS_Slot__c</members>
         <name>CustomObject</name>
     </types>
     <types>
+        <members>VS_Bulk_Export</members>
+        <name>CustomPermission</name>
+    </types>
+    <types>
         <members>VS_FacilityService_BeforeSave_SetExternalId</members>
+        <members>VS_Session_Screen_DefineCapacity</members>
         <name>Flow</name>
+    </types>
+    <types>
+        <members>VS_District_Admin</members>
+        <members>VS_District_MIS</members>
+        <members>VS_Facility_Staff</members>
+        <members>VS_MO_Facility_Admin</members>
+        <members>VS_Nurse</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <members>Security</members>
+        <name>Settings</name>
     </types>
     <version>67.0</version>
 </Package>

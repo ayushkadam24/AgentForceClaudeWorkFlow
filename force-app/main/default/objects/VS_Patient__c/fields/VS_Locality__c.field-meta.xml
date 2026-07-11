@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Locality__c</fullName>
+    <label>Locality</label>
+    <description>Patient's general locality/area name (e.g. village or ward) — Annexure C1.1 person attribute. Deliberately NOT a full postal address: data minimization (C1) caps address detail at locality + pincode only (REQ-045). Not required.</description>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+</CustomField>

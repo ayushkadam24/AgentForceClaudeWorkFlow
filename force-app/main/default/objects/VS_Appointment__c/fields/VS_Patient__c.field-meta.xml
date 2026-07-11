@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Patient__c</fullName>
+    <label>Patient</label>
+    <description>Lookup (not Master-Detail) to VS_Patient__c: the person this appointment is for (booker may differ, see VS_Booked_By_Mobile__c). Lookup because patient retention (>=10 yr if vaccinated) and appointment retention (bookings 3 yr, Annexure C4) are different lifecycles -- a Master-Detail cascade-delete would force one lifecycle onto the other, which is unacceptable for retention (design §2.4, REQ-052). deleteConstraint=Restrict so a patient with existing appointments cannot be deleted out from under its booking history; purge is handled by VS_RetentionPurgeBatch (VS-21) per class, not by ad hoc record deletion.</description>
+    <type>Lookup</type>
+    <referenceTo>VS_Patient__c</referenceTo>
+    <relationshipLabel>Appointments</relationshipLabel>
+    <relationshipName>VS_Appointments</relationshipName>
+    <required>false</required>
+    <deleteConstraint>Restrict</deleteConstraint>
+</CustomField>

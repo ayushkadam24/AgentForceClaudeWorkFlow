@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Capacity__c</fullName>
+    <label>Capacity</label>
+    <description>The enforceable per-slot published capacity ceiling required by REQ-008 ("that slot's published capacity"). Populated by VS-06's even-distribution algorithm (D-023/A-005) such that sum(VS_Capacity__c) across a session's slots equals VS_Session__c.VS_Bookable_Capacity__c. Checked (never exceeded) by VS_BookingService.book() (VS-09) inside the parent session's SELECT ... FOR UPDATE lock (D-019/D-020) -- not enforced by this object alone.</description>
+    <type>Number</type>
+    <precision>6</precision>
+    <scale>0</scale>
+    <required>true</required>
+</CustomField>

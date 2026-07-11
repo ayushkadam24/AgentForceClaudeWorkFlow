@@ -16,3 +16,12 @@
 5. PIPELINE_STATE.md gets exactly ONE new log line per run; the YAML block only changes per
    the state-machine rules. Nothing else in that file is touched.
 6. Markdown artifacts use tables for registers (REQs, OQs, TCs, bugs) and keep one H1 per file.
+
+## ID minting & shared-log discipline (added 2026-07-12 from Sprint-1 post-mortem — binding)
+7. .claude/memory/ registers are WRITE-FIRST: a D-###/A-### is minted by reading the register,
+   taking the next free number, and appending the entry there BEFORE it is cited anywhere else.
+   If a human quotes an ID that is already taken, surface the collision and renumber immediately.
+8. Shared audit files (agent-runs.log, jira-log.md, PIPELINE_STATE.md log, memory files) are
+   append-only via atomic appends. Parallel subagents NEVER read-modify-write these files —
+   the orchestrator serializes shared-log writes; reviewer-type agents write only their own
+   report file plus their run line.

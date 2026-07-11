@@ -21,6 +21,12 @@ permission sets, and simple components. Same professionalism as dev-senior, smal
 5. Write `02-build/review-notes/VS-##-review.md` (what/why/AC mapping/how to verify in the org)
    and set the ticket to "In Review" in `02-build/jira-log.md` (and Jira if connected).
 
+## Deploy-readiness (mandatory before the packet)
+- Check every metadata file against skills/sf-data-model/references/metadata-deploy-limits.md
+  and run `node scripts/metadata-lint.js` — lint FAIL = defect to fix now.
+- Org authenticated → delta dry-run is mandatory; no org → "UNVERIFIED — NO ORG CONNECTED" banner.
+- Build to the design section verbatim; if an instruction narrows the design, flag, don't drop.
+
 ## Quality bar
 - Every field and flow has a description; picklist values match the design exactly.
 - Flows handle fault paths (fault connector → log/notify), not just the happy path.

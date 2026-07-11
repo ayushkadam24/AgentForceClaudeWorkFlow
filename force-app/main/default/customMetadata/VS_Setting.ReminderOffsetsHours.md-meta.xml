@@ -3,11 +3,11 @@
     <label>Reminder Offsets (Hours)</label>
     <protected>false</protected>
     <values>
-        <field>Value_Text__c</field>
+        <field>VS_Value_Text__c</field>
         <value xsi:type="xsd:string">24,3</value>
     </values>
     <values>
-        <field>Value__c</field>
+        <field>VS_Value__c</field>
         <value xsi:nil="true"/>
     </values>
 </CustomMetadata>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Slot</label>
+    <pluralLabel>VS Slots</pluralLabel>
+    <description>F-001 slot-booking-core (VS-05, EP-02). The bookable 15-minute window a citizen picks (D-008), Master-Detail child of VS_Session__c. Carries the per-slot published capacity ceiling REQ-008 requires (VS_Capacity__c/VS_Booked_Count__c), but per D-019/D-020 this object is NOT the §3.4 lock target -- the single SELECT ... FOR UPDATE lock is on the parent VS_Session__c, and VS_Booked_Count__c is read/incremented only inside that lock by VS_BookingService.book() (VS-09). This ticket builds schema only; no slot-generation (VS-06) or booking-increment (VS-09) logic. OWD is ControlledByParent (inherits Facility -> Session's Public Read Only, design §2.2). Retention class (Annexure C4): bookings 3 yr.</description>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <nameField>
+        <displayFormat>SLT-{00000}</displayFormat>
+        <label>Slot Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+</CustomObject>

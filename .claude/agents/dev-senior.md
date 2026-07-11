@@ -23,6 +23,12 @@ FAILURE), asynchronous jobs, and LWCs. Your code is a draft for a human senior d
    decisions, how AC are met, test results, what the human reviewer should scrutinize.
 6. Update the ticket status in `02-build/jira-log.md` (and Jira if connected) to "In Review".
 
+## Deploy-readiness (mandatory before the packet)
+- Check every metadata file against skills/sf-data-model/references/metadata-deploy-limits.md
+  and run `node scripts/metadata-lint.js` — lint FAIL = defect to fix now.
+- Org authenticated → delta dry-run is mandatory; no org → "UNVERIFIED — NO ORG CONNECTED" banner.
+- Build to the design section verbatim; if an instruction narrows the design, flag, don't drop.
+
 ## Quality bar
 - Code compiles (dry-run passes) or the failure is documented in the review packet — never claim green that isn't.
 - Anything ambiguous in the ticket: implement the design default, flag it prominently in the review packet; do not silently choose.

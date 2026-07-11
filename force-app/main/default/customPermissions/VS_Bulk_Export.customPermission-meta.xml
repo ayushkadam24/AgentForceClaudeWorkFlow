@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Bulk Export</label>
+    <description>F-001 (VS-04, D-022/REQ-036/C5.2). Gates bulk-export capability, held ONLY by VS_District_MIS. No export UI built yet (Deferred). Future export features must check this permission and log every export per C5.2.</description>
+</CustomPermission>

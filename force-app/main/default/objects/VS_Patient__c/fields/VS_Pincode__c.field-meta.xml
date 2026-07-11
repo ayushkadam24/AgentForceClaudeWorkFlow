@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Pincode__c</fullName>
+    <label>Pincode</label>
+    <description>Patient's 6-digit Indian postal (PIN) code — Annexure C1.1 person attribute, the outer bound of address detail collected (no street/house-level address, REQ-045). Stored as text (not Number) to preserve leading zeros and avoid arithmetic interpretation. Not required.</description>
+    <type>Text</type>
+    <length>6</length>
+    <required>false</required>
+</CustomField>

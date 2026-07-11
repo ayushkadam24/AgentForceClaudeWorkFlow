@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Booked_Channel__c</fullName>
+    <label>Booked Channel</label>
+    <description>How this appointment was booked, matching design §2.3 exactly: Portal (citizen Experience Cloud site, VS-16), Chat (future chat-assistant seam, Annexure C9 -- not built in F-001), Staff (facility staff booking on a citizen's behalf), WalkIn (booked at the facility on the day, draws from the session's walk-in reserve, D-006/D-009). Set by VS_BookingService.book(patientId, slotId, bookedById, channel) (VS-09) from its channel argument -- no default value, no automation in this ticket.</description>
+    <type>Picklist</type>
+    <required>false</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Portal</fullName>
+                <default>false</default>
+                <label>Portal</label>
+            </value>
+            <value>
+                <fullName>Chat</fullName>
+                <default>false</default>
+                <label>Chat</label>
+            </value>
+            <value>
+                <fullName>Staff</fullName>
+                <default>false</default>
+                <label>Staff</label>
+            </value>
+            <value>
+                <fullName>WalkIn</fullName>
+                <default>false</default>
+                <label>Walk In</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

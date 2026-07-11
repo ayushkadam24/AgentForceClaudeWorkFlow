@@ -34,8 +34,8 @@
         <members>VS_Session__c.VS_Total_Capacity__c</members>
         <members>VS_Session__c.VS_Walk_In_Reserve_Count__c</members>
         <members>VS_Session__c.VS_Walk_In_Used_Count__c</members>
-        <members>VS_Setting__mdt.Value_Text__c</members>
-        <members>VS_Setting__mdt.Value__c</members>
+        <members>VS_Setting__mdt.VS_Value_Text__c</members>
+        <members>VS_Setting__mdt.VS_Value__c</members>
         <name>CustomField</name>
     </types>
     <types>

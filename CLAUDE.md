@@ -22,13 +22,18 @@ Seven role subagents in `.claude/agents/`; humans approve every gate.
 /dev-review VS-## → code-reviewer agent + human verdict · /arch-confirm → architect (drift check) ·
 /qa-plan → qa-lead · /qa-run A|B → qa-engineer · /qa-report → qa-lead close-out ·
 /deploy VS-##|sprint-1|drift-check → devops agent (validate, human-approved execute, record) ·
-/advance → gate proposal (human approves) · /status → where are we · /retro → close the POC
+/advance → gate proposal (human approves) · /status → where are we · /health → deterministic invariant check · /lane setup|A|B|merge → parallel dev lanes (rules/40) · /retro → close the POC
 
 ## Where things live
 Inputs `00-inputs/` · Discovery `01-discovery/` · Build `02-build/` + `force-app/` ·
 QA `03-qa/` · Gate sign-offs `04-confirmations/` · Shared memory `.claude/memory/`
 (decisions D-###, assumptions A-###, glossary, handoffs) · Run log `.claude/logs/agent-runs.log` ·
 Skills (how-to formats) `.claude/skills/` · Retro `retro/poc-learnings.md`.
+
+## Config-load boundaries (learned the hard way)
+Hooks + CLAUDE.md load at SESSION START (restart after changing them). Agent .md files load at
+each subagent LAUNCH. Command .md files load at each INVOCATION. Session resume packs live in
+Session Info/<timestamp>/ — a fresh session reads the newest one first.
 
 ## Salesforce specifics
 - All metadata prefixed `VS_`; standards in rules/20. Scratch org def: `config/project-scratch-def.json`

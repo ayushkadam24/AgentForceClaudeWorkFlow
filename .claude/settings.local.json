@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(claude mcp *)"
+      "Bash(claude mcp *)",
+      "Bash(node \"C:\\\\Users\\\\ayush.kadam\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--VS-Code-Agentic-Workflows\\\\b5e3605b-f28b-47a2-bb27-d25994c3410b\\\\scratchpad\\\\xmlcheck.js\")",
+      "Bash(node -e ' *)"
     ]
   }
 }

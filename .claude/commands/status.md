@@ -5,3 +5,4 @@ description: Show pipeline state, recent activity, and what to run next
 2. Print the last 5 lines of .claude/logs/agent-runs.log.
 3. Count artifacts present: REQs in requirements-brief, open questions, tickets in sprint-plan, review packets, TCs in test-plan, bug reports.
 4. State which phase we are in, whether the next transition is a human gate, and the exact command to run next.
+5. Also run `node scripts/health-check.js` and include its verbatim output — deterministic truth beats self-reporting.

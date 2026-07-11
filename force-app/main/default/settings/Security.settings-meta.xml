@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SecuritySettings xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!--
+        F-001 slot-booking-core (VS-04, EP-08, REQ-055/Annexure C6). Best-effort attempt to set the
+        ORG-WIDE idle session timeout to 15 minutes so shared-device roles (facility staff/nurse/MO)
+        never exceed the 15-min ceiling. This is a SINGLE ORG-WIDE SETTING, not a per-permission-set
+        value: Metadata API does not expose session timeout on PermissionSet, so it cannot be scoped
+        per role here; applying it org-wide is the safe/conservative choice (it can only make every
+        role's timeout AT MOST 15 min, never less strict than required).
+        HONESTY NOTE (dev-mid, unverified): this file has NOT been validated with
+        sf project deploy start with the dry run flag, in this environment (no deploy attempted,
+        rules/00). The exact sessionSettings sub-element schema for SecuritySettings was authored
+        from memory/best effort, not confirmed against a live Metadata API describe. If dry-run
+        rejects this file, the documented FALLBACK is the manual Setup step below: do not treat this
+        file as proof the control is enforced until dry-run/deploy confirms it.
+        MANUAL FALLBACK (belongs on the devops runbook regardless of whether this file deploys clean):
+        Setup, Security, Session Settings, Session Timeout Value = 15 Minutes (org-wide), and confirm
+        no profile carries a longer per-profile Session Settings override.
+    -->
+    <sessionSettings>
+        <sessionTimeout>FifteenMinutes</sessionTimeout>
+        <disableTimeoutWarning>false</disableTimeoutWarning>
+        <lockSessionsToDomain>true</lockSessionsToDomain>
+        <lockSessionsToIp>false</lockSessionsToIp>
+        <forceRelogin>true</forceRelogin>
+    </sessionSettings>
+</SecuritySettings>

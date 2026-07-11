@@ -1,0 +1,9 @@
+.claude/logs/agent-runs.log merge=union
+02-build/jira-log.md merge=union
+02-build/deployments.md merge=union
+02-build/runbook.md merge=union
+PIPELINE_STATE.md merge=union
+.claude/memory/decisions.md merge=union
+.claude/memory/assumptions.md merge=union
+.claude/memory/handoffs.md merge=union
+.claude/memory/glossary.md merge=union

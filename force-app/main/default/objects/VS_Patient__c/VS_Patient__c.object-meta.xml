@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Patient</label>
+    <pluralLabel>VS Patients</pluralLabel>
+    <description>F-001 slot-booking-core (VS-07, EP-05). The single home for person data in F-001 — exactly the Annexure C1.1 minimum attributes (full name, DOB, gender-optional, mobile, locality/pincode, email-optional) plus the D-011/D-017 de-dup match key and DPDP consent capture fields. NO Aadhaar field, no address beyond locality/pincode, no clinical/diagnosis data anywhere on this object (REQ-043/044/045 — structural, verified by grep as part of this ticket's review packet). Booker is not modeled as a person here — a booker is an authenticated mobile only (design §2.5); one mobile may own many VS_Patient__c records (D-011). OWD is Private (Annexure C5 — person data). Retention class (Annexure C4): linked — 10 yr if the patient has a completed vaccination record, else 3 yr (governed by VS_RetentionPurgeBatch honoring the patient's longest-linked record, design §6.5). Field history tracking enabled at the object level to support the REQ-054 read/change-attribution mechanism (design §6.2/A-006); Shield Event Monitoring for full per-record read audit remains a separate, org-level dependency not built here.</description>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>Private</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>true</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <nameField>
+        <displayFormat>PAT-{00000}</displayFormat>
+        <label>Patient Record</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+</CustomObject>
