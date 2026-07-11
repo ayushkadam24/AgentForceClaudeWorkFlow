@@ -1,0 +1,144 @@
+%% Feature: F-001 slot-booking-core
+%% Producing agent: architect (ARCH_DESIGN)
+%% Date: 2026-07-11
+%% Derives from: technical-design.md; D-005..D-017; REQ-001..062
+%% NO AADHAAR anywhere (REQ-044 / Annexure C1.2). Retention class (C4) noted per entity.
+%% Cardinality verbs read parent -> child. M-D = master-detail, LK = lookup.
+
+erDiagram
+
+    %% ---------- Reference / configuration data (retention: permanent reference) ----------
+    VS_Facility__c ||--o{ VS_Facility_Service__c : "offers (M-D)"
+    VS_Service__c  ||--o{ VS_Facility_Service__c : "offered-as (LK)"
+    VS_Facility__c ||--o{ VS_Holiday__c          : "closed-on (LK)"
+
+    %% ---------- Capacity model: Session is the atomic capacity unit (D-007) ----------
+    VS_Facility__c ||--o{ VS_Session__c : "hosts (M-D)"
+    VS_Service__c  ||--o{ VS_Session__c : "for-service (LK)"
+    VS_Session__c  ||--o{ VS_Slot__c    : "generates (M-D)"
+
+    %% ---------- Person + booking (retention: patient linked; appointment 3yr) ----------
+    VS_Patient__c ||--o{ VS_Appointment__c : "booked-for (LK)"
+    VS_Slot__c    ||--o{ VS_Appointment__c : "fills / LOCK TARGET (LK)"
+    VS_Session__c ||--o{ VS_Appointment__c : "within-denorm (LK)"
+    VS_Facility__c||--o{ VS_Appointment__c : "at-denorm (LK)"
+
+    %% ---------- Notification seam (retention: 1yr) + OTP (transient) + errors (3yr) ----------
+    VS_Patient__c     ||--o{ VS_Notification_Log__c : "notifies (LK)"
+    VS_Appointment__c ||--o{ VS_Notification_Log__c : "about (LK)"
+
+    VS_Facility__c {
+        string  VS_Facility_Type__c "PHC/CHC/DistrictHospital"
+        location VS_Location__c "Geolocation - proximity REQ-001"
+        string  VS_Pincode__c
+        phone   VS_Helpline_Number__c "C7.3 helpline"
+        time    VS_Operating_Start_Time__c
+        time    VS_Operating_End_Time__c
+        boolean VS_Is_Active__c
+        string  VS_External_Id__c "UNIQUE ExternalId"
+        note    RETENTION "permanent reference"
+    }
+
+    VS_Service__c {
+        picklist VS_Service_Type__c "Vaccination(F-001) | OPD(later) D-012"
+        string   VS_Vaccine_Name__c
+        number   VS_Slot_Granularity_Mins__c "default 15 D-008"
+        number   VS_Dose_Count__c
+        boolean  VS_Is_Active__c
+        string   VS_External_Id__c "UNIQUE ExternalId"
+        note     RETENTION "permanent reference"
+    }
+
+    VS_Facility_Service__c {
+        boolean VS_Is_Active__c "REQ-010 offering"
+        note    RETENTION "permanent reference"
+    }
+
+    VS_Holiday__c {
+        date    VS_Holiday_Date__c
+        string  VS_Description__c
+        note    RETENTION "permanent reference"
+    }
+
+    VS_Session__c {
+        date     VS_Session_Date__c
+        datetime VS_Start_Time__c
+        datetime VS_End_Time__c
+        number   VS_Total_Capacity__c "MO-set REQ-010/011"
+        number   VS_Walk_In_Reserve_Count__c "formula 25pct D-009"
+        number   VS_Bookable_Capacity__c "formula total-reserve"
+        number   VS_Walk_In_Used_Count__c "locked for walk-ins"
+        picklist VS_Status__c "Open|Closed|Cancelled"
+        boolean  VS_Is_Drive_Day__c "overrides holiday REQ-012/D-019?"
+        string   VS_External_Id__c "UNIQUE ExternalId"
+        note     RETENTION "bookings 3yr"
+    }
+
+    VS_Slot__c {
+        datetime VS_Slot_Start__c
+        datetime VS_Slot_End__c
+        number   VS_Capacity__c "CEILING REQ-008"
+        number   VS_Booked_Count__c "maintained under FOR UPDATE"
+        picklist VS_Status__c "Open|Full|Closed|Cancelled"
+        note     RETENTION "bookings 3yr"
+    }
+
+    VS_Patient__c {
+        string   VS_Full_Name__c "C1.1"
+        date     VS_Date_Of_Birth__c "C1.1 - drives next-dose + dedup"
+        picklist VS_Gender__c "optional C1.1"
+        phone    VS_Mobile__c "C1.1"
+        string   VS_Locality__c
+        string   VS_Pincode__c "C1.1"
+        email    VS_Email__c "optional C1.1"
+        string   VS_Match_Key__c "UNIQUE ExternalId name|DOB|mobile D-011/D-017"
+        boolean  VS_Consent_Given__c "DPDP REQ-046"
+        datetime VS_Consent_Timestamp__c
+        number   VS_No_Show_Count__c "REQ-017 capture-only"
+        note     NO_AADHAAR "REQ-044 - no such field exists"
+        note     RETENTION "linked: 10yr if vaccinated else 3yr"
+    }
+
+    VS_Appointment__c {
+        string   VS_Booking_Reference__c "UNIQUE ExternalId non-guessable D-016"
+        picklist VS_Status__c "Booked|CheckedIn|Completed|Cancelled|NoShow|WalkIn"
+        picklist VS_Booked_Channel__c "Portal|Chat|Staff|WalkIn"
+        phone    VS_Booked_By_Mobile__c "booker != patient REQ-004"
+        number   VS_Dose_Number__c
+        datetime VS_Cancelled_At__c
+        note     RETENTION "bookings 3yr"
+    }
+
+    VS_Notification_Log__c {
+        picklist VS_Channel__c "SMS|Email"
+        string   VS_Template_Name__c "DLT template REQ-058"
+        string   VS_Message_Body__c
+        picklist VS_Status__c "Logged|Sent|Failed"
+        string   VS_Provider__c "log-only in POC D-014"
+        boolean  VS_Helpline_Included__c "C7.3"
+        datetime VS_Sent_At__c
+        note     RETENTION "SMS logs 1yr"
+    }
+
+    VS_OTP_Verification__c {
+        phone    VS_Mobile__c "citizen auth D-013"
+        string   VS_Code_Hash__c "hashed - stub provider fixed code in scratch"
+        datetime VS_Expires_At__c
+        boolean  VS_Verified__c
+        number   VS_Attempts__c
+        note     RETENTION "transient - purge daily"
+    }
+
+    VS_Error_Log__c {
+        string   VS_Source__c "class or flow name"
+        string   VS_Record_Id__c
+        string   VS_Message__c
+        string   VS_Severity__c
+        datetime VS_Logged_At__c
+        note     RETENTION "audit 3yr tamper-evident"
+    }
+
+    %% ================= DEFERRED - designed, NOT built in F-001 (non-preclusion) =================
+    %% VS_Vaccination_Event__c  LK Patient, LK Appointment, LK Vial -> REQ-020/021/024  (retention >=10yr)
+    %% VS_Vial__c / VS_Stock__c  LK Facility, LK Service            -> REQ-021/022/023  (reference/ops)
+    %% VS_Certificate__c         LK Vaccination_Event, non-guessable VS_Certificate_Id__c -> REQ-029/030/031

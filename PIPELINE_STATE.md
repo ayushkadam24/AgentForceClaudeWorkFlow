@@ -1,8 +1,8 @@
 ---
 feature: F-001 slot-booking-core
-phase: DISCOVERY
+phase: ARCH_DESIGN
 blocked_on: none
-next_command: /advance
+next_command: /arch-design
 last_updated: 2026-07-11
 updated_by: human
 ---
@@ -25,3 +25,5 @@ Rules:
 - 2026-07-11 | human | Workspace scaffolded. Awaiting /kickoff.
 - 2026-07-11 | human | Inputs placed in 00-inputs/; agents, commands, rules, skills, memory, logs authored. Ready for /kickoff.
 - 2026-07-11 | human | Kickoff approved. Phase → DISCOVERY. Launching ba-analyst.
+- 2026-07-11 | human | Gate approved by human. DISCOVERY → ARCH_DESIGN. OQ-001/002/003/004/020/025/027 + OQ-011/012 decided → D-007..D-014.
+- 2026-07-11 | architect | Technical design + ERD complete (11 F-001 objects, §3.4 slot-integrity via FOR UPDATE on VS_Slot__c, 8 epics EP-01..08, all 62 REQs traced). D-015..018, A-005/006 logged. YAML left for orchestrator to advance ARCH_DESIGN → SPRINT_PLANNED.

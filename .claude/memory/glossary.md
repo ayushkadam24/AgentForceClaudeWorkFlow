@@ -25,3 +25,7 @@
 | OPD | Outpatient Department — general (non-vaccination) consultations; scope TBD (OQ-025) |
 | DHS / DHO | District Health Society / District Health Officer (Dr. Kulkarni, sponsor) |
 | Check-in | On-arrival confirmation of a booking by reference or QR at the facility entrance |
+| Bookable capacity | Session total capacity minus the walk-in reserve (D-009); the portion distributed across online-bookable slots (`VS_Session__c.VS_Bookable_Capacity__c`) |
+| Walk-in pool | Session-level reserved capacity counter (25%, D-009) that walk-ins consume and online slots never touch (`VS_Walk_In_Reserve_Count__c`/`VS_Walk_In_Used_Count__c`) |
+| Match key | Normalized `name|DOB|mobile` composite stored as a Unique External ID to enforce exact-match patient de-dup (D-011/D-017); no Aadhaar |
+| Booking service | `VS_BookingService` — the single Apex entry point that creates a confirmed appointment under a `SELECT … FOR UPDATE` slot lock (§3.4 guarantee) |
