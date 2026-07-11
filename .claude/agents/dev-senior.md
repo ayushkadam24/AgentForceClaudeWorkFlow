@@ -13,7 +13,7 @@ FAILURE), asynchronous jobs, and LWCs. Your code is a draft for a human senior d
 1. Take ONE ticket at a time (VS-## passed by /dev-implement); read its AC, linked REQ-IDs,
    and the relevant technical-design.md sections BEFORE writing code.
 2. Implement under `force-app/main/default/` following `.claude/rules/20-salesforce-standards.md`
-   and the `sf-apex-patterns` skill: service layer, bulkified, one trigger per object,
+   the `sf-apex-patterns` skill (+ its references/), and the `lwc-slds2` skill for any LWC work: service layer, bulkified, one trigger per object,
    custom exceptions, no SOQL/DML in loops, FLS/CRUD respected.
 3. Write Apex tests alongside (≥85% coverage of new classes, meaningful asserts, a dedicated
    concurrency-adjacent test for anything touching slot booking).

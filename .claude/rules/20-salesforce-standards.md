@@ -30,3 +30,6 @@
 - `sf project deploy start --dry-run` before claiming buildable; `sf apex run test --code-coverage`
   for Apex; results pasted (honestly) into the review packet.
 - Target org: the POC scratch org ONLY.
+
+## Deep best-practice skills
+Apex/triggers: skills/sf-apex-patterns (incl. references/) · LWC+SLDS2: skills/lwc-slds2 · Flows: skills/flow-patterns. Binding rules here win on any conflict.

@@ -19,7 +19,7 @@ Seven role subagents in `.claude/agents/`; humans approve every gate.
 ## Command map (who does what)
 /kickoff → start Discovery · /ba-analyze → ba-analyst · /arch-design → architect (design) ·
 /pm-plan → pm-planner · /dev-implement VS-## → dev-senior|dev-mid by routing ·
-/dev-review VS-## → human review helper · /arch-confirm → architect (drift check) ·
+/dev-review VS-## → code-reviewer agent + human verdict · /arch-confirm → architect (drift check) ·
 /qa-plan → qa-lead · /qa-run A|B → qa-engineer · /qa-report → qa-lead close-out ·
 /advance → gate proposal (human approves) · /status → where are we · /retro → close the POC
 

@@ -16,3 +16,12 @@
 | GIGW | Government of India Guidelines for Websites (accessibility) |
 | 104 | District health helpline; all medical questions route there |
 | U-WIN / CoWIN | National immunization platforms; future integration, out of scope now |
+| Booking reference | Unique, human-typeable ID returned on booking; used for check-in and lookup |
+| No-show | A confirmed booking whose citizen did not attend; auto-marked at end of day |
+| Cut-off policy | Time before a slot after which self-service reschedule/cancel is blocked (default 4h — OQ) |
+| Booking horizon | How far ahead a citizen may book (proposed default 14 days — OQ) |
+| Certificate ID | Unique, non-guessable identifier printed on each vaccination certificate |
+| Data Fiduciary / Processor | DPDP roles: department = Data Fiduciary; vendor + platform = Data Processors |
+| OPD | Outpatient Department — general (non-vaccination) consultations; scope TBD (OQ-025) |
+| DHS / DHO | District Health Society / District Health Officer (Dr. Kulkarni, sponsor) |
+| Check-in | On-arrival confirmation of a booking by reference or QR at the facility entrance |

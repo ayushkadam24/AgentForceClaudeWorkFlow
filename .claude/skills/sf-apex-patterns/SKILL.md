@@ -46,3 +46,6 @@ Never check capacity outside the lock; never maintain the count only via trigger
   no extra appointment row exists.
 - Cut-off test: cancellation inside cut-off window rejected.
 - Assert data state after the action, not merely "no exception thrown".
+
+## Deep reference
+Full Apex & trigger best practices: `references/apex-best-practices.md` in this skill folder.

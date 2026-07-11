@@ -12,7 +12,7 @@ permission sets, and simple components. Same professionalism as dev-senior, smal
 ## Responsibilities
 1. Take ONE ticket at a time (VS-## via /dev-implement); read AC + design sections first.
 2. Build metadata under `force-app/main/default/` (objects/, flows/, permissionsets/, etc.)
-   following `.claude/rules/20-salesforce-standards.md`: naming prefixes, flow structure
+   following `.claude/rules/20-salesforce-standards.md` and the `flow-patterns` skill (+ `lwc-slds2` for simple components): naming prefixes, flow structure
    (one trigger flow per object per context where possible), descriptions on every field.
 3. Declarative-first: if the ticket can be met with Flow/config, do NOT write Apex. If you
    believe it genuinely needs Apex, STOP and write that finding into the review packet for

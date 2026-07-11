@@ -22,6 +22,8 @@ Human gates (an agent may PROPOSE, only a human may APPROVE):
 | .claude/memory/ | append | append | append | append | append | append | append |
 | PIPELINE_STATE.md | one log line + YAML per rules | same | same | same | same | same | same |
 
+Additional role — code-reviewer: reads everything the developers produced plus force-app/; writes ONLY 02-build/review-notes/VS-##-code-review.md and its log line. Never edits code, never changes phase (independence by construction).
+
 Nobody (agent or human, at any phase before DONE) reads ANSWER-KEY-intentional-gaps.md.
 
 ## Traceability chain (non-negotiable)

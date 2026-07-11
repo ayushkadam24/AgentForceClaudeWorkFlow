@@ -1,8 +1,8 @@
 ---
 feature: F-001 slot-booking-core
-phase: NOT_STARTED
+phase: DISCOVERY
 blocked_on: none
-next_command: /kickoff
+next_command: /advance
 last_updated: 2026-07-11
 updated_by: human
 ---
@@ -24,3 +24,4 @@ Rules:
 ## Log
 - 2026-07-11 | human | Workspace scaffolded. Awaiting /kickoff.
 - 2026-07-11 | human | Inputs placed in 00-inputs/; agents, commands, rules, skills, memory, logs authored. Ready for /kickoff.
+- 2026-07-11 | human | Kickoff approved. Phase → DISCOVERY. Launching ba-analyst.
