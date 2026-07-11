@@ -5,7 +5,7 @@ date:            2026-07-11
 phase:           ARCH_DESIGN
 derives-from:    01-discovery/requirements-brief.md (REQ-001..062)
                  01-discovery/open-questions.md (OQ-001..027)
-                 .claude/memory/decisions.md (D-005..D-017)
+                 .claude/memory/decisions.md (D-005..D-020; D-019 SUPERSEDES D-015)
                  .claude/rules/{00,10,20,30}, skills/{sf-data-model,sf-apex-patterns,flow-patterns}
 downstream:      02-build/sprint-plan.md (VS-## tickets via pm-planner), 03-qa/test-plan.md
 -->
@@ -53,12 +53,16 @@ The 25% walk-in reserve is held as a **session-level counter** (`VS_Walk_In_Used
 online slots never draw from (D-009). Online bookers only ever see and consume the 75% carried by
 slots. Walk-ins consume the session reserve pool.
 
-**Where the §3.4 ceiling lives (D-015):** although capacity is *authored* on the Session, the
-*enforceable* ceiling and the `SELECT … FOR UPDATE` lock live on **`VS_Slot__c`**
-(`VS_Capacity__c` / `VS_Booked_Count__c`). This is mandated by rules/20 and by REQ-008's wording
-("that **slot's** published capacity"), and it gives **row-scoped** concurrency — contention exists
-only between two bookers of the *same* slot, so 6,000/day drive peaks (REQ-062) scale across slots
-and facilities. Walk-in serving locks the **Session** row instead (its reserve counter). See §4.
+**Where the §3.4 lock lives (D-019, SUPERSEDES D-015):** there is exactly **one** lock target — the
+`SELECT … FOR UPDATE` lock is taken on the **`VS_Session__c`** row for **every** booking type (online,
+staff, walk-in). Capacity is authored on the Session (D-007), and the Session is the single source of
+truth for the walk-in reserve pool (`VS_Walk_In_Used_Count__c` vs `VS_Walk_In_Reserve_Count__c`,
+D-009). The per-slot published ceiling that REQ-008 demands ("that **slot's** published capacity") is
+still enforced on `VS_Slot__c` (`VS_Capacity__c` / `VS_Booked_Count__c`), but those counters are read
+and written **only inside the parent session's lock** (D-020) — every booking for a session, of any
+type, serializes on that one session row before it touches any slot, so slot counts can never race.
+The retracted D-015 dual-lock (slot row for online, session row for walk-in) no longer applies:
+there is no slot-row lock and no second lock target. See §4.
 
 ### 2.2 Object catalogue (F-001 build set)
 
@@ -71,8 +75,8 @@ exists on any object** (REQ-044).
 | 1 | `VS_Facility__c` | Public Read Only | PHC/CHC/District Hospital; discoverable reference (REQ-001) | permanent reference |
 | 2 | `VS_Service__c` | Public Read Only | Generic service catalogue; vaccination in F-001, service-type for OPD (D-012) | permanent reference |
 | 3 | `VS_Facility_Service__c` | Public Read Only | Junction: which service a facility offers (REQ-010) | permanent reference |
-| 4 | `VS_Session__c` | Public Read Only | **Atomic capacity unit** (D-007); authors capacity + walk-in reserve | bookings 3 yr |
-| 5 | `VS_Slot__c` | Public Read Only | Bookable window; **§3.4 lock target** (REQ-008) | bookings 3 yr |
+| 4 | `VS_Session__c` | Public Read Only | **Atomic capacity unit + §3.4 lock target** (D-007/D-019); authors capacity + walk-in reserve; source of truth for the reserve pool | bookings 3 yr |
+| 5 | `VS_Slot__c` | Public Read Only | Bookable 15-min window a citizen picks + per-slot ceiling (REQ-008/D-008); counters read/written only inside the session lock (D-020) | bookings 3 yr |
 | 6 | `VS_Holiday__c` | Public Read Only | Per-facility closure dates for slot generation (REQ-009) | permanent reference |
 | 7 | `VS_Patient__c` | **Private** | Person, C1-minimal; booker≠patient (REQ-004/043/045) | linked: 10 yr if vaccinated else 3 yr |
 | 8 | `VS_Appointment__c` | **Private** | The booking; carries booking reference + status | bookings 3 yr |
@@ -108,15 +112,17 @@ Standard audit fields (CreatedBy/Date etc.) omitted. `ExternalId`/`Unique` marke
 (Date), `VS_Start_Time__c`/`VS_End_Time__c` (DateTime), `VS_Total_Capacity__c` (Number, MO-set),
 `VS_Walk_In_Reserve_Count__c` (**Formula** = `CEILING(VS_Total_Capacity__c * $CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c / 100)`),
 `VS_Bookable_Capacity__c` (**Formula** = `VS_Total_Capacity__c - VS_Walk_In_Reserve_Count__c`),
-`VS_Walk_In_Used_Count__c` (Number, incremented under Session lock), `VS_Status__c`
-(picklist Open|Closed|Cancelled), `VS_Is_Drive_Day__c` (Checkbox — overrides holiday closure, D-018),
-`VS_External_Id__c` (Unique). Formula fields mean the reserve split needs **zero automation**.
+`VS_Walk_In_Used_Count__c` (Number, incremented under the **session** `FOR UPDATE` lock — D-019),
+`VS_Status__c` (picklist Open|Closed|Cancelled), `VS_Is_Drive_Day__c` (Checkbox — overrides holiday
+closure, D-018), `VS_External_Id__c` (Unique). This row is the single §3.4 lock target (D-019);
+the formula fields mean the reserve split needs **zero automation**.
 
 **`VS_Slot__c`** — Master-Detail→`VS_Session__c`, `VS_Slot_Start__c`/`VS_Slot_End__c` (DateTime),
-`VS_Capacity__c` (Number, the enforceable ceiling REQ-008), `VS_Booked_Count__c` (Number, maintained
-**only** inside the FOR UPDATE transaction — never by rollup/trigger, rules/20), `VS_Status__c`
-(picklist Open|Full|Closed|Cancelled). Master-Detail to Session so slots cascade with session
-lifecycle and inherit sharing.
+`VS_Capacity__c` (Number, the enforceable per-slot ceiling REQ-008), `VS_Booked_Count__c` (Number,
+read and incremented **only** inside the parent session's `FOR UPDATE` lock — never by rollup/trigger,
+never under a slot-row lock, D-019/D-020/rules/20), `VS_Status__c` (picklist Open|Full|Closed|Cancelled).
+Master-Detail to Session so slots cascade with session lifecycle, inherit sharing, and are protected by
+the session's single booking lock.
 
 **`VS_Holiday__c`** — Lookup→`VS_Facility__c`, `VS_Holiday_Date__c` (Date), `VS_Description__c`.
 Per-facility, staff-maintained (OQ-015 default). Slot generation skips these dates unless a session
@@ -154,10 +160,10 @@ Holds no PII beyond mobile; purged daily.
 | Relationship | Type | Why |
 |---|---|---|
 | Facility → Session | **Master-Detail** | Sessions are meaningless without their facility; inherit facility sharing; cascade lifecycle |
-| Session → Slot | **Master-Detail** | Slots are generated artifacts of a session; cascade delete/reparent on session cancel; inherit sharing |
+| Session → Slot | **Master-Detail** | Slots are generated artifacts of a session; cascade delete/reparent on session cancel; inherit sharing; the session is also the booking lock that guards its slots' counters (D-019/D-020) |
 | Facility → Facility_Service | **Master-Detail** | Offering only exists under a facility |
 | Service → Session / Facility_Service | **Lookup** | Service is a shared catalogue row referenced by many facilities; must not cascade-delete |
-| Slot → Appointment | **Lookup** | Booked-count is maintained manually under the lock (rules/20 forbids rollup); lookup also allows **reparenting on reschedule** and lets appointments (3 yr) outlive slots |
+| Slot → Appointment | **Lookup** | Booked-count is maintained manually inside the parent **session** lock (rules/20 forbids rollup); lookup also allows **reparenting on reschedule** and lets appointments (3 yr) outlive slots |
 | Patient → Appointment | **Lookup** | Patient retention (≥10 yr if vaccinated) differs from appointment (3 yr); master-detail would force one lifecycle / cascade delete — unacceptable for retention (REQ-052) |
 | Facility → Holiday | **Lookup** | Holidays are reference data queried during generation, not owned children |
 
@@ -181,47 +187,77 @@ cardinality- and verb-labeled relationships (master-detail vs lookup), retention
 entity, an explicit no-Aadhaar note on `VS_Patient__c`, and the three deferred objects
 (`VS_Vaccination_Event__c`, `VS_Vial__c`, `VS_Certificate__c`) as commented non-preclusion stubs.
 The capacity spine reads Facility ||--o{ Session ||--o{ Slot, with Appointment ||--o{ hanging off
-Slot (the lock target), Patient, Session and Facility.
+**Session (the single lock target, D-019)**, Slot, Patient and Facility.
 
 ---
 
 ## 4. Slot-integrity strategy — the RFP §3.4 guarantee (REQ-008)
 
-**Requirement:** confirmed bookings for a slot must NEVER exceed that slot's published capacity, even
-under simultaneous attempts. Acceptance = a concurrency test firing many parallel `book()` calls at a
-slot with 1 remaining place; exactly one succeeds, the rest get `SLOT_FULL`, and no extra row exists.
+> **D-019 SUPERSEDES D-015.** There is exactly **one** way to consume capacity: a single service
+> method locks the **`VS_Session__c`** row with `SELECT … FOR UPDATE` for **every** booking type —
+> online, staff, and walk-in — then does all capacity checks (the chosen slot's ceiling **and** the
+> walk-in reserve) and the appointment insert inside that one lock. There is **no** second lock
+> target; the retracted D-015 dual-lock (slot row for online, session row for walk-in) no longer
+> applies. This is the highest-priority guarantee in F-001 and **QA Tier-1, release-blocking**.
+
+**Requirement:** confirmed bookings for a slot must NEVER exceed that slot's published capacity, and
+walk-ins must never exceed the session reserve, even under simultaneous attempts across all channels.
+Acceptance = a concurrency test firing many parallel `book()` calls at a session with one remaining
+place; exactly one succeeds, the rest get `SLOT_FULL` / `RESERVE_FULL`, and no extra row exists.
 
 ### 4.1 The single write path
 
-`VS_BookingService.book(Id patientId, Id slotId, Id bookedById)` is the **only** code that creates a
-confirmed appointment. Portal LWC, the (later) chat assistant, and the staff console all call it — one
-rule, one owner (rules/20, flow-patterns "never split a business rule between Flow and Apex").
+`VS_BookingService.book(Id patientId, Id slotId, Id bookedById, String channel)` is the **only** code
+that creates an appointment of any kind. Portal LWC, the (later) chat assistant, the staff console,
+and walk-in serving all call this one method (`channel` ∈ Portal|Chat|Staff|WalkIn) — one rule, one
+owner, one lock (rules/20; flow-patterns "never split a business rule between Flow and Apex"). There
+is **no** separate walk-in service holding a different lock; folding walk-in into this path is exactly
+what removes the online-vs-walk-in race that D-015's dual lock left open (D-019 rationale).
 
-### 4.2 Locking sequence (row-scoped pessimistic lock)
+### 4.2 Locking sequence (single session-row pessimistic lock)
 
 ```apex
 public with sharing class VS_BookingService {
     public class VS_BookingException extends Exception {}
 
-    public static Id book(Id patientId, Id slotId, Id bookedById) {
-        // 1. LOCK the slot row. Any other tx touching this slotId blocks here until we commit/rollback.
-        VS_Slot__c slot = [SELECT Id, VS_Capacity__c, VS_Booked_Count__c, VS_Status__c
-                           FROM VS_Slot__c WHERE Id = :slotId FOR UPDATE];   // rules/20 mandate
+    public static Id book(Id patientId, Id slotId, Id bookedById, String channel) {
+        // 1. Resolve the owning session, then LOCK THE SESSION ROW. Every booking for this session
+        //    — online, staff, walk-in — blocks here until we commit/rollback. This is the ONE lock.
+        Id sessionId = [SELECT VS_Session__c FROM VS_Slot__c WHERE Id = :slotId].VS_Session__c;
+        VS_Session__c session = [SELECT Id, VS_Status__c,
+                                        VS_Walk_In_Reserve_Count__c, VS_Walk_In_Used_Count__c
+                                 FROM VS_Session__c WHERE Id = :sessionId FOR UPDATE];   // ONE lock
 
-        // 2. Re-check capacity + cut-off INSIDE the lock (never outside it)
-        if (slot.VS_Status__c != 'Open' || slot.VS_Booked_Count__c >= slot.VS_Capacity__c) {
-            throw new VS_BookingException('SLOT_FULL');
+        // 2. Re-read the target slot INSIDE the session lock. Because every booking for this session
+        //    holds this same lock, no other booking can interleave, so the slot counters cannot race.
+        VS_Slot__c slot = [SELECT Id, VS_Capacity__c, VS_Booked_Count__c, VS_Status__c
+                           FROM VS_Slot__c WHERE Id = :slotId];
+
+        if (channel == 'WalkIn') {
+            // Walk-in consumes the SESSION reserve pool (D-009) — never the slot's bookable count.
+            if (session.VS_Walk_In_Used_Count__c >= session.VS_Walk_In_Reserve_Count__c) {
+                throw new VS_BookingException('RESERVE_FULL');
+            }
+            session.VS_Walk_In_Used_Count__c += 1;
+        } else {
+            // Online / staff consume the chosen slot's published bookable ceiling (REQ-008).
+            if (slot.VS_Status__c != 'Open' || slot.VS_Booked_Count__c >= slot.VS_Capacity__c) {
+                throw new VS_BookingException('SLOT_FULL');
+            }
+            slot.VS_Booked_Count__c += 1;
+            if (slot.VS_Booked_Count__c == slot.VS_Capacity__c) slot.VS_Status__c = 'Full';
         }
-        // 3. Create appointment (unique VS_Booking_Reference__c, D-016) AND increment the
-        //    denormalized counter in the SAME transaction. The lock makes read-check-write atomic.
+
+        // 3. Insert appointment + persist the counter change in the SAME transaction, still under the
+        //    session lock. The lock makes read-check-write atomic for the whole session.
         VS_Appointment__c appt = new VS_Appointment__c(
-            VS_Patient__c = patientId, VS_Slot__c = slotId,
-            VS_Booking_Reference__c = VS_ReferenceGenerator.next(),   // random, non-guessable
-            VS_Status__c = 'Booked', VS_Booked_By_Mobile__c = ...);
+            VS_Patient__c = patientId, VS_Slot__c = slotId, VS_Session__c = sessionId,
+            VS_Booking_Reference__c = VS_ReferenceGenerator.next(),   // random, non-guessable D-016
+            VS_Booked_Channel__c = channel,
+            VS_Status__c = (channel == 'WalkIn') ? 'WalkIn' : 'Booked',
+            VS_Booked_By_Mobile__c = /* booker */ null);
         insert as user appt;                                          // WITH USER_MODE / FLS
-        slot.VS_Booked_Count__c += 1;
-        if (slot.VS_Booked_Count__c == slot.VS_Capacity__c) slot.VS_Status__c = 'Full';
-        update slot;                                                  // still holding the lock
+        if (channel == 'WalkIn') { update session; } else { update slot; }   // still holding the lock
         // 4. Fire confirmation via the notification seam (log-only, D-014) AFTER commit is fine.
         return appt.Id;
     }
@@ -230,44 +266,62 @@ public with sharing class VS_BookingService {
 
 ### 4.3 Why it cannot overbook — the negative (last-place) case
 
-Two requests, R1 and R2, both want the **last** place (`VS_Booked_Count__c = capacity-1`):
+Two requests R1 and R2 both want the **last** place in the same session — whether they target the
+same slot, two different slots, or one is a walk-in:
 
-1. R1 acquires the `FOR UPDATE` row lock. R2's identical `SELECT … FOR UPDATE` **blocks** on the
-   same row — the database serializes them.
-2. R1 re-checks inside the lock (`count < capacity` → true), inserts its appointment, sets
-   `count = capacity`, status `Full`, and commits — releasing the lock.
-3. R2 now acquires the lock and **re-reads the freshly committed row**: `count (capacity) >= capacity`
-   → throws `SLOT_FULL`. No second insert happens.
+1. R1 acquires the session `FOR UPDATE` lock. R2's `SELECT … FOR UPDATE` on the **same session row**
+   **blocks** — the database serializes every booking for the session, so there is no interleaving and
+   no online-vs-walk-in seam.
+2. R1 re-reads its slot (or the reserve) inside the lock, passes the check, inserts its appointment,
+   increments the slot count (or the session reserve), and commits — releasing the lock.
+3. R2 now acquires the lock and **re-reads the freshly committed counters**: the ceiling is now met
+   → throws `SLOT_FULL` (or `RESERVE_FULL`). No second insert happens.
 
-Overbooking is impossible because the capacity check and the counter write are inside the same lock
-on the capacity-bearing row, so they can never interleave. The counter is **never** maintained by a
-roll-up summary or trigger — those don't serialize and would allow both inserts (rules/20).
+Overbooking is impossible because the capacity check and the counter write live inside the same lock
+on the **session** row, and because *all* booking paths take *that same* lock there is no second path
+that could increment a count without holding it. Counts are **never** maintained by a roll-up summary
+or trigger — those don't serialize and would allow both inserts (rules/20). A-005 guarantees
+`sum(VS_Slot__c.VS_Capacity__c) == VS_Bookable_Capacity__c`, so enforcing each slot's ceiling under
+the session lock also enforces the session bookable ceiling — neither the slot nor the session total
+can be exceeded on any path.
 
 ### 4.4 How the DHS acceptance concurrency test passes
 
-QA fires N parallel `book()` calls (Apex `@future`/enhanced parallel test or an external driver) at a
-slot seeded with `VS_Capacity__c = 1`. Expected, asserted state: exactly **one** `VS_Appointment__c`
-in `Booked`; `VS_Slot__c.VS_Booked_Count__c == 1 == VS_Capacity__c`; every other call caught
-`VS_BookingException('SLOT_FULL')`; **zero** rows above capacity. The dev unit test (`VS_BookingServiceTest`)
-includes the capacity-exhaustion test mandated by the apex skill; QA Tier-1 re-runs it as the release gate.
+QA fires N parallel `book()` calls at a session seeded with one remaining place — run once for an
+online slot (`VS_Capacity__c = 1`), once for the walk-in reserve (`VS_Walk_In_Reserve_Count__c = 1`),
+and once as a **mixed online+walk-in burst on the same session** (the case D-015 could not prove).
+Expected, asserted state: exactly **one** appointment per seeded place;
+`VS_Slot__c.VS_Booked_Count__c ≤ VS_Capacity__c` and
+`VS_Walk_In_Used_Count__c ≤ VS_Walk_In_Reserve_Count__c` always; every other call caught a
+`VS_BookingException`; **zero** rows above capacity. The dev unit test (`VS_BookingServiceTest`)
+carries the capacity-exhaustion **and** parallel-booking tests (apex skill), now against the one
+path; QA Tier-1 re-runs them as the release gate.
 
-### 4.5 Walk-ins, reschedule, cancel (same discipline)
+### 4.5 Walk-ins, reschedule, cancel (same single lock)
 
-- **Walk-in** (`VS_WalkInService.serve`, D-009): locks the **Session** row `FOR UPDATE`, checks
-  `VS_Walk_In_Used_Count__c < VS_Walk_In_Reserve_Count__c`, increments, inserts a `WalkIn` appointment.
-  Different row from online booking → no cross-contention; reserve can never be exceeded (REQ-007).
+- **Walk-in** (D-009): served by the **same** `VS_BookingService.book(..., 'WalkIn')` under the
+  **same session lock**; it checks `VS_Walk_In_Used_Count__c < VS_Walk_In_Reserve_Count__c`,
+  increments the session reserve, and stamps the appointment to the session (and, for reporting, the
+  arrival-time slot) **without** touching that slot's bookable count. Online and walk-in can no longer
+  race because they serialize on the one session row (D-019). There is **no** separate
+  `VS_WalkInService` and **no** second lock.
 - **Cancel/Reschedule** (`VS_BookingService.cancel/reschedule`): enforce the 4-hour cut-off (D-010,
-  `VS_Setting__mdt.CutOffHours`) — reject inside the window with a user-actionable message (REQ-003/015);
-  on success, lock the freed slot row, decrement `VS_Booked_Count__c`, flip `Full`→`Open` so the place
-  is reusable the same day. Reschedule = cancel-old + book-new in one transaction, both under their
-  respective row locks (lock ordering by slot Id to avoid deadlock).
+  `VS_Setting__mdt.CutOffHours`) — reject inside the window with a user-actionable message
+  (REQ-003/015); on success, lock the appointment's **session** row `FOR UPDATE`, decrement the slot
+  `VS_Booked_Count__c` (or the session reserve for a walk-in), flip `Full`→`Open` so the place is
+  reusable the same day. Reschedule = cancel-old + book-new in one transaction; when old and new slots
+  are in **different sessions**, lock both session rows **ordered by session Id** to avoid deadlock;
+  same session = a single lock.
 
 ### 4.6 Volume/governor posture (REQ-062)
 
-Each `book()` is a single-row, single-slot transaction — the lock is row-scoped, so 1,900/day steady
-and 6,000/day drive peaks distribute across thousands of slot rows with contention only within a slot.
-Slot generation and no-show marking run as **Batch Apex** (bulk-safe, chunked). No SOQL/DML in loops
-anywhere (rules/20).
+Each `book()` is a single-session transaction holding one row lock. Concurrency is **session-scoped**:
+bookings contend only when they target the *same* session, and 1,900/day steady + 6,000/day drive
+peaks distribute across many sessions and facilities. A session-scoped lock is coarser than D-015's
+slot-scoped lock (a session groups many slots), but at pilot volumes (~120 bookings/day/facility, a
+handful of concurrent sessions) serializing per session is well within limits and makes correctness
+trivially auditable with **one** lock instead of two (D-019 rationale). Slot generation and no-show
+marking run as **Batch Apex** (bulk-safe, chunked). No SOQL/DML in loops anywhere (rules/20).
 
 ---
 
@@ -279,9 +333,9 @@ and Queueables are **Apex**; simple same-record stamps, staff-guided screens, an
 
 | Capability | Mechanism | Component | Routing | REQ |
 |---|---|---|---|---|
-| **Confirmed booking (§3.4 lock)** | **Apex service** | `VS_BookingService.book` (FOR UPDATE) | **senior** | REQ-002/008 |
-| Cancel / reschedule + cut-off | Apex service | `VS_BookingService.cancel/reschedule` | senior | REQ-003/015 |
-| Walk-in serve (session reserve lock) | Apex service | `VS_WalkInService.serve` | senior | REQ-007 |
+| **Confirmed booking (§3.4 lock)** | **Apex service** | `VS_BookingService.book` (FOR UPDATE on **`VS_Session__c`**, all channels — D-019) | **senior** | REQ-002/008 |
+| Cancel / reschedule + cut-off | Apex service | `VS_BookingService.cancel/reschedule` (session-row lock; deadlock-safe order by session Id) | senior | REQ-003/015 |
+| Walk-in serve | **Apex service — same path** | `VS_BookingService.book(..., 'WalkIn')` — same session lock, no separate service (D-019) | senior | REQ-007 |
 | Slot generation from sessions | Apex Batch | `VS_SlotGenerationService` / `VS_SlotGenBatch` (granularity D-008, holiday+drive skip) | senior | REQ-009/012/013/014 |
 | Patient find-or-create (de-dup) | Apex service | `VS_PatientService.findOrCreate` (upsert by `VS_Match_Key__c`, D-011/D-017) | senior | REQ-004 |
 | Booking reference generator | Apex util | `VS_ReferenceGenerator` (random non-guessable, D-016) | senior | REQ-002/019 |
@@ -293,7 +347,7 @@ and Queueables are **Apex**; simple same-record stamps, staff-guided screens, an
 | Session reserve/bookable split | **Formula fields** (no automation) | `VS_Session__c` formulas referencing `$CustomMetadata` | — | REQ-007/D-009 |
 | MO defines session capacity | **Screen Flow** | `VS_Session_Screen_DefineCapacity` (create sessions + capacity; drive-day toggle) | **mid** | REQ-010/011/012 |
 | Booking-confirmation log entry | **Record-triggered Flow (after-save)** | `VS_Appointment_AfterSave_LogConfirmation` → subflow calling the notification seam | mid | REQ-002/028 |
-| Slot status stamp (Full/Open) | Apex (inside the lock) | owned by `VS_BookingService` — **not** a flow (single owner) | senior | REQ-008 |
+| Slot status stamp (Full/Open) | Apex (inside the session lock) | owned by `VS_BookingService` — **not** a flow (single owner) | senior | REQ-008 |
 | **Reminders (pre-appt + next-dose)** | Scheduled Apex — **designed, deferred to a later feature** | `VS_ReminderScheduler` queues `VS_Notification_Log__c` via `VS_SmsService`; offsets in `VS_Setting__mdt` | — | REQ-024/025/026/027 |
 | Vial/wastage visibility | **Deferred** (needs `VS_Vaccination_Event__c`/`VS_Vial__c`) — LWC over confirmed-remaining vs doses-left | — | REQ-022/023 |
 
@@ -368,7 +422,7 @@ are governance/process — captured for later, not F-001 build.
 |---|---|---|---|
 | **EP-01** | Facility, Service & Capacity Model | Objects Facility/Service/Facility_Service/Session/Holiday; MO screen flow to define per-session capacity (D-007); reserve/bookable formula fields (D-009); discovery data. | REQ-001, REQ-009, REQ-010, REQ-011, REQ-012 |
 | **EP-02** | Slot Generation Engine | `VS_SlotGenBatch` generating 15-min slots (D-008) within sessions, distributing bookable capacity (A-005), respecting holidays + drive-day override (D-018), booking horizon (REQ-013). | REQ-009, REQ-013, REQ-014, REQ-012 |
-| **EP-03** | Slot-Integrity Booking (§3.4 — crown jewel) | `VS_BookingService.book` FOR UPDATE slot lock; walk-in session-reserve lock; booking reference (D-016); confirmation seam. Includes the capacity-exhaustion + concurrency tests. | REQ-002, REQ-006, REQ-007, REQ-008 |
+| **EP-03** | Slot-Integrity Booking (§3.4 — crown jewel) | `VS_BookingService.book` — **single `VS_Session__c` FOR UPDATE lock for ALL booking types** (online/staff/walk-in, D-019); the chosen slot's per-slot ceiling (REQ-008) **and** the walk-in reserve (D-009) checked inside the one lock; booking reference (D-016); confirmation seam. Includes the capacity-exhaustion + parallel-booking (incl. mixed online+walk-in) tests against the single path. | REQ-002, REQ-006, REQ-007, REQ-008 |
 | **EP-04** | Cancel / Reschedule / No-Show | Self-service cancel+reschedule with 4-hour cut-off (D-010); free-the-place; `VS_NoShowBatch` end-of-day marking; capture No_Show_Count. | REQ-003, REQ-015, REQ-016 |
 | **EP-05** | Patient & Identity | `VS_Patient__c` C1-minimal; `VS_PatientService.findOrCreate` exact-match de-dup via unique match key (D-011/D-017); booker≠patient; DOB/gender (OQ-026); consent capture. | REQ-004, REQ-043, REQ-045, REQ-046 |
 | **EP-06** | Citizen Access & Discovery | OTP auth stub (D-013); Experience Cloud citizen surface; discovery by service+proximity (REQ-001); accessible LWC booking journey; i18n-ready labels. | REQ-001, REQ-005, REQ-056, REQ-057, REQ-060 |
@@ -387,7 +441,7 @@ Legend: **In F-001** = built now; **Deferred** = captured/non-preclusion, later 
 | REQ-004 | §2.5, §5 | EP-05 |
 | REQ-005 | §6.6 | EP-06 |
 | REQ-006 | §4.1 (single fast path) | EP-03 |
-| REQ-007 | §2.1, §4.5 | EP-03 |
+| REQ-007 | §2.1, §4.2, §4.5 | EP-03 |
 | REQ-008 | §4 (all) | EP-03 |
 | REQ-009 | §2.1, §5 | EP-01/EP-02 |
 | REQ-010 | §2.2, §5 | EP-01 |
@@ -437,7 +491,7 @@ Legend: **In F-001** = built now; **Deferred** = captured/non-preclusion, later 
 | REQ-059 | §6.4 | EP-07 |
 | REQ-060 | §6.6 | EP-06 (Custom Labels) |
 | REQ-061 | §6 (ops) | **Deferred** — availability window is ops config, not build |
-| REQ-062 | §4.6 | EP-08/EP-03 (bulkification + row-scoped locks) |
+| REQ-062 | §4.6 | EP-08/EP-03 (bulkification + session-scoped lock) |
 
 **Coverage:** all 62 REQs mapped. In-F-001 build set touches EP-01..EP-08. Deferred items are
 captured with a reason and, where relevant, a seam built now (booking reference → check-in/cert;
@@ -447,18 +501,32 @@ notification seam → reminders; external IDs → CoWIN) so no later phase is pr
 
 ## 8. Decision references
 
-Design honors D-005..D-014 (client/human sign-off) verbatim. New architect decisions logged this run:
+Design honors D-005..D-014 (client/human sign-off) verbatim. Architect decisions and the D-019 rework
+governing this design:
 
-- **D-015** — §3.4 ceiling + FOR UPDATE lock live on `VS_Slot__c` (capacity authored on Session);
-  25% reserve is a session-level counter; walk-ins lock the Session row. (§2.1, §4)
+- **D-015** — *[SUPERSEDED by D-019]* originally placed the §3.4 ceiling + `FOR UPDATE` lock on
+  `VS_Slot__c` for online booking, with a **separate** session-row lock for walk-ins (dual lock).
+  Retracted: two lock rows for two paths left an unproven online-vs-walk-in seam. Do not build.
 - **D-016** — Booking reference / certificate ID = random, non-guessable, human-typeable 8-char
   Crockford base32, stored as unique External IDs. (§2.3, §4.2)
 - **D-017** — Patient exact-match de-dup enforced by a unique External ID `VS_Match_Key__c`
   (`normalize(name)|DOB|mobile`) via upsert, race-safe at the DB. (§2.3, §5)
+- **D-018** — A `VS_Session__c.VS_Is_Drive_Day__c` session overrides a `VS_Holiday__c` closure for that
+  facility+date only. (§2.3)
+- **D-019** — *(human sign-off, SUPERSEDES D-015)* a **single `VS_Session__c` FOR UPDATE lock** for
+  **every** booking type (online/staff/walk-in); one write path (`VS_BookingService.book`); slot
+  ceiling **and** walk-in reserve both checked inside that one lock; §3.4 overbooking provably
+  impossible with one serialized path, no cross-path race. (§2.1, §2.2, §4, §5, §7 EP-03)
+- **D-020** — *(architect, propagating D-019)* the per-slot published ceiling REQ-008 demands is
+  **retained** on `VS_Slot__c` (`VS_Capacity__c` / `VS_Booked_Count__c`), but those counters are read
+  and written **only inside the parent session's lock**; `VS_Session__c` is the sole lock target and
+  the source of truth for the walk-in reserve pool; there is **no** slot-row lock and **no** roll-up.
+  (§2.1, §2.3, §4)
 
-New assumptions **A-005** (even slot-capacity distribution), **A-006** (facility-scoped sharing
-implementation + Shield dependency for read audit). New glossary terms: Bookable capacity, Walk-in
-pool, Match key, Booking service. All in `.claude/memory/`.
+New assumptions **A-005** (even slot-capacity distribution — now also underpins the equivalence
+between per-slot enforcement and the session bookable ceiling under D-019/D-020) and **A-006**
+(facility-scoped sharing implementation + Shield dependency for read audit). New glossary terms:
+Bookable capacity, Walk-in pool, Match key, Booking service. All in `.claude/memory/`.
 
 **Open items carried to pm-planner (not silently resolved):** SMS live-send (D-014 deferred),
 reminders/next-dose/check-in/vaccination/stock/certificates/dashboards deferred to later features;

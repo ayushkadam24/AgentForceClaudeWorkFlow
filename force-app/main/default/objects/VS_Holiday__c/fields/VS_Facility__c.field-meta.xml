@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility__c</fullName>
+    <label>Facility</label>
+    <description>Lookup (not Master-Detail) to VS_Facility__c — holidays are reference data queried during slot generation, not owned/cascading children of the facility (design §2.4).</description>
+    <type>Lookup</type>
+    <referenceTo>VS_Facility__c</referenceTo>
+    <relationshipLabel>Holidays</relationshipLabel>
+    <relationshipName>VS_Holidays</relationshipName>
+    <required>true</required>
+    <deleteConstraint>Restrict</deleteConstraint>
+</CustomField>

@@ -1,9 +1,10 @@
 %% Feature: F-001 slot-booking-core
 %% Producing agent: architect (ARCH_DESIGN)
 %% Date: 2026-07-11
-%% Derives from: technical-design.md; D-005..D-017; REQ-001..062
+%% Derives from: technical-design.md; D-005..D-020 (D-019 SUPERSEDES D-015); REQ-001..062
 %% NO AADHAAR anywhere (REQ-044 / Annexure C1.2). Retention class (C4) noted per entity.
 %% Cardinality verbs read parent -> child. M-D = master-detail, LK = lookup.
+%% §3.4 LOCK TARGET = VS_Session__c row (single FOR UPDATE lock for ALL booking types, D-019).
 
 erDiagram
 
@@ -12,15 +13,15 @@ erDiagram
     VS_Service__c  ||--o{ VS_Facility_Service__c : "offered-as (LK)"
     VS_Facility__c ||--o{ VS_Holiday__c          : "closed-on (LK)"
 
-    %% ---------- Capacity model: Session is the atomic capacity unit (D-007) ----------
+    %% ---------- Capacity model: Session is the atomic capacity unit (D-007) + §3.4 lock (D-019) ----------
     VS_Facility__c ||--o{ VS_Session__c : "hosts (M-D)"
     VS_Service__c  ||--o{ VS_Session__c : "for-service (LK)"
-    VS_Session__c  ||--o{ VS_Slot__c    : "generates (M-D)"
+    VS_Session__c  ||--o{ VS_Slot__c    : "generates (M-D); guards slot counters under its lock (D-020)"
 
     %% ---------- Person + booking (retention: patient linked; appointment 3yr) ----------
     VS_Patient__c ||--o{ VS_Appointment__c : "booked-for (LK)"
-    VS_Slot__c    ||--o{ VS_Appointment__c : "fills / LOCK TARGET (LK)"
-    VS_Session__c ||--o{ VS_Appointment__c : "within-denorm (LK)"
+    VS_Session__c ||--o{ VS_Appointment__c : "within / §3.4 LOCK TARGET (LK, D-019)"
+    VS_Slot__c    ||--o{ VS_Appointment__c : "fills (LK)"
     VS_Facility__c||--o{ VS_Appointment__c : "at-denorm (LK)"
 
     %% ---------- Notification seam (retention: 1yr) + OTP (transient) + errors (3yr) ----------
@@ -67,18 +68,19 @@ erDiagram
         number   VS_Total_Capacity__c "MO-set REQ-010/011"
         number   VS_Walk_In_Reserve_Count__c "formula 25pct D-009"
         number   VS_Bookable_Capacity__c "formula total-reserve"
-        number   VS_Walk_In_Used_Count__c "locked for walk-ins"
+        number   VS_Walk_In_Used_Count__c "reserve consumed under session FOR UPDATE - all booking types D-019"
         picklist VS_Status__c "Open|Closed|Cancelled"
-        boolean  VS_Is_Drive_Day__c "overrides holiday REQ-012/D-019?"
+        boolean  VS_Is_Drive_Day__c "overrides holiday REQ-012/D-018"
         string   VS_External_Id__c "UNIQUE ExternalId"
+        note     LOCK "§3.4 single FOR UPDATE lock target D-019"
         note     RETENTION "bookings 3yr"
     }
 
     VS_Slot__c {
         datetime VS_Slot_Start__c
         datetime VS_Slot_End__c
-        number   VS_Capacity__c "CEILING REQ-008"
-        number   VS_Booked_Count__c "maintained under FOR UPDATE"
+        number   VS_Capacity__c "per-slot ceiling REQ-008"
+        number   VS_Booked_Count__c "read/written ONLY inside parent session lock - no slot-row lock D-020"
         picklist VS_Status__c "Open|Full|Closed|Cancelled"
         note     RETENTION "bookings 3yr"
     }

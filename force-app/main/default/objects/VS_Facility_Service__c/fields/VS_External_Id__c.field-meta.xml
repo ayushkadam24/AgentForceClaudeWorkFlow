@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_External_Id__c</fullName>
+    <label>External Id</label>
+    <description>Composite facility+service uniqueness key (design §2.3: "Composite uniqueness (facility+service) via VS_External_Id__c (Unique)"). Populated on CREATE by the before-save record-triggered flow VS_FacilityService_BeforeSave_SetExternalId (VS_Facility__c &amp; "-" &amp; VS_Service__c), which runs before this field's Unique constraint is evaluated, so a duplicate facility+service pairing is genuinely rejected at save (VS-01 AC-3). This is a plain Text field — NOT a formula field (formula fields cannot be marked externalId/unique, and default values cannot reference sibling fields on the same record; both were corrected after VS-01 review caught this as a deploy-blocking defect).</description>
+    <type>Text</type>
+    <length>60</length>
+    <externalId>true</externalId>
+    <unique>true</unique>
+    <caseSensitive>false</caseSensitive>
+    <required>false</required>
+</CustomField>

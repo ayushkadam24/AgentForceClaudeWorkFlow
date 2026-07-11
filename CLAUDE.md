@@ -21,6 +21,7 @@ Seven role subagents in `.claude/agents/`; humans approve every gate.
 /pm-plan → pm-planner · /dev-implement VS-## → dev-senior|dev-mid by routing ·
 /dev-review VS-## → code-reviewer agent + human verdict · /arch-confirm → architect (drift check) ·
 /qa-plan → qa-lead · /qa-run A|B → qa-engineer · /qa-report → qa-lead close-out ·
+/deploy VS-##|sprint-1|drift-check → devops agent (validate, human-approved execute, record) ·
 /advance → gate proposal (human approves) · /status → where are we · /retro → close the POC
 
 ## Where things live

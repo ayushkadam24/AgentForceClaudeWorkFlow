@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_External_Id__c</fullName>
+    <label>External Id</label>
+    <description>External system key reserved for a future CoWIN/U-WIN integration seam (OQ-016); not populated in F-001. Marked External ID + Unique so a later integration upserts without duplicating services.</description>
+    <type>Text</type>
+    <length>30</length>
+    <externalId>true</externalId>
+    <unique>true</unique>
+    <caseSensitive>false</caseSensitive>
+    <required>false</required>
+</CustomField>

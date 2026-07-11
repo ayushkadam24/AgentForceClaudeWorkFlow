@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Holiday_Date__c</fullName>
+    <label>Holiday Date</label>
+    <description>Date this facility is closed for booking. VS-06 slot generation skips this facility+date unless a session on that date is flagged VS_Is_Drive_Day__c = true (D-018).</description>
+    <type>Date</type>
+    <required>true</required>
+</CustomField>

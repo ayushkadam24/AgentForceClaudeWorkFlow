@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Value__c</fullName>
+    <label>Value</label>
+    <description>Numeric value of this configurable tunable (rules/20 — Custom Metadata for config, no hardcoded values in Apex/Flow/formula; A-003). Populated for every numeric setting record (CutOffHours=4 D-010, WalkInReservePct=25 D-009, DefaultSlotGranularityMins=15 D-008, BookingHorizonDays=14, NoShowThresholdCount=3). Left blank on records whose value is non-numeric/multi-valued (see Value_Text__c). CONTRACT — do not rename: VS_Session__c.VS_Walk_In_Reserve_Count__c's formula (VS-01) references this exact field as $CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c.</description>
+    <type>Number</type>
+    <precision>18</precision>
+    <scale>0</scale>
+    <required>false</required>
+</CustomField>

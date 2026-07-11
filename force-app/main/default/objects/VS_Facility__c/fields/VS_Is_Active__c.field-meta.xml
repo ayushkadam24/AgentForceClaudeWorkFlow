@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Is_Active__c</fullName>
+    <label>Is Active</label>
+    <description>When unchecked, the facility is excluded from citizen discovery search results (REQ-001) and new session creation, without deleting historical data.</description>
+    <type>Checkbox</type>
+    <defaultValue>true</defaultValue>
+</CustomField>

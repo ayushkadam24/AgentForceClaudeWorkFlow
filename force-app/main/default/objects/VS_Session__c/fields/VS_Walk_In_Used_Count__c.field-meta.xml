@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Walk_In_Used_Count__c</fullName>
+    <label>Walk-In Used Count</label>
+    <description>Running count of walk-in places consumed from this session's reserve pool. Design §2.3: incremented ONLY inside the session's SELECT ... FOR UPDATE lock by VS_BookingService.book() (VS-09, D-019/D-020) — never by a rollup or trigger. Defaults to 0 on creation; no automation is built in this metadata-only ticket.</description>
+    <type>Number</type>
+    <precision>6</precision>
+    <scale>0</scale>
+    <defaultValue>0</defaultValue>
+    <required>true</required>
+</CustomField>

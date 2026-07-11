@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Start_Time__c</fullName>
+    <label>Start Time</label>
+    <description>Session start (DateTime). A facility that thinks in daily numbers defines one session covering its whole operating day; a facility that thinks per-session defines several (D-007). Bounds VS-06 slot generation.</description>
+    <type>DateTime</type>
+    <required>true</required>
+</CustomField>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Service</label>
+    <pluralLabel>VS Services</pluralLabel>
+    <description>F-001 slot-booking-core (VS-01, EP-01). Generic service catalogue (vaccination in F-001; a service-type field keeps OPD additive later per D-012 — build nothing OPD-specific). OWD Public Read Only (design §2.2). Retention class (Annexure C4): permanent reference — never purged by VS_RetentionPurgeBatch.</description>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>Read</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <nameField>
+        <label>Service Name</label>
+        <trackHistory>false</trackHistory>
+        <type>Text</type>
+    </nameField>
+</CustomObject>

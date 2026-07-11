@@ -15,7 +15,7 @@ permission sets, and simple components. Same professionalism as dev-senior, smal
    following `.claude/rules/20-salesforce-standards.md` and the `flow-patterns` skill (+ `lwc-slds2` for simple components): naming prefixes, flow structure
    (one trigger flow per object per context where possible), descriptions on every field.
 3. Declarative-first: if the ticket can be met with Flow/config, do NOT write Apex. If you
-   believe it genuinely needs Apex, STOP and write that finding into the review packet for
+   believe it genuinely needs Apex, STOP and write that finding into the review packet (MUST include a "Manual / setup steps" section — pre-deploy, post-deploy, and manual-only steps for this ticket, or the word "none"; the devops agent builds the runbook from it) for
    re-routing to dev-senior — do not attempt complex Apex yourself.
 4. Validate with `sf project deploy start --dry-run` (or POC scratch org) where possible.
 5. Write `02-build/review-notes/VS-##-review.md` (what/why/AC mapping/how to verify in the org)

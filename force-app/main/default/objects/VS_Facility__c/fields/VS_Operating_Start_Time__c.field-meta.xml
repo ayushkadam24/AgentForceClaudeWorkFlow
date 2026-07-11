@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Operating_Start_Time__c</fullName>
+    <label>Operating Start Time</label>
+    <description>Facility's daily opening time, used by VS-03 (session flow) and VS-06 (slot generation) to bound session windows (REQ-009).</description>
+    <type>Time</type>
+    <required>false</required>
+</CustomField>

@@ -184,3 +184,19 @@ SMS) end-to-end and asking "what happens when this goes wrong or does not exist?
 
 **Register total: 27 open questions.** F-001-blocking subset the architect must close before/at design
 sign-off: OQ-001, OQ-002, OQ-003, OQ-004, OQ-020, OQ-025, OQ-027 (plus OQ-011/OQ-012 before any SMS build).
+
+---
+
+## Launch Checklist (pre-UAT, NOT build work)
+
+Items that do not block the F-001 build but MUST be closed before UAT/go-live. Added at pre-build
+sign-off (2026-07-11, human) so they cannot be lost between build and launch. These are launch gates,
+not sprint tickets — no VS-## is created for them.
+
+| # | Item | Source | Owner | Due | Status |
+|---|---|---|---|---|---|
+| LC-1 | Written data-residency confirmation (org in India region) received before UAT | REQ-050, OQ-014, Annexure C3.1 | Vendor PM + Deshmukh | Before UAT | Open |
+| LC-2 | Department-approved DPDP consent/notice wording swapped into the Custom Label (replacing the `[[DRAFT — pending department approval]]` placeholder built per D-024) | OQ-013, REQ-047, Annexure C2.2 | Department (Data Fiduciary) | Before go-live | Open |
+| LC-3 | DLT-registered SMS templates + chosen gateway wired into `VS_ISmsProvider` (POC ships log-only per D-014) | OQ-011, OQ-012, Annexure C7 | Deshmukh / e-Gov cell | Before live SMS | Open |
+| LC-4 | Named breach-notification nodal officer + documented path | OQ-017, Annexure C2.5 | Department | Before go-live | Open |
+| LC-5 | Per-record read attribution (REQ-054) — production prerequisite: provision Shield Event Monitoring (absent in scratch org; known POC limitation, A-006) | REQ-054, A-006 | Architect → DHO/Deshmukh | Before production | Open |

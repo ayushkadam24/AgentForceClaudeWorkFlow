@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Pincode__c</fullName>
+    <label>Pincode</label>
+    <description>Facility's 6-digit postal PIN code, used for locality-based discovery search (REQ-001).</description>
+    <type>Text</type>
+    <length>6</length>
+    <required>false</required>
+</CustomField>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Service_Type__c</fullName>
+    <label>Service Type</label>
+    <description>Keeps the Service catalogue generic so OPD is additive later without a redesign (D-012). F-001 uses Vaccination only; no OPD-specific behavior is built in this ticket.</description>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Vaccination</fullName>
+                <default>true</default>
+                <label>Vaccination</label>
+            </value>
+            <value>
+                <fullName>OPD</fullName>
+                <default>false</default>
+                <label>OPD</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

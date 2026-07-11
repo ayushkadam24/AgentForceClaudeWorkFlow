@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Helpline_Number__c</fullName>
+    <label>Helpline Number</label>
+    <description>Facility helpline phone number that MUST appear in every actionable SMS template sent about a booking at this facility (Annexure C7.3). Not a person's number — facility-level contact only.</description>
+    <type>Phone</type>
+    <required>false</required>
+</CustomField>

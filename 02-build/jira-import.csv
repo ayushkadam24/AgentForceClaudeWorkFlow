@@ -1,0 +1,148 @@
+Issue Type,Summary,Epic Name,Epic Link,Priority,Story Points,Labels,Sprint,Description
+"Epic","Facility, Service & Capacity Model","Facility Capacity Model","","Medium","","F-001","","Objects Facility/Service/Facility_Service/Session/Holiday; MO screen flow to define per-session capacity (D-007); reserve/bookable formula fields (D-009); discovery data."
+"Epic","Slot Generation Engine","Slot Generation Engine","","Medium","","F-001","","VS_SlotGenBatch generating 15-min slots (D-008) within sessions, distributing bookable capacity (A-005/D-023), respecting holidays + drive-day override (D-018), booking horizon (REQ-013)."
+"Epic","Slot-Integrity Booking (§3.4 crown jewel)","Slot Integrity Booking","","Highest","","F-001","","VS_BookingService.book - single VS_Session__c FOR UPDATE lock for ALL booking types (online/staff/walk-in, D-019); per-slot ceiling (REQ-008) and walk-in reserve (D-009) checked inside one lock; booking reference (D-016); confirmation seam."
+"Epic","Cancel / Reschedule / No-Show","Cancel Reschedule NoShow","","Medium","","F-001","","Self-service cancel+reschedule with 4-hour cut-off (D-010); free-the-place; VS_NoShowBatch end-of-day marking; capture No_Show_Count."
+"Epic","Patient & Identity","Patient Identity","","Medium","","F-001","","VS_Patient__c C1-minimal, no-Aadhaar; VS_PatientService.findOrCreate exact-match de-dup via unique match key (D-011/D-017); booker != patient; DPDP consent capture (D-024)."
+"Epic","Citizen Access & Discovery","Citizen Access Discovery","","Medium","","F-001","","OTP auth stub (D-013); Experience Cloud citizen surface; discovery by service+proximity; accessible LWC booking journey (WCAG 2.1 AA); i18n-ready labels."
+"Epic","Notification Seam","Notification Seam","","Medium","","F-001","","VS_ISmsProvider/VS_SmsService log-only (D-014) writing to VS_Notification_Log__c; booking confirmation; helpline+template metadata."
+"Epic","Security, Sharing & Compliance","Security Sharing Compliance","","Medium","","F-001","","Permission sets; OWD + criteria/sharing-set visibility; WITH USER_MODE/FLS; session timeout; residency; synthetic seed; retention purge; no-Aadhaar guard; bulk-export gating."
+"Task","Build facility/service/session capacity objects","","Facility Capacity Model","Medium","5","EP-01 dev-mid F-001","Sprint 1","Build VS_Facility__c, VS_Service__c, VS_Facility_Service__c, VS_Holiday__c, VS_Session__c with every field from design section 2.3, each described. Operationalizes per-session capacity (D-007) and reserve/bookable split (D-009).
+AC:
+- All five objects deploy with described fields.
+- VS_Session__c.VS_Total_Capacity__c set -> reserve/bookable formulas compute (CEILING against WalkInReservePct).
+- VS_Facility_Service__c duplicate facility+service rejected by unique external id.
+Depends on: none (Sprint 1 foundation)"
+"Task","Create VS_Setting__mdt config + seed values","","Facility Capacity Model","Medium","2","EP-01 dev-mid F-001","Sprint 1","Deploy VS_Setting__mdt as the single home for every tunable (walk-in %, cut-off hours, granularity, horizon) so DHS can adjust without code deploy.
+AC:
+- Exposes CutOffHours=4 (D-010), WalkInReservePct=25 (D-009), DefaultSlotGranularityMins=15 (D-008), BookingHorizonDays=14, ReminderOffsetsHours, NoShowThresholdCount.
+- Value change in Setup requires no code redeploy.
+Depends on: none (Sprint 1 foundation)"
+"Story","MO screen flow: define session capacity + drive-day","","Facility Capacity Model","Medium","5","EP-01 dev-mid F-001","Sprint 1","Build VS_Session_Screen_DefineCapacity screen flow so an MO can create sessions/capacity/drive-days without developer help; drive-day overrides holiday closure (D-018) for VS-06 slot gen to honor.
+AC:
+- Facility+service+date -> VS_Session__c created with capacity and reserve/bookable formulas populated.
+- Drive Day checked -> VS_Is_Drive_Day__c=true so slot gen opens the date even if VS_Holiday__c marks it closed.
+- Flow element fails -> plain-language message + facility helpline (C7.3), writes VS_Error_Log__c.
+Depends on: VS-01, VS-02"
+"Task","Permission sets, OWD, session timeout, MIS export gate","","Security Sharing Compliance","Medium","5","EP-08 dev-mid F-001 Tier-1","Sprint 1","Configure OWD and six role permission sets so each persona sees only what it should; enforce <=15min shared-device session timeout (REQ-055); gate (permission-bit only) bulk-export to District MIS (REQ-036).
+AC:
+- Reference/bookable objects = Public Read Only; person/booking objects = Private (section 6.2).
+- Six permission sets assigned; user without one gets no access beyond OWD.
+- Shared-device role idle 15 min -> session times out.
+- VS_District_MIS alone carries the export/bulk-data permission bit (gating only, no export UI built).
+Depends on: VS-01"
+"Task","VS_Slot__c object & fields","","Slot Generation Engine","Medium","2","EP-02 dev-mid F-001 Tier-1","Sprint 1","Build VS_Slot__c carrying the per-slot published capacity ceiling (REQ-008), read/written only inside the VS_Session__c lock per D-020 (lock itself implemented in VS-09; this is schema only).
+AC:
+- Master-Detail to VS_Session__c; VS_Slot_Start__c/VS_Slot_End__c; VS_Capacity__c; VS_Booked_Count__c; VS_Status__c (Open/Full/Closed/Cancelled), each described.
+- Session delete cascades slots (no orphans).
+Depends on: VS-01"
+"Story","VS_SlotGenBatch: generate slots from sessions","","Slot Generation Engine","High","8","EP-02 dev-senior F-001 Tier-1","Sprint 1","Build VS_SlotGenBatch generating 15-min slots from session bookable capacity, honoring holidays + drive-day override (D-018) and booking horizon. D-023: even-distribution logic MUST live in exactly ONE private method (drift-check radar item). Must be bulk-safe at 250+ sessions (REQ-062).
+AC:
+- Session with Bookable_Capacity=60 at 15-min granularity -> slot capacities sum to exactly 60 (even split, remainder to earliest slots, A-005/D-023).
+- Holiday date, no drive-day session -> no slots generated.
+- Holiday date WITH drive-day session -> slots generated for that session only (D-018).
+- BookingHorizonDays=14 -> no slots beyond horizon.
+- 250+ sessions -> completes with no SOQL/DML in loops, no governor-limit exceptions.
+Depends on: VS-01, VS-02, VS-05"
+"Task","VS_Patient__c object & fields (C1-minimal, no-Aadhaar)","","Patient Identity","Medium","2","EP-05 dev-mid F-001 Tier-1","Sprint 1","Build VS_Patient__c with exactly the C1.1 minimum person fields and NO Aadhaar field/label anywhere (REQ-044) - a structural AC re-verified by QA Tier-1. Unique VS_Match_Key__c (D-017, enforced in VS-10). DPDP consent copy = Custom Label prefixed [[DRAFT - pending department approval]] per D-024, never hardcoded text.
+AC:
+- Only fields: VS_Full_Name__c, VS_Date_Of_Birth__c, VS_Gender__c (optional), VS_Mobile__c, VS_Locality__c, VS_Pincode__c, VS_Email__c (optional) - exactly C1.1.
+- Org metadata searched for Aadhaar-named field/label anywhere -> zero matches (structural AC).
+- VS_Match_Key__c ExternalId+Unique -> duplicate name|DOB|mobile insert rejected at DB (D-017, proven in VS-10).
+- VS_Consent_Given__c/VS_Consent_Timestamp__c exist; record not usable for booking without consent=true (enforced in VS-10).
+Depends on: none (Sprint 1 foundation)"
+"Task","VS_Appointment__c object & fields","","Slot Integrity Booking","High","2","EP-03 dev-mid F-001 Tier-1","Sprint 1","Build VS_Appointment__c, the record VS_BookingService.book() (VS-09) inserts, carrying unique typeable VS_Booking_Reference__c (D-016, 8-char Crockford base32) and NO clinical/diagnosis fields (REQ-045).
+AC:
+- Lookups to Patient/Slot/Session/Facility/Service; VS_Booking_Reference__c (ExternalId+Unique); VS_Status__c (Booked/CheckedIn/Completed/Cancelled/NoShow/WalkIn); VS_Booked_Channel__c; VS_Booked_By_Mobile__c; VS_Dose_Number__c; VS_Cancelled_At__c.
+- Object scanned for clinical/diagnosis fields -> none exist.
+Depends on: VS-01, VS-05, VS-07"
+"Story","VS_BookingService.book() - single session-lock booking","","Slot Integrity Booking","Highest","8","EP-03 dev-senior F-001 Tier-1","Sprint 1","Build VS_BookingService.book(patientId, slotId, bookedById, channel) as the SINGLE public entry point for online, staff, and walk-in booking. Per D-019/D-020 this method MUST take exactly one lock: SELECT ... FOR UPDATE on the parent VS_Session__c row (never VS_Slot__c - D-015 superseded/retracted), checking the per-slot ceiling AND the walk-in reserve inside that one lock before insert with a unique VS_Booking_Reference__c (D-016). MANDATORY test class: (1) capacity-exhaustion test, (2) mixed online/walk-in parallel-booking concurrency test proving no overbooking (the exact case D-015 could not prove, D-019 exists to prove it), plus a negative test with meaningful row-count asserts. Insert uses WITH USER_MODE/Security.stripInaccessible.
+AC:
+- One remaining bookable slot place, 50 parallel book() calls -> exactly one appointment created, Booked_Count never exceeds Capacity, others catch VS_BookingException('SLOT_FULL').
+- One remaining walk-in reserve place, 50 parallel walk-in book() calls -> exactly one succeeds, Walk_In_Used_Count never exceeds Walk_In_Reserve_Count.
+- Mixed burst of online+walk-in book() calls for the last shared place -> exactly one booking of any type succeeds, no overbooking (mandatory D-019 proof).
+- Successful book() -> unique VS_Booking_Reference__c (D-016), CRUD/FLS enforced.
+- Exactly ONE public entry point for all channels - no separate VS_WalkInService, no second lock target.
+- Test class includes capacity-exhaustion test AND mixed-burst test (both mandatory) plus negative test.
+Depends on: VS-01, VS-02, VS-05, VS-07, VS-08"
+"Story","VS_PatientService.findOrCreate (exact-match de-dup)","","Patient Identity","High","5","EP-05 dev-senior F-001","Sprint 2","Build VS_PatientService.findOrCreate implementing D-011 exact-match (name+DOB+mobile) de-dup, NO fuzzy matching, race-safe via D-017 unique VS_Match_Key__c external id (upsert-by-external-id). Enforces DPDP consent capture (D-024 Custom Label, DRAFT-prefixed) before creating a new patient.
+AC:
+- Identical normalized name+DOB+mobile triple exists -> existing Id returned, no new row.
+- Any single field differs -> new patient created (known-duplicate limitation per D-011, not silently merged).
+- Two calls race for the same new match key -> DB unique constraint on VS_Match_Key__c prevents duplicate insert (D-017).
+- VS_Consent_Given__c not true -> method throws instead of creating a patient without consent; stamps VS_Consent_Timestamp__c on success.
+Depends on: VS-07"
+"Story","VS_BookingService.cancel/reschedule (cut-off, session-lock reuse)","","Cancel Reschedule NoShow","High","8","EP-04 dev-senior F-001 Tier-1","Sprint 2","Extend the booking service with cancel()/reschedule(), reusing the SAME session-row lock pattern from VS-09 (D-019/D-020) - no new lock target. Enforces the 4-hour cut-off (D-010). Cross-session reschedule locks both session rows ordered by session Id to avoid deadlock.
+AC:
+- Within CutOffHours (4h) of slot start -> cancel() rejected with a user-actionable message.
+- Cut-off not passed -> cancel() succeeds: session row locked FOR UPDATE, Booked_Count (or Walk_In_Used_Count) decrements, slot status flips Full->Open if applicable, all in one transaction.
+- reschedule() across two sessions -> locks both ordered by session Id (deadlock-safe), cancels old and books new atomically.
+- Old and new slots share the same session -> only one lock taken.
+- Test class includes a negative test (attempt inside cut-off) with final row/counter asserts.
+Depends on: VS-09"
+"Story","VS_NoShowBatch (scheduled, idempotent)","","Cancel Reschedule NoShow","Medium","5","EP-04 dev-senior F-001","Sprint 2","Build a scheduled, idempotent batch marking unattended bookings NoShow at day's end and incrementing VS_Patient__c.VS_No_Show_Count__c.
+AC:
+- Booked appointment, slot passed, no check-in -> status becomes NoShow, No_Show_Count increments by 1.
+- Batch runs twice on same appointment -> count does not double-increment (idempotency).
+- 200+ appointments due (REQ-062) -> no SOQL/DML in a loop, completes within governor limits.
+Depends on: VS-08"
+"Story","VS_IOtpProvider + VS_OtpService (stub)","","Citizen Access Discovery","Medium","5","EP-06 dev-senior F-001","Sprint 3","Build VS_IOtpProvider interface + VS_OtpService with a POC stub provider (fixed test code, D-013) so mobile+OTP auth works in the scratch org without a live SMS gateway; a real provider swaps in later with zero caller change.
+AC:
+- OTP requested -> VS_OTP_Verification__c stores only VS_Mobile__c + hashed code + expiry, never plaintext.
+- POC stub provider -> fixed test code issued (documented for QA) instead of live SMS.
+- Real provider built later -> swaps in with zero change to VS_OtpService callers.
+- 3 failed verify attempts -> 4th rejected with a user-actionable message.
+Depends on: VS-07"
+"Task","Experience Cloud citizen site + sharing set","","Citizen Access Discovery","Medium","5","EP-06 dev-mid F-001","Sprint 3","Stand up the Experience Cloud citizen site with VS_Citizen_Community permission set and a sharing set keyed to the OTP-verified mobile number, so citizens see only their own patients/appointments.
+AC:
+- OTP-verified citizen logs in -> sharing set grants visibility only to patients/appointments matching their verified mobile (section 6.2).
+- Unverified citizen guesses another mobile's URL -> access denied.
+- Site theme at 200% zoom -> layout remains usable (baseline check; full accessibility asserted in VS-16).
+Depends on: VS-04, VS-13"
+"Story","Facility/service discovery LWC (search by service + proximity)","","Citizen Access Discovery","Medium","5","EP-06 dev-senior F-001","Sprint 3","Build a discovery LWC letting citizens search active facility+service offerings and order results by proximity, degrading gracefully on 3G-class connections.
+AC:
+- Citizen searches by service type -> only active facilities offering that service appear.
+- Citizen's approximate location -> facilities ordered by proximity using Geolocation.
+- 3G-class connection -> component degrades gracefully (no heavy assets, works without map tiles).
+Depends on: VS-01, VS-14"
+"Story","Citizen booking journey LWC (book/view/cancel/reschedule)","","Citizen Access Discovery","Medium","8","EP-06 dev-senior F-001","Sprint 3","Build the citizen-facing LWC covering the full book/view/cancel/reschedule journey, calling VS_BookingService.book()/cancel()/reschedule() (VS-09/VS-11) imperatively, fully accessible (WCAG 2.1 AA) and localization-ready (Custom Labels only, no hardcoded strings).
+AC:
+- Citizen picks facility/service/date/slot and confirms -> LWC calls book(), shows booking reference or a user-actionable error.
+- Citizen cancels/reschedules -> calls cancel/reschedule and reflects cut-off rule with a plain-language message when blocked.
+- Screen-reader/keyboard-only user operates the whole journey -> every control reachable and ARIA-labelled, no mouse required.
+- Slot availability states rendered with a text label, not colour alone.
+- Successful booking confirmation screen is printable and shows essential details.
+- All citizen-facing strings use Custom Labels (no hardcoded English) for later Marathi/Hindi localization.
+Depends on: VS-09, VS-11, VS-14, VS-15"
+"Task","VS_Notification_Log__c object & fields","","Notification Seam","Medium","2","EP-07 dev-mid F-001","Sprint 4","Build VS_Notification_Log__c as the durable record every notification writes to (D-014 log-only architecture) - lookups to Patient/Appointment, channel, template name, message body, status, provider, helpline-included flag, sent-at.
+AC:
+- Deploys with lookups to Patient/Appointment, VS_Channel__c, VS_Template_Name__c, VS_Message_Body__c, VS_Status__c (Logged/Sent/Failed), VS_Provider__c, VS_Helpline_Included__c, VS_Sent_At__c, each described.
+Depends on: VS-08"
+"Story","VS_ISmsProvider + VS_SmsService (log-only)","","Notification Seam","Medium","5","EP-07 dev-senior F-001","Sprint 4","Build VS_ISmsProvider interface + VS_SmsService, POC implementation LOG-ONLY per D-014 - writes a VS_Notification_Log__c row, sends NO real SMS. Preserves the send surface (DLT template name, helpline-included flag per C7.1-7.3) so a real gateway can implement the interface later with zero caller redesign. SMS vendor/DLT registration explicitly deferred, does not block F-001.
+AC:
+- Confirmation triggered -> VS_Notification_Log__c row written with Provider=LogOnly, Status=Logged, DLT template name, Helpline_Included=true for actionable templates - no real SMS sent (D-014).
+- Real gateway implements VS_ISmsProvider later -> no caller of VS_SmsService changes.
+- Called in bulk (e.g. 200 bookings) -> no SOQL/DML in a loop.
+Depends on: VS-17"
+"Task","Booking-confirmation record-triggered flow","","Notification Seam","Medium","2","EP-07 dev-mid F-001","Sprint 4","Build VS_Appointment_AfterSave_LogConfirmation, the record-triggered flow invoking the log-only notification seam (VS-18) exactly once per new appointment, fault path never rolls back the underlying booking.
+AC:
+- VS_Appointment__c inserted with status Booked or WalkIn -> flow invokes the notification seam exactly once per appointment.
+- Invocable Apex action throws -> fault path writes VS_Error_Log__c, does not roll back the appointment.
+Depends on: VS-08, VS-18"
+"Task","Facility-scoped sharing rules + district View All","","Security Sharing Compliance","Medium","5","EP-08 dev-mid F-001 Tier-1","Sprint 4","Configure criteria-based sharing rules keyed on VS_Facility__c so facility staff see only their own facility's citizens/appointments, plus a compliance-tier View All for District Admin/MIS (C5.1 justified+audited).
+AC:
+- Facility-staff user in that facility's public group queries Appointment/Patient -> sharing returns only their facility's records.
+- Same user opens a record from a different facility by Id -> not visible (insufficient privileges).
+- District_Admin/District_MIS query the same objects -> View All on the compliance permission set grants aggregate/record-level access.
+Depends on: VS-04, VS-08"
+"Story","VS_RetentionPurgeBatch (per-class policy)","","Security Sharing Compliance","Medium","5","EP-08 dev-senior F-001","Sprint 4","Build a scheduled batch archiving/purging VS_Appointment__c/VS_Notification_Log__c/VS_OTP_Verification__c rows per their retention-class threshold in VS_Setting__mdt (bookings 3yr, SMS logs 1yr, audit 3yr, OTP daily), never purging a patient ahead of its longest-linked record.
+AC:
+- Per-class retention policy in VS_Setting__mdt -> eligible rows older than class threshold archived/purged per policy.
+- VS_Patient__c linked to a still-retained booking -> NOT purged before its longest-linked record's retention expires.
+- 200+ eligible rows (bulk posture) -> no SOQL/DML in a loop.
+Depends on: VS-02, VS-07, VS-08, VS-17"
+"Task","Synthetic seed data script","","Security Sharing Compliance","Medium","2","EP-08 dev-mid F-001","Sprint 4","Build a seed script producing fictional facilities, sessions, slots, and patients for the scratch/dev org, with no real PII and no Aadhaar-shaped values anywhere (rules/10).
+AC:
+- Seed script run against scratch/dev org -> creates fictional facilities, sessions, slots, patients with no real PII, no Aadhaar-shaped values.
+- Script re-run -> does not duplicate reference data (idempotent or clearly reset-first).
+Depends on: VS-01, VS-05, VS-07, VS-08"

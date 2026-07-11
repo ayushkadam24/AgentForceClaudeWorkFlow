@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_End_Time__c</fullName>
+    <label>End Time</label>
+    <description>Session end (DateTime). Bounds VS-06 slot generation together with VS_Start_Time__c (D-007).</description>
+    <type>DateTime</type>
+    <required>true</required>
+</CustomField>

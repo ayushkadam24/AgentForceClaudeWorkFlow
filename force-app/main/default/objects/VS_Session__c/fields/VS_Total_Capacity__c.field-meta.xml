@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Total_Capacity__c</fullName>
+    <label>Total Capacity</label>
+    <description>Total number of citizens this session can serve, set by the Medical Officer in Charge (REQ-010/011, VS-03 screen flow). Source input for the VS_Walk_In_Reserve_Count__c / VS_Bookable_Capacity__c formula split (D-009) and the total VS-06 distributes evenly across generated slots (A-005/D-023).</description>
+    <type>Number</type>
+    <precision>6</precision>
+    <scale>0</scale>
+    <required>true</required>
+</CustomField>

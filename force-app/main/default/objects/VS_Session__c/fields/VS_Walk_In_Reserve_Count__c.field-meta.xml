@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Walk_In_Reserve_Count__c</fullName>
+    <label>Walk-In Reserve Count</label>
+    <description>Formula (design §2.3/§2.1): CEILING(VS_Total_Capacity__c * WalkInReservePct / 100). WalkInReservePct is read from VS_Setting__mdt (VS-02's deliverable, currently 25% per D-009) via a $CustomMetadata merge field — NOT hardcoded, per rules/20. DEPLOY DEPENDENCY: this formula reference will fail deploy validation until the VS_Setting__mdt custom metadata type and its "WalkInReservePct" record (VS-02) exist in the org/deployment; see VS-01 review packet.</description>
+    <type>Number</type>
+    <precision>6</precision>
+    <scale>0</scale>
+    <formula>CEILING(VS_Total_Capacity__c * $CustomMetadata.VS_Setting__mdt.WalkInReservePct.Value__c / 100)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+</CustomField>

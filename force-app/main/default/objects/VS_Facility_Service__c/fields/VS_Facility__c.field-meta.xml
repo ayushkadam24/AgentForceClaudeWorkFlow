@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility__c</fullName>
+    <label>Facility</label>
+    <description>Master-Detail to VS_Facility__c: the facility offering the related service. Master-Detail (not Lookup) because a facility-service offering is meaningless without its facility and inherits Facility's sharing (design §2.4).</description>
+    <type>MasterDetail</type>
+    <referenceTo>VS_Facility__c</referenceTo>
+    <relationshipLabel>Facility Services</relationshipLabel>
+    <relationshipName>VS_Facility_Services</relationshipName>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
