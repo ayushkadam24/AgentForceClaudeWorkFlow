@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Lookup (not Master-Detail) to VS_Facility__c, denormalized off VS_Session__c for sharing/reporting convenience (design §2.3) -- lets facility-scoped sharing rules (VS-20, REQ-053) and dashboards key off the appointment directly instead of joining through Session. Lookup because Facility is shared reference data (Public Read Only) that must never cascade-delete its bookings. Set by VS_BookingService.book() (VS-09) -- not defaulted or automated by this ticket. deleteConstraint=Restrict so a facility with existing appointments cannot be deleted out from under its booking history.</description>
+    <label>Facility</label>
+    <referenceTo>VS_Facility__c</referenceTo>
+    <relationshipLabel>Appointments</relationshipLabel>
+    <relationshipName>VS_Appointments</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

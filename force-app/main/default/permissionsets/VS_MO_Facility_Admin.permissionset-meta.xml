@@ -61,7 +61,6 @@
     </objectPermissions>
 
     <fieldPermissions><field>VS_Facility__c.VS_External_Id__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Facility__c.VS_Facility_Type__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Facility__c.VS_Helpline_Number__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Facility__c.VS_Is_Active__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Facility__c.VS_Location__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
@@ -72,36 +71,15 @@
     <fieldPermissions><field>VS_Service__c.VS_Dose_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Service__c.VS_External_Id__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Service__c.VS_Is_Active__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Service__c.VS_Service_Type__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Service__c.VS_Slot_Granularity_Mins__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Service__c.VS_Vaccine_Name__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 
     <fieldPermissions><field>VS_Facility_Service__c.VS_External_Id__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Facility_Service__c.VS_Facility__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Facility_Service__c.VS_Is_Active__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Facility_Service__c.VS_Service__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 
     <fieldPermissions><field>VS_Session__c.VS_Bookable_Capacity__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_End_Time__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_Session__c.VS_External_Id__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Facility__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_Session__c.VS_Is_Drive_Day__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Service__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Session_Date__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Start_Time__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Status__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Total_Capacity__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_Session__c.VS_Walk_In_Reserve_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Session__c.VS_Walk_In_Used_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-
-    <fieldPermissions><field>VS_Slot__c.VS_Booked_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Slot__c.VS_Capacity__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Slot__c.VS_Session__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Slot__c.VS_Slot_End__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Slot__c.VS_Slot_Start__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Slot__c.VS_Status__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 
     <fieldPermissions><field>VS_Holiday__c.VS_Description__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Holiday__c.VS_Facility__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
-    <fieldPermissions><field>VS_Holiday__c.VS_Holiday_Date__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
 </PermissionSet>

@@ -1,0 +1,1 @@
+SELECT Parent.Name, PermissionsRead, PermissionsCreate, PermissionsEdit, PermissionsDelete FROM ObjectPermissions WHERE SobjectType='VS_Session__c' AND Parent.Name LIKE 'VS_%' ORDER BY Parent.Name

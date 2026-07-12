@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Session_Date__c</fullName>
+    <description>Calendar date this session runs. Used by VS-06 slot generation to check VS_Holiday__c closures and by VS_Setting__mdt.BookingHorizonDays to bound how far ahead slots are generated.</description>
+    <label>Session Date</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Date</type>
+</CustomField>

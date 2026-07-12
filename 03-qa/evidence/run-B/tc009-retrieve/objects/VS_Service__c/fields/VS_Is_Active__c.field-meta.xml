@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Is_Active__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>When unchecked, the service is excluded from citizen discovery search results and new facility-service offerings, without deleting historical bookings that reference it.</description>
+    <label>Is Active</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

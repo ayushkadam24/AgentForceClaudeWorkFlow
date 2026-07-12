@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Is_Drive_Day__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>When checked, this session overrides a VS_Holiday__c closure for its facility+date only, so VS-06 slot generation opens this date even though the calendar marks it a holiday (D-018). Set by the MO via the VS-03 screen flow for special vaccination drives (e.g. Sunday drives). Scoped to this one session — does not affect the shared holiday calendar.</description>
+    <label>Is Drive Day</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

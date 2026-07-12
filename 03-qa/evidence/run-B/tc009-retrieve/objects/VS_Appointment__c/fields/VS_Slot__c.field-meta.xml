@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Slot__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Lookup (not Master-Detail) to VS_Slot__c, REQUIRED: the bookable 15-minute window this appointment occupies. Lookup because VS_Slot__c.VS_Booked_Count__c is maintained manually inside the parent VS_Session__c&apos;s FOR UPDATE lock (D-019/D-020, rules/20 forbids a roll-up here), and a Lookup is what lets VS_BookingService.reschedule() (VS-11) REPARENT this field to a different slot (and therefore a different session) instead of deleting and recreating the appointment row -- design §2.4 calls this out explicitly (&quot;lookup also allows reparenting on reschedule&quot;). Lookup also lets appointments (3 yr retention) outlive the slot row if slots are ever archived separately. deleteConstraint=Restrict: a slot with existing appointments cannot be deleted out from under its booking history.</description>
+    <label>Slot</label>
+    <referenceTo>VS_Slot__c</referenceTo>
+    <relationshipLabel>Appointments</relationshipLabel>
+    <relationshipName>VS_Appointments</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

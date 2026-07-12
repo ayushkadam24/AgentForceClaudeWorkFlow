@@ -1,0 +1,27 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "SetupEntityAccess",
+          "url": "/services/data/v67.0/sobjects/SetupEntityAccess/0J0gL00002DOLEESA5"
+        },
+        "SetupEntityId": "0CPgL000000Lqd7WAC",
+        "SetupEntityType": "CustomPermission",
+        "ParentId": "0PSgL00000IMCD5WAP",
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD5WAP"
+          },
+          "Name": "VS_District_MIS"
+        }
+      }
+    ],
+    "totalSize": 1,
+    "done": true
+  },
+  "warnings": []
+}

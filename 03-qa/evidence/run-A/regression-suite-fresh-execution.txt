@@ -1,0 +1,104 @@
+===== VS_BookingServiceTest (TC-004/006/022 regression) =====
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+=== Test Results
+TEST NAME                                                                               OUTCOME  MESSAGE  RUNTIME (MS)
+──────────────────────────────────────────────────────────────────────────────────────  ───────  ───────  ────────────
+VS_BookingServiceTest.testBookingReference_uniqueAndPopulatedAndTypeable                Pass              556         
+VS_BookingServiceTest.testCapacityExhaustion_online_neverOverbooks                      Pass              479         
+VS_BookingServiceTest.testHappyPath_onlineBooking                                       Pass              381         
+VS_BookingServiceTest.testNegative_closedSession_throwsSessionNotOpen                   Pass              263         
+VS_BookingServiceTest.testNegative_invalidChannel_throws                                Pass              247         
+VS_BookingServiceTest.testNegative_invalidSlotId_throwsAndCreatesNothing                Pass              668         
+VS_BookingServiceTest.testNegative_nullInput_throws                                     Pass              28          
+VS_BookingServiceTest.testReferenceCollision_regeneratesAndRetriesOnce_bookingSucceeds  Pass              478         
+VS_BookingServiceTest.testReferenceCollision_twiceInARow_throwsCodedException           Pass              446         
+
+
+
+
+=== Test Summary
+NAME                 VALUE                                      
+───────────────────  ───────────────────────────────────────────
+Outcome              Passed                                     
+Tests Ran            9                                          
+Pass Rate            100%                                       
+Fail Rate            0%                                         
+Skip Rate            0%                                         
+Test Run Id                                                     
+Test Setup Time      0 ms                                       
+Test Execution Time  4874 ms                                    
+Test Total Time      4874 ms                                    
+Org Id               00DgL00000VkhBNUAZ                         
+Username             ethanspython396.16ac318df344@agentforce.com
+
+
+===== VS_SlotGenBatchTest (TC-015..020 regression) =====
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+=== Test Results
+TEST NAME                                                                               OUTCOME  MESSAGE  RUNTIME (MS)
+──────────────────────────────────────────────────────────────────────────────────────  ───────  ───────  ────────────
+VS_SlotGenBatchTest.testBookingHorizon_excludesBeyondHorizon                            Pass              497         
+VS_SlotGenBatchTest.testBuildSlots_invalidGranularity_throws                            Pass              72          
+VS_SlotGenBatchTest.testBuildSlots_invalidWindow_throws                                 Pass              124         
+VS_SlotGenBatchTest.testBulk_250Sessions_isGovernorSafe                                 Pass              3632        
+VS_SlotGenBatchTest.testCapacityLessThanSlotCount_trailingSlotsGetZeroCapacity          Pass              166         
+VS_SlotGenBatchTest.testConfigurableGranularity_nonMultipleWindow_dropsTrailingPartial  Pass              487         
+VS_SlotGenBatchTest.testDriveDayOverridesHoliday_generatesSlots                         Pass              334         
+VS_SlotGenBatchTest.testEvenDistribution_sumsToBookableExactly                          Pass              355         
+VS_SlotGenBatchTest.testGenerateForSessions_degenerateWindow_skippedNotThrown           Pass              208         
+VS_SlotGenBatchTest.testGenerateForSessions_emptyInput_returnsZero                      Pass              23          
+VS_SlotGenBatchTest.testHolidaySkip_generatesNoSlots                                    Pass              361         
+VS_SlotGenBatchTest.testReRun_isIdempotent                                              Pass              648         
+
+
+
+
+=== Test Summary
+NAME                 VALUE                                      
+───────────────────  ───────────────────────────────────────────
+Outcome              Passed                                     
+Tests Ran            12                                         
+Pass Rate            100%                                       
+Fail Rate            0%                                         
+Skip Rate            0%                                         
+Test Run Id                                                     
+Test Setup Time      0 ms                                       
+Test Execution Time  7947 ms                                    
+Test Total Time      7947 ms                                    
+Org Id               00DgL00000VkhBNUAZ                         
+Username             ethanspython396.16ac318df344@agentforce.com
+
+
+===== VS_BookingServiceWalkInTest (TC-002/003/005 — confirms D-028 org-limit persists) =====
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+=== Test Results
+TEST NAME                                                                OUTCOME  MESSAGE                                                                                                                                RUNTIME (MS)
+───────────────────────────────────────────────────────────────────────  ───────  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────  ────────────
+VS_BookingServiceWalkInTest.testHappyPath_walkInBooking                  Fail     System.DmlException: Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result!  
+                                                                                  Class.VS_BookingService.book: line 182, column 1                                                                                       
+                                                                                  Class.VS_BookingServiceWalkInTest.testHappyPath_walkInBooking: line 126, column 1                                                                  
+VS_BookingServiceWalkInTest.testMixedChannels_sameSession_noOverbooking  Fail     System.DmlException: Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result!  
+                                                                                  Class.VS_BookingService.book: line 182, column 1                                                                                       
+                                                                                  Class.VS_BookingServiceWalkInTest.testMixedChannels_sameSession_noOverbooking: line 185, column 1                                                  
+VS_BookingServiceWalkInTest.testWalkInReserveExhaustion_neverOverbooks   Fail     System.DmlException: Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result!  
+                                                                                  Class.VS_BookingService.book: line 182, column 1                                                                                       
+                                                                                  Class.VS_BookingServiceWalkInTest.testWalkInReserveExhaustion_neverOverbooks: line 149, column 1                                                   
+
+
+
+
+=== Test Summary
+NAME                 VALUE                                      
+───────────────────  ───────────────────────────────────────────
+Outcome              Failed                                     
+Tests Ran            3                                          
+Pass Rate            0%                                         
+Fail Rate            100%                                       
+Skip Rate            0%                                         
+Test Run Id                                                     
+Test Setup Time      0 ms                                       
+Test Execution Time  1637 ms                                    
+Test Total Time      1637 ms                                    
+Org Id               00DgL00000VkhBNUAZ                         
+Username             ethanspython396.16ac318df344@agentforce.com
+

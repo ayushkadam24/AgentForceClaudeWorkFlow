@@ -1,0 +1,59 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+Compiled successfully.
+Executed successfully.
+
+67.0 APEX_CODE,DEBUG;APEX_PROFILING,INFO
+Execute Anonymous: // Diagnostic only — no permission/metadata changes. Build minimal required-field-only fixtures
+Execute Anonymous: // as the connected admin, then attempt VS_BookingService.book() to observe the real FLS behavior.
+Execute Anonymous: VS_Facility__c fac = new VS_Facility__c(Name='Diag Facility', VS_Facility_Type__c='PHC');
+Execute Anonymous: insert fac;
+Execute Anonymous: VS_Service__c svc = new VS_Service__c(Name='Diag Service', VS_Service_Type__c='Vaccination', VS_Slot_Granularity_Mins__c=15);
+Execute Anonymous: insert svc;
+Execute Anonymous: VS_Session__c ses = new VS_Session__c(
+Execute Anonymous:     VS_Facility__c = fac.Id, VS_Service__c = svc.Id,
+Execute Anonymous:     VS_Session_Date__c = Date.today().addDays(1),
+Execute Anonymous:     VS_Start_Time__c = Datetime.now().addDays(1),
+Execute Anonymous:     VS_End_Time__c = Datetime.now().addDays(1).addHours(1),
+Execute Anonymous:     VS_Total_Capacity__c = 4, VS_Status__c = 'Open');
+Execute Anonymous: insert ses;
+Execute Anonymous: VS_Slot__c slot = new VS_Slot__c(VS_Session__c=ses.Id, VS_Slot_Start__c=Datetime.now().addDays(1),
+Execute Anonymous:     VS_Slot_End__c=Datetime.now().addDays(1).addMinutes(15), VS_Capacity__c=1, VS_Booked_Count__c=0, VS_Status__c='Open');
+Execute Anonymous: insert slot;
+Execute Anonymous: VS_Patient__c pat = new VS_Patient__c(VS_Full_Name__c='Diag Patient', VS_Date_Of_Birth__c=Date.newInstance(1990,1,1), VS_Mobile__c='9000000001');
+Execute Anonymous: insert pat;
+Execute Anonymous: System.debug('DIAG:FIXTURES_OK facility=' + fac.Id + ' session=' + ses.Id + ' slot=' + slot.Id + ' patient=' + pat.Id);
+Execute Anonymous: try {
+Execute Anonymous:     Id apptId = VS_BookingService.book(pat.Id, slot.Id, UserInfo.getUserId(), 'Portal');
+Execute Anonymous:     System.debug('DIAG:BOOK_SUCCEEDED apptId=' + apptId);
+Execute Anonymous: } catch (Exception e) {
+Execute Anonymous:     System.debug('DIAG:BOOK_FAILED type=' + e.getTypeName() + ' msg=' + e.getMessage());
+Execute Anonymous: }
+Execute Anonymous: // cleanup so this diagnostic doesn't pollute the real seed
+Execute Anonymous: delete slot; delete ses; delete pat; // svc/fac left (harmless minimal rows); will be cleaned with the rest
+06:46:23.123 (123505380)|USER_INFO|[EXTERNAL]|005gL00000Kf6Nh|ethanspython396.16ac318df344@agentforce.com|(GMT-07:00) Pacific Daylight Time (America/Los_Angeles)|GMT-07:00
+06:46:23.123 (123575271)|EXECUTION_STARTED
+06:46:23.123 (123607909)|CODE_UNIT_STARTED|[EXTERNAL]|execute_anonymous_apex
+06:46:23.123 (416417960)|USER_DEBUG|[19]|DEBUG|DIAG:FIXTURES_OK facility=a02gL00000S9b9tQAB session=a06gL00000TKQgnQAH slot=a07gL000012zKxaQAE patient=a04gL00000T97JJQAZ
+06:46:23.123 (436702593)|EXCEPTION_THROWN|[117]|System.QueryException: No such column 'VS_Walk_In_Reserve_Count__c' on entity 'VS_Session__c'. If you are attempting to use a custom field, be sure to append the '__c' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.
+06:46:23.123 (438049484)|USER_DEBUG|[24]|DEBUG|DIAG:BOOK_FAILED type=System.QueryException msg=No such column 'VS_Walk_In_Reserve_Count__c' on entity 'VS_Session__c'. If you are attempting to use a custom field, be sure to append the '__c' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.
+06:46:24.69 (1069236970)|CUMULATIVE_LIMIT_USAGE
+06:46:24.69 (1069236970)|LIMIT_USAGE_FOR_NS|(default)|
+  Number of SOQL queries: 1 out of 100
+  Number of query rows: 1 out of 50000
+  Number of SOSL queries: 0 out of 20
+  Number of DML statements: 8 out of 150
+  Number of Publish Immediate DML: 0 out of 150
+  Number of DML rows: 8 out of 10000
+  Maximum CPU time: 0 out of 10000
+  Maximum heap size: 0 out of 6000000
+  Number of callouts: 0 out of 100
+  Number of Email Invocations: 0 out of 10
+  Number of future calls: 0 out of 50
+  Number of queueable jobs added to the queue: 0 out of 50
+  Number of Mobile Apex push calls: 0 out of 10
+
+06:46:24.69 (1069236970)|CUMULATIVE_LIMIT_USAGE_END
+
+06:46:23.123 (1069438472)|CODE_UNIT_FINISHED|execute_anonymous_apex
+06:46:23.123 (1069474722)|EXECUTION_FINISHED
+

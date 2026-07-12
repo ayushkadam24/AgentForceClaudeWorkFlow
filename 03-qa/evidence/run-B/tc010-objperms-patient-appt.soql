@@ -1,0 +1,1 @@
+SELECT Parent.Name, SobjectType, PermissionsRead, PermissionsCreate, PermissionsEdit, PermissionsDelete FROM ObjectPermissions WHERE SobjectType IN ('VS_Patient__c','VS_Appointment__c') AND Parent.Name LIKE 'VS_%' ORDER BY Parent.Name, SobjectType

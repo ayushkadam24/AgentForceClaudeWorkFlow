@@ -1,0 +1,1 @@
+SELECT DeveloperName, VS_Value__c, VS_Value_Text__c FROM VS_Setting__mdt ORDER BY DeveloperName

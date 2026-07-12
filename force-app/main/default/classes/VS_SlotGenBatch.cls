@@ -65,18 +65,15 @@ public with sharing class VS_SlotGenBatch implements Database.Batchable<SObject>
     }
 
     /**
-     * Booking horizon in days from VS_Setting__mdt (D-008/REQ-013). Custom Metadata is always
-     * readable, so no USER_MODE clause is applied. Falls back to the design default (14) only if the
-     * config record is missing.
+     * Booking horizon in days from VS_Setting__mdt (D-008/REQ-013). Read via the cache-backed,
+     * FLS-free VS_Setting__mdt.getInstance(DeveloperName) rather than SOQL: SOQL on a Custom Metadata
+     * Type is rejected on a USER_MODE/runAs path in this org, and getInstance is the SF-recommended read
+     * anyway. getInstance returns null if the record is absent — falls back to the design default (14).
      */
     private static Integer getBookingHorizonDays() {
-        List<VS_Setting__mdt> settings = [
-            SELECT VS_Value__c
-            FROM VS_Setting__mdt
-            WHERE DeveloperName = 'BookingHorizonDays'
-            LIMIT 1];
-        if (!settings.isEmpty() && settings[0].VS_Value__c != null) {
-            return settings[0].VS_Value__c.intValue();
+        VS_Setting__mdt setting = VS_Setting__mdt.getInstance('BookingHorizonDays');
+        if (setting != null && setting.VS_Value__c != null) {
+            return setting.VS_Value__c.intValue();
         }
         return 14;
     }

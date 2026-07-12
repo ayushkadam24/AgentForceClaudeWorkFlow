@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPRINT-1 Phase 1a (D-026a): REAL deploy of the VS_Setting__mdt CMDT TYPE + its 2 fields ONLY
+     (VS_Value__c, VS_Value_Text__c). No records. Proven dry-run-clean (Deploy ID 0AfgL00000QxbpNSAR).
+     Committing the type first makes the 6 records (Phase 1b) dry-run-validatable. 3 components. -->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>VS_Setting__mdt.VS_Value_Text__c</members>
+        <members>VS_Setting__mdt.VS_Value__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>VS_Setting__mdt</members>
+        <name>CustomObject</name>
+    </types>
+    <version>67.0</version>
+</Package>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Mobile__c</fullName>
+    <description>Patient mobile number — Annexure C1.1 core person attribute; also the channel for OTP citizen auth (D-013) and SMS notifications (D-014). One of the three inputs (with full name + DOB) normalized into VS_Match_Key__c for exact-match de-dup (D-011/D-017); required because the match key cannot be computed without it. One mobile number MAY be shared by many VS_Patient__c records (booker != patient, REQ-004) — this is modeled as multiple patient rows sharing the same mobile, not a lookup to a separate &quot;booker&quot; person object.</description>
+    <label>Mobile</label>
+    <required>true</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Phone</type>
+</CustomField>

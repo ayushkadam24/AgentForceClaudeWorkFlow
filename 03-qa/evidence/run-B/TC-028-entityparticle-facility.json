@@ -1,0 +1,144 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.Id"
+        },
+        "QualifiedApiName": "Id"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.Owner"
+        },
+        "QualifiedApiName": "OwnerId"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.IsDeleted"
+        },
+        "QualifiedApiName": "IsDeleted"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.Name"
+        },
+        "QualifiedApiName": "Name"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.CreatedDate"
+        },
+        "QualifiedApiName": "CreatedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.CreatedBy"
+        },
+        "QualifiedApiName": "CreatedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.LastModifiedDate"
+        },
+        "QualifiedApiName": "LastModifiedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.LastModifiedBy"
+        },
+        "QualifiedApiName": "LastModifiedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.SystemModstamp"
+        },
+        "QualifiedApiName": "SystemModstamp"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhM"
+        },
+        "QualifiedApiName": "VS_External_Id__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhN"
+        },
+        "QualifiedApiName": "VS_Facility_Type__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhO"
+        },
+        "QualifiedApiName": "VS_Helpline_Number__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhP"
+        },
+        "QualifiedApiName": "VS_Is_Active__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhQ.0BCgL000000CNk1"
+        },
+        "QualifiedApiName": "VS_Location__Latitude__s"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhQ.0BCgL000000CNk2"
+        },
+        "QualifiedApiName": "VS_Location__Longitude__s"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhQ"
+        },
+        "QualifiedApiName": "VS_Location__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhR"
+        },
+        "QualifiedApiName": "VS_Operating_End_Time__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhS"
+        },
+        "QualifiedApiName": "VS_Operating_Start_Time__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1od.00NgL00004F9WhT"
+        },
+        "QualifiedApiName": "VS_Pincode__c"
+      }
+    ],
+    "totalSize": 19,
+    "done": true
+  },
+  "warnings": []
+}

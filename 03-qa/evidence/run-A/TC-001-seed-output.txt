@@ -1,0 +1,49 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+Compiled successfully.
+Executed successfully.
+
+67.0 APEX_CODE,DEBUG;APEX_PROFILING,INFO
+Execute Anonymous: VS_Facility__c fac = new VS_Facility__c(Name='LoadTest Facility TC001', VS_Facility_Type__c='PHC');
+Execute Anonymous: insert fac;
+Execute Anonymous: VS_Service__c svc = new VS_Service__c(Name='LoadTest Service TC001', VS_Service_Type__c='Vaccination', VS_Slot_Granularity_Mins__c=15);
+Execute Anonymous: insert svc;
+Execute Anonymous: VS_Session__c ses = new VS_Session__c(
+Execute Anonymous:     VS_Facility__c = fac.Id, VS_Service__c = svc.Id,
+Execute Anonymous:     VS_Session_Date__c = Date.today().addDays(1),
+Execute Anonymous:     VS_Start_Time__c = Datetime.now().addDays(1),
+Execute Anonymous:     VS_End_Time__c = Datetime.now().addDays(1).addHours(1),
+Execute Anonymous:     VS_Total_Capacity__c = 4, VS_Status__c = 'Open');
+Execute Anonymous: insert ses;
+Execute Anonymous: VS_Slot__c slot = new VS_Slot__c(VS_Session__c=ses.Id, VS_Slot_Start__c=Datetime.now().addDays(1),
+Execute Anonymous:     VS_Slot_End__c=Datetime.now().addDays(1).addMinutes(15), VS_Capacity__c=1, VS_Booked_Count__c=0, VS_Status__c='Open');
+Execute Anonymous: insert slot;
+Execute Anonymous: System.debug('TC001:FACILITY:' + fac.Id);
+Execute Anonymous: System.debug('TC001:SESSION:' + ses.Id);
+Execute Anonymous: System.debug('TC001:SLOT:' + slot.Id);
+06:49:50.53 (53041096)|USER_INFO|[EXTERNAL]|005gL00000Kf6Nh|ethanspython396.16ac318df344@agentforce.com|(GMT-07:00) Pacific Daylight Time (America/Los_Angeles)|GMT-07:00
+06:49:50.53 (53070755)|EXECUTION_STARTED
+06:49:50.53 (53114005)|CODE_UNIT_STARTED|[EXTERNAL]|execute_anonymous_apex
+06:49:50.53 (195901592)|USER_DEBUG|[15]|DEBUG|TC001:FACILITY:a02gL00000S9bJZQAZ
+06:49:50.53 (195962391)|USER_DEBUG|[16]|DEBUG|TC001:SESSION:a06gL00000TKR09QAH
+06:49:50.53 (196018382)|USER_DEBUG|[17]|DEBUG|TC001:SLOT:a07gL00001307doQAA
+06:49:50.223 (223533590)|CUMULATIVE_LIMIT_USAGE
+06:49:50.223 (223533590)|LIMIT_USAGE_FOR_NS|(default)|
+  Number of SOQL queries: 0 out of 100
+  Number of query rows: 0 out of 50000
+  Number of SOSL queries: 0 out of 20
+  Number of DML statements: 4 out of 150
+  Number of Publish Immediate DML: 0 out of 150
+  Number of DML rows: 4 out of 10000
+  Maximum CPU time: 0 out of 10000
+  Maximum heap size: 0 out of 6000000
+  Number of callouts: 0 out of 100
+  Number of Email Invocations: 0 out of 10
+  Number of future calls: 0 out of 50
+  Number of queueable jobs added to the queue: 0 out of 50
+  Number of Mobile Apex push calls: 0 out of 10
+
+06:49:50.223 (223533590)|CUMULATIVE_LIMIT_USAGE_END
+
+06:49:50.53 (223649225)|CODE_UNIT_FINISHED|execute_anonymous_apex
+06:49:50.53 (223675882)|EXECUTION_FINISHED
+

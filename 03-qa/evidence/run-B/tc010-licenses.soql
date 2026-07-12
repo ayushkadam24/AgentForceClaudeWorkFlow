@@ -1,0 +1,1 @@
+SELECT Name, MasterLabel, TotalLicenses, UsedLicenses, Status FROM UserLicense WHERE Status='Active'

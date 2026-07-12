@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SPRINT-1 Phase 1b (D-026a): the 6 VS_Setting.* CustomMetadata RECORDS ONLY. Deployed AFTER
+     Phase 1a has committed VS_Setting__mdt in-org, so these records can finally be dry-run-validated
+     against the existing type. Does NOT re-include the type. 6 components. -->
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>VS_Setting.BookingHorizonDays</members>
+        <members>VS_Setting.CutOffHours</members>
+        <members>VS_Setting.DefaultSlotGranularityMins</members>
+        <members>VS_Setting.NoShowThresholdCount</members>
+        <members>VS_Setting.ReminderOffsetsHours</members>
+        <members>VS_Setting.WalkInReservePct</members>
+        <name>CustomMetadata</name>
+    </types>
+    <version>67.0</version>
+</Package>

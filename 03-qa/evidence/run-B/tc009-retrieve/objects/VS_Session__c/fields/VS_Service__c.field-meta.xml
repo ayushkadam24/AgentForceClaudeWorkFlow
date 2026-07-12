@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Service__c</fullName>
+    <deleteConstraint>Restrict</deleteConstraint>
+    <description>Lookup (not Master-Detail) to VS_Service__c — the service this session provides capacity for. Lookup because Service is a shared catalogue row referenced by many sessions and must not cascade-delete (design §2.4).</description>
+    <label>Service</label>
+    <referenceTo>VS_Service__c</referenceTo>
+    <relationshipLabel>Sessions</relationshipLabel>
+    <relationshipName>VS_Sessions</relationshipName>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

@@ -225,6 +225,109 @@ to two metadata defects (see `02-build/deployments.md`/`runbook.md` and the devo
 - No object/field permission, `customPermissions` grant (VS_Bulk_Export still enabled ONLY in
   VS_District_MIS), or any logic was touched — descriptions only.
 
+## 9b. Deploy-defect fix #2 (required-field FLS) — 2026-07-12, dev-mid fix-forward pass 2
+
+The Phase 2 dry-run (`02-build/deployments.md`, Deploy ID `0AfgL00000Qxf0ASAR`, 2026-07-12 12:20)
+surfaced a clean, non-opaque component error on all 5 permission sets: **`"You cannot deploy to
+a required field: VS_Facility_Service__c.VS_Service__c"`**.
+
+**Root cause:** `VS_Facility_Service__c.VS_Service__c` is a `required=true` lookup (VS-01). The
+platform forbids explicit field-level-security (`<fieldPermissions>`) entries on universally
+required fields — they are always implicitly readable/editable, so declaring FLS on them is
+illegal metadata, not merely redundant.
+
+**Fix applied:** removed the ONE `<fieldPermissions>` block whose `<field>` is
+`VS_Facility_Service__c.VS_Service__c` from each of the 5 permission sets:
+`VS_Facility_Staff`, `VS_Nurse`, `VS_MO_Facility_Admin`, `VS_District_Admin`, `VS_District_MIS`.
+Nothing else in any file was touched — verified by grep: zero remaining
+`VS_Facility_Service__c.VS_Service__c` references anywhere under
+`force-app/main/default/permissionsets/`, and all other `fieldPermissions`/`objectPermissions`
+blocks (including `VS_Facility_Service__c.VS_Facility__c`, which is present and did NOT error
+because it is not `required=true`) are unchanged. The `VS_Bulk_Export` custom-permission gate in
+`VS_District_MIS` (C5/D-022, MIS-only) was left exactly as-is — not part of this defect.
+
+**Effective access change:** none in practice — `VS_Facility_Service__c.VS_Service__c` remains
+fully readable (and, for `VS_District_Admin`, editable, since the object itself has Create/Edit
+object permission) exactly as it did before, because Salesforce grants required fields implicit
+FLS regardless of any explicit permission-set entry. Removing the illegal explicit entry does not
+reduce or expand any user's actual access to this field.
+
+**Salesforce error this fix addresses (verbatim):**
+`"problem": "You cannot deploy to a required field: VS_Facility_Service__c.VS_Service__c"` —
+Phase 2 dry-run, Deploy ID `0AfgL00000Qxf0ASAR` (`02-build/deployments.md`, "Phase 2 dry-run"
+section), reported identically across all 5 permission sets.
+
+**Verification this pass:** all 5 files re-parsed with Python `xml.dom.minidom` — 0 failures.
+`node scripts/metadata-lint.js` re-run read-only: shows only the 2 pre-existing, already-
+documented `$CustomMetadata` formula flags (`VS_Session__c.VS_Walk_In_Reserve_Count__c` and the
+known false positive `VS_Setting__mdt.VS_Value__c`) — nothing new, confirms no regression from
+this fix. Not deployed/dry-run by this agent per this pass's explicit instruction; devops re-runs
+Phase 2 next.
+
+## 9c. Deploy-defect fix #3 (20 illegal FLS entries, Master-Detail + required, complete sweep) — 2026-07-12, dev-mid fix-forward pass 3
+
+Removing the single `VS_Facility_Service__c.VS_Service__c` FLS entry (9b) cleared that specific
+error, but only unmasked the next batch of the SAME defect class — Master-Detail and other
+`required=true` fields also carrying illegal `<fieldPermissions>` entries. devops ran a complete
+sweep (not another one-at-a-time dry-run cycle) and identified **20 fields across 3 categories**
+that must never carry FLS, all removed in this single batched pass per rules/20 §5:
+
+**Master-Detail (3 fields)** — MD fields inherit access entirely from the parent object's
+permissions; a child MD field cannot independently carry FLS:
+- `VS_Facility_Service__c.VS_Facility__c`
+- `VS_Session__c.VS_Facility__c`
+- `VS_Slot__c.VS_Session__c`
+
+**Required (17 fields)** — same rule as 9b's `VS_Facility_Service__c.VS_Service__c`: required
+fields get implicit read/edit and reject explicit FLS:
+`VS_Facility__c.VS_Facility_Type__c`, `VS_Holiday__c.VS_Facility__c`,
+`VS_Holiday__c.VS_Holiday_Date__c`, `VS_Service__c.VS_Service_Type__c`,
+`VS_Service__c.VS_Slot_Granularity_Mins__c`, `VS_Session__c.VS_End_Time__c`,
+`VS_Session__c.VS_Service__c`, `VS_Session__c.VS_Session_Date__c`,
+`VS_Session__c.VS_Start_Time__c`, `VS_Session__c.VS_Status__c`,
+`VS_Session__c.VS_Total_Capacity__c`, `VS_Session__c.VS_Walk_In_Used_Count__c`,
+`VS_Slot__c.VS_Booked_Count__c`, `VS_Slot__c.VS_Capacity__c`, `VS_Slot__c.VS_Slot_End__c`,
+`VS_Slot__c.VS_Slot_Start__c`, `VS_Slot__c.VS_Status__c`.
+
+**Correction to section 9b's note:** 9b stated `VS_Facility_Service__c.VS_Facility__c` "did NOT
+error because it is not `required=true`" — that was an accurate read of the round-1 dry-run
+result (which only reached the one `VS_Service__c` error before stopping), but this field is in
+fact illegal for FLS for a *different* reason (it's Master-Detail, not required) that only
+surfaced once the complete sweep ran. Recording this correction here rather than editing 9b's
+historical text.
+
+**Fix applied:** removed the `<fieldPermissions>` block for each of the 20 fields above from
+**all 5** permission sets (`VS_Facility_Staff`, `VS_Nurse`, `VS_MO_Facility_Admin`,
+`VS_District_Admin`, `VS_District_MIS`) — 100 line removals total, done via a scripted pass
+(exact field-string match on `<field>...</field>`, one line per entry) to guarantee consistency
+across all 5 files rather than 100 manual edits. One side effect: `VS_Slot__c` had all 6 of its
+fieldPermissions entries targeted (`Booked_Count__c`, `Capacity__c`, `Session__c`, `Slot_End__c`,
+`Slot_Start__c`, `Status__c`), so that field-permission group is now empty in every file (the
+`VS_Slot__c` **objectPermissions** grant, which is unrelated and unaffected, remains — read-only
+in all 5 sets as before). Consecutive blank lines left by the empty group were collapsed to a
+single blank line for readability; no content was altered.
+
+**Effective access change:** none in practice, same reasoning as 9b — every removed field either
+inherits FLS from its parent (Master-Detail) or gets implicit read/edit because it is required;
+removing the illegal explicit entries does not reduce or expand any user's actual access.
+
+**Verification — grep-confirmed zero remaining, all 5 files:** searched every permission set for
+each of the 20 field strings (plus re-confirmed the round-1 `VS_Facility_Service__c.VS_Service__c`
+entry, already removed, stayed removed) — **0 matches** across all 5 files. `objectPermissions`
+blocks (all 6 objects, all 5 sets) and the `VS_Bulk_Export` custom-permission gate (still enabled
+ONLY in `VS_District_MIS`, C5/D-022) were confirmed byte-identical to before this pass — neither
+was touched.
+
+**Salesforce errors this fix addresses:** devops's complete sweep re-run, 2026-07-12
+(`02-build/deployments.md` latest Errors table) — 20× `"You cannot deploy to a required field:
+<field>"` / `"...Master-Detail field: <field>"` pattern errors, one per field listed above, across
+all 5 permission sets.
+
+**Verification this pass:** all 5 files re-parsed with Python `xml.dom.minidom` — 0 failures.
+`node scripts/metadata-lint.js` re-run read-only — unchanged, still only the 2 pre-existing
+`$CustomMetadata` formula flags, no new issue. Not deployed/dry-run by this agent; devops re-runs
+next.
+
 ## 10. Manual / setup steps
 
 **Pre-deploy:**

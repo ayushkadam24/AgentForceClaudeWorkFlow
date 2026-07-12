@@ -1,0 +1,1 @@
+SELECT QualifiedApiName, SharingModel FROM EntityDefinition WHERE QualifiedApiName IN ('VS_Patient__c','VS_Appointment__c','VS_Facility__c','VS_Service__c','VS_Facility_Service__c','VS_Session__c','VS_Slot__c','VS_Holiday__c')

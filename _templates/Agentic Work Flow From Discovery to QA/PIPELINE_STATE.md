@@ -1,0 +1,25 @@
+---
+feature: F-001 <pilot-feature>
+phase: NOT_STARTED
+blocked_on: complete SETUP.md, paste client docs into 00-inputs/
+next_command: /kickoff
+last_updated: <date>
+updated_by: human
+---
+
+# Pipeline State Log
+
+Valid phases (in order):
+NOT_STARTED → DISCOVERY → ARCH_DESIGN → SPRINT_PLANNED → DEV_IN_PROGRESS →
+DEV_COMPLETE → BA_ARCH_CONFIRM → READY_FOR_QA → QA_IN_PROGRESS → DONE
+
+Rules:
+1. Only the YAML block above is machine state. Agents parse it; humans read the log below.
+2. Any agent finishing its work updates `phase`, `next_command`, `last_updated`,
+   `updated_by`, and appends ONE log line below. Nothing else in this file changes.
+3. No agent may advance the phase more than one step, and never past a human gate.
+   Human gates: SPRINT_PLANNED→DEV_IN_PROGRESS, DEV_COMPLETE→BA_ARCH_CONFIRM,
+   BA_ARCH_CONFIRM→READY_FOR_QA, QA_IN_PROGRESS→DONE.
+
+## Log
+- <date> | human | Template initialized from the Discovery-to-QA starter. Awaiting SETUP.md completion + /kickoff.

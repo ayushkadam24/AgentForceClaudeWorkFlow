@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Gender__c</fullName>
+    <description>Patient gender — Annexure C1.1 explicitly OPTIONAL person attribute (design §2.3: &quot;picklist, optional&quot;). Not required to register or book. Exact picklist values are a dev-mid assumption (design does not enumerate them) — logged as A-012 for BA/DHO confirmation before launch; do not treat these labels as department-approved final copy.</description>
+    <label>Gender</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Male</fullName>
+                <default>false</default>
+                <label>Male</label>
+            </value>
+            <value>
+                <fullName>Female</fullName>
+                <default>false</default>
+                <label>Female</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>PreferNotToSay</fullName>
+                <default>false</default>
+                <label>Prefer Not to Say</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

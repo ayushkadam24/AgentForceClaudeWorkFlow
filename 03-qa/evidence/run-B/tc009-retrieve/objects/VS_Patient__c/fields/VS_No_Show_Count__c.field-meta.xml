@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_No_Show_Count__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>Running count of no-shows for this patient; captured now, enforcement deferred to phase 2 (REQ-017/OQ-007). Incremented by VS_NoShowBatch (VS-12). Added 2026-07-12 as a batched review fix (A-013, MAJOR gap) closing the omission from VS-07&apos;s original C1-minimal build: design §2.3 lists this field on VS_Patient__c, and VS-12 (Sprint 2) increments VS_Patient__c.VS_No_Show_Count__c — without it VS-12 would fail to deploy. NOT person/C1 data (it&apos;s a derived count of booking-behavior events, not a C1.1 person attribute), so it does not affect this object&apos;s data-minimization posture (rules/10 C1). No automation in this ticket sets or reads this field; VS-12 owns the increment.</description>
+    <externalId>false</externalId>
+    <label>No Show Count</label>
+    <precision>4</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

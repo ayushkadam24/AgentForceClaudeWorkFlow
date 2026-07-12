@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Status__c</fullName>
+    <description>Slot lifecycle status controlling whether it is offered for booking. Values match design §2.3 exactly: Open (bookable), Full (VS_Booked_Count__c has reached VS_Capacity__c), Closed (administratively closed, e.g. session closed), Cancelled (session or slot cancelled). Flipped by VS_BookingService (VS-09/VS-11) inside the session lock -- no automation in this ticket.</description>
+    <label>Status</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Open</fullName>
+                <default>true</default>
+                <label>Open</label>
+            </value>
+            <value>
+                <fullName>Full</fullName>
+                <default>false</default>
+                <label>Full</label>
+            </value>
+            <value>
+                <fullName>Closed</fullName>
+                <default>false</default>
+                <label>Closed</label>
+            </value>
+            <value>
+                <fullName>Cancelled</fullName>
+                <default>false</default>
+                <label>Cancelled</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

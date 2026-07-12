@@ -1,0 +1,47 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRF9QQO"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD3WAP"
+          },
+          "Name": "VS_Booking_Engine_Test_Context"
+        },
+        "SobjectType": "VS_Appointment__c",
+        "PermissionsRead": true,
+        "PermissionsCreate": true,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFDQQ4"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD3WAP"
+          },
+          "Name": "VS_Booking_Engine_Test_Context"
+        },
+        "SobjectType": "VS_Patient__c",
+        "PermissionsRead": true,
+        "PermissionsCreate": true,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      }
+    ],
+    "totalSize": 2,
+    "done": true
+  },
+  "warnings": []
+}

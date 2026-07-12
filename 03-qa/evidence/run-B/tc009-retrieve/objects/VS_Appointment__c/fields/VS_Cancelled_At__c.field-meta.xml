@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Cancelled_At__c</fullName>
+    <description>Timestamp this appointment was cancelled, paired with VS_Status__c = Cancelled so a cancellation is auditable (when, not just whether) -- supports the 4-hour cut-off check (D-010) and the audit-trail retention class (Annexure C4). THIS TICKET (VS-08) DEFINES THE FIELD ONLY: it is stamped by VS_BookingService.cancel() (VS-11, Apex, dev-senior) on a successful cancellation -- no automation sets it in this ticket.</description>
+    <label>Cancelled At</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

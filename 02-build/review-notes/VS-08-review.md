@@ -172,6 +172,44 @@ package that includes VS-01/02/05/07 lands in the DE org; this ticket is metadat
 that same or a subsequent package, and devops should sequence it accordingly in
 `02-build/deployments.md`/the manifest.
 
+## Description-trim (deploy-limit fix) — 2026-07-12, dev-mid fix-forward pass
+
+devops's 2nd dry-run bisection (`02-build/deployments.md`, 20:10 re-run) found
+`VS_Appointment__c.object-meta.xml`'s `<description>` at **1401 chars**, over the CustomObject
+1000-char cap (`skills/sf-data-model/references/metadata-deploy-limits.md`), causing a clean
+component-level deploy failure ("Value too long for field: Description maximum length is:1000").
+Fixed by shortening the XML `<description>` to **696 chars** (well under the 1000 cap, with
+headroom). No metadata behavior changed — description-only edit; object structure, fields,
+relationships, OWD, and all other content on this object are untouched.
+
+**Full original text (1401 chars), preserved here for the record:**
+
+> F-001 slot-booking-core (VS-08, EP-03 -- §3.4 slot-integrity booking, crown-jewel epic). The
+> booking record that VS_BookingService.book() (VS-09, Apex, dev-senior) inserts for every channel
+> (Portal/Chat/Staff/WalkIn). This ticket builds SCHEMA ONLY -- no booking logic, no
+> VS_Booking_Reference__c generation, no VS_Slot__c/VS_Session__c counter increment (all VS-09
+> Apex per D-019/D-020). Relationships to Patient/Slot/Session/Facility/Service are all Lookup
+> (never Master-Detail): design §2.4 requires VS_Slot__c -> VS_Appointment__c to be reparentable so
+> VS-11's reschedule() can move an appointment to a different slot/session without a
+> delete+recreate, and requires VS_Patient__c -> VS_Appointment__c to be a Lookup because patient
+> retention (>=10 yr if vaccinated) and appointment retention (3 yr, Annexure C4) are different
+> lifecycles that a Master-Detail cascade-delete would incorrectly couple. No clinical/diagnosis
+> fields exist anywhere on this object (REQ-045 -- health data here is limited to the
+> booking/appointment lifecycle only). NO Aadhaar field, no Aadhaar-shaped field, anywhere. OWD is
+> Private (Annexure C5 -- booking is person-adjacent data). Retention class (Annexure C4): bookings
+> 3 yr, purge/archive governed by VS_RetentionPurgeBatch (VS-21) honoring the patient's
+> longest-linked record (design §6.5) -- this object's retention class does not itself force early
+> patient purge.
+
+**Why it's safe to trim:** every substantive fact in the original (relationship-type rationale,
+retention class, no-clinical/no-Aadhaar confirmation, OWD) is already captured in full detail
+elsewhere in this same review packet ("Relationship types — Slot confirmed as Lookup, and why",
+"OWD — Private confirmed", "No-Aadhaar confirmation" sections above) and in the field-level
+descriptions on disk. The XML description now states the object's purpose and cites the same
+ticket/design/decision IDs (VS-08, EP-03, RFP §3.4, D-019/D-020, design §2.4, REQ-045, Annexure
+C5, VS-21/design §6.5) so a reader can still trace to the full rationale without the XML itself
+carrying it.
+
 ## Manual / setup steps
 
 None required by this ticket beyond the standard deploy-order sequencing already noted above

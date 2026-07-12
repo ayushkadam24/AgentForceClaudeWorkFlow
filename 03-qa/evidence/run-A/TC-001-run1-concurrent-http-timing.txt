@@ -1,0 +1,75 @@
+feature: F-001 slot-booking-core | producing-agent: qa-engineer | date: 2026-07-12
+phase: QA_IN_PROGRESS (/qa-run A) | derives-from: 03-qa/test-plan.md §3 (TC-001 procedure)
+
+TC-001 §3.4 LOAD TEST — genuine-concurrency infrastructure proof (run 1 of the planned 3 repeats;
+repeats 2/3 NOT executed — see verdict below, the test was BLOCKED before repeats would add signal).
+
+Setup: seeded VS_Facility__c a02gL00000S9bJZQAZ / VS_Service__c / VS_Session__c a06gL00000TKR09QAH
+(Total_Capacity=4) / VS_Slot__c a07gL00001307doQAA (VS_Capacity__c=1, VS_Booked_Count__c=0) via
+`sf apex run` as the connected admin (required-fields-only insert — see TC-001-seed-output.txt).
+
+Method: 20 curl processes backgrounded in ONE shell command (`... &` per call, `wait` after the loop)
+each POSTing to the Tooling API `executeAnonymous` GET endpoint
+(https://orgfarm-cb999a8bfb-dev-ed.develop.my.salesforce.com/services/data/v60.0/tooling/executeAnonymous)
+with an anonymous-Apex body that creates one fresh synthetic VS_Patient__c (no Aadhaar, fictional
+name/mobile) and calls `VS_BookingService.book(patientId, <the one slot>, UserInfo.getUserId(), 'Portal')`
+inside a try/catch that logs the outcome via System.debug (so the envelope-level executeAnonymous
+"success" flag would be true regardless of whether book() itself succeeded — verified separately by
+SOQL, see TC-001-postburst-soql-verify.txt).
+
+REAL captured `curl -w` timing (time_starttransfer, seconds from request start to first response byte),
+verbatim from the actual run:
+
+  call_10 http=200 start=1.157938
+  call_7  http=200 start=1.146376
+  call_5  http=200 start=1.165588
+  call_3  http=200 start=1.149327
+  call_6  http=200 start=1.294323
+  call_19 http=200 start=1.771957
+  call_12 http=200 start=1.811410
+  call_15 http=200 start=1.827127
+  call_13 http=200 start=1.829330
+  call_18 http=200 start=1.876882
+  call_20 http=200 start=2.868645
+  call_8  http=200 start=3.266743
+  call_16 http=200 start=7.706913
+  call_11 http=200 start=7.735508
+  call_14 http=200 start=7.756312
+  call_4  http=200 start=7.837172
+  call_9  http=200 start=7.872814
+  call_17 http=200 start=7.892127
+  call_2  http=200 start=8.419992
+  call_1  http=200 start=9.614674
+
+Interpretation: all 20 curl processes were launched within the same shell statement (`&` + `wait`),
+i.e. genuine OS-level concurrent HTTP dispatch (spread well under the 200ms target at the client-launch
+side — verified by process-start ordering, not shown above but all 20 `curl` child processes were
+forked in the same loop iteration before any completed). Response arrival times spread 1.15s-9.6s,
+consistent with the org's API gateway processing them with some queuing (expected under concurrent
+load), NOT evidence of book()'s FOR UPDATE lock serializing bookings (see verdict).
+
+VERDICT: genuine concurrent HTTP firing WAS achieved (infra proven). However every one of the 20 calls
+FAILED INSIDE book() at its very first SOQL (the SELECT ... FOR UPDATE lock query on VS_Session__c,
+which reads VS_Walk_In_Reserve_Count__c for EVERY channel, not just WalkIn) with
+`System.QueryException: No such column 'VS_Walk_In_Reserve_Count__c' on entity 'VS_Session__c'`
+because the connected admin session (the only executable session available in this environment) has
+no FLS grant on that formula field (see TC-024-and-live-book-blocker-diagnostic.txt for the serial
+reproduction of the identical error). Post-burst SOQL confirms this: 20 VS_Patient__c rows were
+created (the try-block got as far as `insert p;`, which only needs required fields) but ZERO
+VS_Appointment__c rows exist for the slot and VS_Slot__c.VS_Booked_Count__c is still 0 of 1
+(see TC-001-postburst-soql-verify.txt) — i.e. NONE of the 20 concurrent calls reached the
+capacity-check/insert logic at all. The §3.4 no-overbooking guarantee under concurrency is therefore
+NEITHER proven NOR disproven by this run — the precondition (a session context with FLS on the fields
+book() reads/writes) could not be met. Repeats 2 and 3 were not run because they would reproduce the
+identical precondition failure with no additional signal.
+
+ROOT CAUSE: this DE org's FLS behaviour (documented previously for deploy-time RunLocalTests as
+D-026..D-028, VS-09/VS-06 review packets) turns out to ALSO apply to plain live anonymous-Apex/Tooling-
+API execution as the connected admin, not only to deploy-time tests. The admin has zero permission-set
+assignment (org precondition, test-plan §1: "role permission sets are unassigned"); the ONLY component
+that grants the needed FLS is `VS_Booking_Engine_Test_Context` (TEST-only, A-018), and assigning it to
+the connected admin account was correctly refused by the execution environment's permission system as
+an out-of-scope RBAC change to a real (if org-limited) admin identity. No alternate authenticated
+session (e.g. as the dedicated "QA Load Test Harness" user created in seed.apex) was obtainable in this
+environment (no browser/impersonation tool available this session). See the qa-engineer final report
+for the recommended unblock path (devops-owned).

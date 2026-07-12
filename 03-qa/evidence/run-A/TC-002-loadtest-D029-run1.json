@@ -1,0 +1,379 @@
+{
+  "summary": {
+    "label": "TC-002-run1",
+    "variant": "walkin",
+    "N": 25,
+    "http200": 25,
+    "onlineSuccess": 0,
+    "walkinSuccess": 1,
+    "totalSuccess": 1,
+    "rejections": {
+      "WALKIN_RESERVE_FULL": 24
+    },
+    "launch_spread_ms": 750,
+    "total_window_ms": 2517,
+    "peak_concurrent_in_flight": 25
+  },
+  "verify": {
+    "sessionStatus": "Open",
+    "slotStatus": "Open",
+    "walkInReserve": 1,
+    "walkInUsed": 1,
+    "slotCapacity": 3,
+    "slotBookedCount": 0,
+    "apptCount": 1,
+    "sessionId": "a06gL00000TKgTpQAL"
+  },
+  "calls": [
+    {
+      "idx": 1,
+      "ch": "walkin",
+      "start": 1783873901433,
+      "end": 1783873902366,
+      "ttfb": 0.785776,
+      "ttot": 0.785899,
+      "http": 200,
+      "resp": {
+        "reason": null,
+        "apptId": "a00gL00001ErbiPQAR",
+        "success": true
+      }
+    },
+    {
+      "idx": 2,
+      "ch": "walkin",
+      "start": 1783873901451,
+      "end": 1783873902666,
+      "ttfb": 1.06478,
+      "ttot": 1.065141,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 3,
+      "ch": "walkin",
+      "start": 1783873901468,
+      "end": 1783873902628,
+      "ttfb": 0.94707,
+      "ttot": 0.947141,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 5,
+      "ch": "walkin",
+      "start": 1783873901521,
+      "end": 1783873902468,
+      "ttfb": 0.794951,
+      "ttot": 0.795037,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 4,
+      "ch": "walkin",
+      "start": 1783873901527,
+      "end": 1783873902713,
+      "ttfb": 1.03253,
+      "ttot": 1.03258,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 6,
+      "ch": "walkin",
+      "start": 1783873901535,
+      "end": 1783873902664,
+      "ttfb": 0.946805,
+      "ttot": 0.946876,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 7,
+      "ch": "walkin",
+      "start": 1783873901632,
+      "end": 1783873902799,
+      "ttfb": 1.038132,
+      "ttot": 1.038211,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 8,
+      "ch": "walkin",
+      "start": 1783873901643,
+      "end": 1783873902764,
+      "ttfb": 0.989932,
+      "ttot": 0.989975,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 10,
+      "ch": "walkin",
+      "start": 1783873901668,
+      "end": 1783873902933,
+      "ttfb": 1.085105,
+      "ttot": 1.085187,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 9,
+      "ch": "walkin",
+      "start": 1783873901683,
+      "end": 1783873902869,
+      "ttfb": 0.963964,
+      "ttot": 0.96401,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 11,
+      "ch": "walkin",
+      "start": 1783873901715,
+      "end": 1783873903050,
+      "ttfb": 1.122757,
+      "ttot": 1.122822,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 12,
+      "ch": "walkin",
+      "start": 1783873901763,
+      "end": 1783873902976,
+      "ttfb": 0.981689,
+      "ttot": 0.981746,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 14,
+      "ch": "walkin",
+      "start": 1783873901808,
+      "end": 1783873903761,
+      "ttfb": 1.274928,
+      "ttot": 1.27499,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 13,
+      "ch": "walkin",
+      "start": 1783873901849,
+      "end": 1783873903226,
+      "ttfb": 1.151497,
+      "ttot": 1.151559,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 15,
+      "ch": "walkin",
+      "start": 1783873901866,
+      "end": 1783873903408,
+      "ttfb": 1.21654,
+      "ttot": 1.216596,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 16,
+      "ch": "walkin",
+      "start": 1783873901910,
+      "end": 1783873903679,
+      "ttfb": 1.269331,
+      "ttot": 1.269438,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 17,
+      "ch": "walkin",
+      "start": 1783873901931,
+      "end": 1783873903880,
+      "ttfb": 1.201621,
+      "ttot": 1.201679,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 18,
+      "ch": "walkin",
+      "start": 1783873901942,
+      "end": 1783873903937,
+      "ttfb": 1.352248,
+      "ttot": 1.352304,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 19,
+      "ch": "walkin",
+      "start": 1783873901964,
+      "end": 1783873903950,
+      "ttfb": 1.57639,
+      "ttot": 1.576447,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 20,
+      "ch": "walkin",
+      "start": 1783873902007,
+      "end": 1783873903679,
+      "ttfb": 1.272856,
+      "ttot": 1.272911,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 21,
+      "ch": "walkin",
+      "start": 1783873902089,
+      "end": 1783873903950,
+      "ttfb": 1.419429,
+      "ttot": 1.419486,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 22,
+      "ch": "walkin",
+      "start": 1783873902103,
+      "end": 1783873903927,
+      "ttfb": 1.353554,
+      "ttot": 1.353607,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 23,
+      "ch": "walkin",
+      "start": 1783873902150,
+      "end": 1783873903890,
+      "ttfb": 1.181107,
+      "ttot": 1.181162,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 24,
+      "ch": "walkin",
+      "start": 1783873902169,
+      "end": 1783873903864,
+      "ttfb": 1.350777,
+      "ttot": 1.350835,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 25,
+      "ch": "walkin",
+      "start": 1783873902183,
+      "end": 1783873903932,
+      "ttfb": 1.271753,
+      "ttot": 1.271816,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    }
+  ]
+}

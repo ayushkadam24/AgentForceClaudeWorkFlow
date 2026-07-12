@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Bookable_Capacity__c</fullName>
+    <description>Formula (design §2.1/§2.3): VS_Total_Capacity__c - VS_Walk_In_Reserve_Count__c. The portion of session capacity online/staff bookings may draw from; VS-06 distributes this total evenly across the session&apos;s generated VS_Slot__c rows (A-005) so sum(Slot.Capacity) == this value.</description>
+    <externalId>false</externalId>
+    <formula>VS_Total_Capacity__c - VS_Walk_In_Reserve_Count__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Bookable Capacity</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

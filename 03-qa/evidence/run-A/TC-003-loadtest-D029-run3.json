@@ -1,0 +1,394 @@
+{
+  "summary": {
+    "label": "TC-003-run3",
+    "variant": "disjoint",
+    "N": 26,
+    "http200": 26,
+    "onlineSuccess": 1,
+    "walkinSuccess": 1,
+    "totalSuccess": 2,
+    "rejections": {
+      "WALKIN_RESERVE_FULL": 12,
+      "SLOT_FULL": 12
+    },
+    "launch_spread_ms": 887,
+    "total_window_ms": 2184,
+    "peak_concurrent_in_flight": 26
+  },
+  "verify": {
+    "sessionStatus": "Open",
+    "slotStatus": "Full",
+    "walkInReserve": 1,
+    "walkInUsed": 1,
+    "slotCapacity": 1,
+    "slotBookedCount": 1,
+    "apptCount": 2,
+    "sessionId": "a06gL00000TKgdVQAT"
+  },
+  "calls": [
+    {
+      "idx": 1,
+      "ch": "walkin",
+      "start": 1783873947430,
+      "end": 1783873948386,
+      "ttfb": 0.717475,
+      "ttot": 0.717522,
+      "http": 200,
+      "resp": {
+        "reason": null,
+        "apptId": "a00gL00001ErborQAB",
+        "success": true
+      }
+    },
+    {
+      "idx": 2,
+      "ch": "online",
+      "start": 1783873947455,
+      "end": 1783873948498,
+      "ttfb": 0.872498,
+      "ttot": 0.872568,
+      "http": 200,
+      "resp": {
+        "reason": null,
+        "apptId": "a00gL00001ErGqsQAF",
+        "success": true
+      }
+    },
+    {
+      "idx": 3,
+      "ch": "walkin",
+      "start": 1783873947469,
+      "end": 1783873948433,
+      "ttfb": 0.73057,
+      "ttot": 0.730714,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 4,
+      "ch": "online",
+      "start": 1783873947500,
+      "end": 1783873948578,
+      "ttfb": 0.850744,
+      "ttot": 0.850892,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 5,
+      "ch": "walkin",
+      "start": 1783873947569,
+      "end": 1783873948619,
+      "ttfb": 0.83779,
+      "ttot": 0.837844,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 6,
+      "ch": "online",
+      "start": 1783873947582,
+      "end": 1783873948667,
+      "ttfb": 0.888759,
+      "ttot": 0.888799,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 7,
+      "ch": "walkin",
+      "start": 1783873947599,
+      "end": 1783873948533,
+      "ttfb": 0.789231,
+      "ttot": 0.789282,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 8,
+      "ch": "online",
+      "start": 1783873947655,
+      "end": 1783873948733,
+      "ttfb": 0.882016,
+      "ttot": 0.882082,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 9,
+      "ch": "walkin",
+      "start": 1783873947686,
+      "end": 1783873948772,
+      "ttfb": 0.8774,
+      "ttot": 0.877456,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 10,
+      "ch": "online",
+      "start": 1783873947791,
+      "end": 1783873948872,
+      "ttfb": 0.904928,
+      "ttot": 0.905002,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 11,
+      "ch": "walkin",
+      "start": 1783873947810,
+      "end": 1783873948832,
+      "ttfb": 0.830336,
+      "ttot": 0.830403,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 12,
+      "ch": "online",
+      "start": 1783873947827,
+      "end": 1783873949116,
+      "ttfb": 0.985039,
+      "ttot": 0.985671,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 13,
+      "ch": "walkin",
+      "start": 1783873947858,
+      "end": 1783873948906,
+      "ttfb": 0.836527,
+      "ttot": 0.836588,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 15,
+      "ch": "walkin",
+      "start": 1783873947918,
+      "end": 1783873948940,
+      "ttfb": 0.843632,
+      "ttot": 0.843727,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 14,
+      "ch": "online",
+      "start": 1783873947925,
+      "end": 1783873948987,
+      "ttfb": 0.884505,
+      "ttot": 0.884569,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 16,
+      "ch": "online",
+      "start": 1783873947962,
+      "end": 1783873949016,
+      "ttfb": 0.837759,
+      "ttot": 0.837865,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 17,
+      "ch": "walkin",
+      "start": 1783873947993,
+      "end": 1783873949066,
+      "ttfb": 0.879825,
+      "ttot": 0.879887,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 18,
+      "ch": "online",
+      "start": 1783873947996,
+      "end": 1783873949134,
+      "ttfb": 0.865347,
+      "ttot": 0.865572,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 19,
+      "ch": "walkin",
+      "start": 1783873948082,
+      "end": 1783873949303,
+      "ttfb": 0.968473,
+      "ttot": 0.968565,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 21,
+      "ch": "walkin",
+      "start": 1783873948141,
+      "end": 1783873949375,
+      "ttfb": 0.985111,
+      "ttot": 0.985175,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 20,
+      "ch": "online",
+      "start": 1783873948166,
+      "end": 1783873949412,
+      "ttfb": 1.055824,
+      "ttot": 1.055937,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 23,
+      "ch": "walkin",
+      "start": 1783873948185,
+      "end": 1783873949330,
+      "ttfb": 0.95084,
+      "ttot": 0.950924,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 22,
+      "ch": "online",
+      "start": 1783873948204,
+      "end": 1783873949614,
+      "ttfb": 1.220797,
+      "ttot": 1.220844,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 24,
+      "ch": "online",
+      "start": 1783873948243,
+      "end": 1783873949443,
+      "ttfb": 1.029553,
+      "ttot": 1.02961,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 25,
+      "ch": "walkin",
+      "start": 1783873948276,
+      "end": 1783873949501,
+      "ttfb": 1.028314,
+      "ttot": 1.028386,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 26,
+      "ch": "online",
+      "start": 1783873948317,
+      "end": 1783873949534,
+      "ttfb": 1.041163,
+      "ttot": 1.041218,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Slot_Start__c</fullName>
+    <description>Start of this 15-minute bookable window (D-008 default granularity, configurable via VS_Setting__mdt/VS_Service__c.VS_Slot_Granularity_Mins__c). Populated by VS-06 slot generation from the parent session&apos;s operating window -- no generation logic lives in this ticket.</description>
+    <label>Slot Start</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

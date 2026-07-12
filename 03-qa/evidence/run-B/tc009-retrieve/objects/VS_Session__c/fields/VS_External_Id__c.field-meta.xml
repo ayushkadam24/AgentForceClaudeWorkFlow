@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_External_Id__c</fullName>
+    <caseSensitive>false</caseSensitive>
+    <description>External system key reserved for a future CoWIN/U-WIN integration seam (OQ-016); not populated in F-001. Marked External ID + Unique per design §2.3; no composite default-value formula is set for this field in this ticket since VS-01&apos;s acceptance criteria only require the composite key behavior on VS_Facility_Service__c (see review packet).</description>
+    <externalId>true</externalId>
+    <label>External Id</label>
+    <length>60</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility_Type__c</fullName>
+    <description>Facility tier used for discovery filtering and capacity-planning reporting (REQ-001, design §2.3). Values match design exactly: PHC, CHC, DistrictHospital.</description>
+    <label>Facility Type</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>PHC</fullName>
+                <default>true</default>
+                <label>PHC</label>
+            </value>
+            <value>
+                <fullName>CHC</fullName>
+                <default>false</default>
+                <label>CHC</label>
+            </value>
+            <value>
+                <fullName>DistrictHospital</fullName>
+                <default>false</default>
+                <label>District Hospital</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

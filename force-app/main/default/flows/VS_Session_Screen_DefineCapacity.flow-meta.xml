@@ -3,31 +3,15 @@
     <apiVersion>67.0</apiVersion>
     <description>VS-03 (EP-01, dev-mid). Purpose: lets a Medical Officer in Charge (persona P6, permission set VS_MO_Facility_Admin) create a VS_Session__c — defining per-session capacity for a facility+service+date (D-007) and optionally marking the session a Drive Day (VS_Is_Drive_Day__c, D-018), which VS-06 slot generation will later honor as a holiday-closure override. Entry: this is a user-launched SCREEN FLOW, not a record trigger — no automatic entry criteria apply; it is intended to be launched by an MO via a Lightning App Page tab or Global Quick Action (exact placement is a manual post-deploy Setup step, see review packet "Manual / setup steps"). Scope boundaries (do not exceed in future edits without a new ticket): does NOT generate VS_Slot__c rows (VS-06's job), does NOT set slot granularity or the VS_Session__c.VS_Walk_In_Reserve_Count__c/VS_Bookable_Capacity__c formula fields (both platform-computed from VS_Total_Capacity__c + VS_Setting__mdt.WalkInReservePct.VS_Value__c — this flow only sets VS_Total_Capacity__c), does NOT enforce facility-scoped record visibility (VS-20/A-007 — MOs currently see whichever facilities their profile/permission set can read; the Facility picker here does not itself restrict by assigned facility). Validation is enforced entirely in-flow (screen field validationRule) per rules/20 "declarative-first" and this ticket's explicit instruction to use flow validation, not Apex: Total Capacity must be greater than 0, End Time must be after Start Time, Session Date must not be in the past, and — added 2026-07-12 as a batched review fix (reviewer's concrete cross-field suggestion) — the DATE PART of both Start Time and End Time must equal the selected Session Date (via DATEVALUE(...) = {!VS_Session_Date_Input} screen-field validationRules), so an MO cannot create a session dated one calendar day with slot times timestamped on a different day; this prevents VS-06 slot generation from keying off the wrong calendar day for the drive-day/holiday check. The DML create carries a fault connector (flow-patterns skill) to a plain-language fault screen including the facility's helpline number (Annexure C7.3); VS_Error_Log__c does not exist on disk yet (a later ticket) so no error-log write is attempted here — this is called out as deferred, not silently skipped.</description>
     <environments>Default</environments>
+    <formulas>
+        <name>VS_Helpline_Display</name>
+        <dataType>String</dataType>
+        <expression>IF(ISBLANK({!VS_Selected_Facility.VS_Helpline_Number__c}), &quot;your district helpline&quot;, {!VS_Selected_Facility.VS_Helpline_Number__c})</expression>
+    </formulas>
     <interviewLabel>VS Session Screen Define Capacity {!$Flow.CurrentDateTime}</interviewLabel>
     <label>VS Session Screen Define Capacity</label>
     <processType>Flow</processType>
-    <status>Active</status>
-
-    <start>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>VS_Session_Details_Screen</targetReference>
-        </connector>
-    </start>
-
-    <!-- ==================== VARIABLES ==================== -->
-    <variables>
-        <name>VS_Selected_Facility</name>
-        <dataType>SObject</dataType>
-        <isCollection>false</isCollection>
-        <isInput>false</isInput>
-        <isOutput>false</isOutput>
-        <objectType>VS_Facility__c</objectType>
-    </variables>
-
-    <!-- ==================== CHOICE SETS ==================== -->
-    <recordChoiceSets>
+    <dynamicChoiceSets>
         <name>VS_Active_Facility_Choices</name>
         <dataType>String</dataType>
         <displayField>Name</displayField>
@@ -44,9 +28,8 @@
         <sortField>Name</sortField>
         <sortOrder>Asc</sortOrder>
         <valueField>Id</valueField>
-    </recordChoiceSets>
-
-    <recordChoiceSets>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
         <name>VS_Active_Service_Choices</name>
         <dataType>String</dataType>
         <displayField>Name</displayField>
@@ -63,16 +46,95 @@
         <sortField>Name</sortField>
         <sortOrder>Asc</sortOrder>
         <valueField>Id</valueField>
-    </recordChoiceSets>
-
-    <!-- ==================== FORMULAS ==================== -->
-    <formulas>
-        <name>VS_Helpline_Display</name>
-        <dataType>String</dataType>
-        <expression>IF(ISBLANK({!VS_Selected_Facility.VS_Helpline_Number__c}), &quot;your district helpline&quot;, {!VS_Selected_Facility.VS_Helpline_Number__c})</expression>
-    </formulas>
-
-    <!-- ==================== SCREEN 1: DETAILS ==================== -->
+    </dynamicChoiceSets>
+    <recordCreates>
+        <name>VS_Create_Session</name>
+        <label>Create Session</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <connector>
+            <targetReference>VS_Session_Success_Screen</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>VS_Session_Fault_Screen</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>VS_Facility__c</field>
+            <value>
+                <elementReference>VS_Facility_Select</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Service__c</field>
+            <value>
+                <elementReference>VS_Service_Select</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Session_Date__c</field>
+            <value>
+                <elementReference>VS_Session_Date_Input</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Start_Time__c</field>
+            <value>
+                <elementReference>VS_Start_Time_Input</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_End_Time__c</field>
+            <value>
+                <elementReference>VS_End_Time_Input</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Total_Capacity__c</field>
+            <value>
+                <elementReference>VS_Total_Capacity_Input</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Is_Drive_Day__c</field>
+            <value>
+                <elementReference>VS_Drive_Day_Input</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>VS_Status__c</field>
+            <value>
+                <stringValue>Open</stringValue>
+            </value>
+        </inputAssignments>
+        <object>VS_Session__c</object>
+    </recordCreates>
+    <recordLookups>
+        <name>VS_Get_Selected_Facility</name>
+        <label>Get Selected Facility</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>VS_Create_Session</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>VS_Session_Fault_Screen</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>VS_Facility_Select</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>VS_Facility__c</object>
+        <outputReference>VS_Selected_Facility</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <queriedFields>VS_Helpline_Number__c</queriedFields>
+    </recordLookups>
     <screens>
         <name>VS_Session_Details_Screen</name>
         <label>Define Session Capacity</label>
@@ -155,105 +217,10 @@
             <dataType>Boolean</dataType>
             <fieldText>Mark as Drive Day (opens this session even if the date is marked a holiday closure)</fieldText>
             <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-
-    <!-- ==================== GET SELECTED FACILITY (for helpline display) ==================== -->
-    <recordLookups>
-        <name>VS_Get_Selected_Facility</name>
-        <label>Get Selected Facility</label>
-        <locationX>176</locationX>
-        <locationY>242</locationY>
-        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>VS_Create_Session</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>VS_Session_Fault_Screen</targetReference>
-        </faultConnector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>VS_Facility_Select</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>VS_Facility__c</object>
-        <outputReference>VS_Selected_Facility</outputReference>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-        <queriedFields>VS_Helpline_Number__c</queriedFields>
-    </recordLookups>
-
-    <!-- ==================== CREATE SESSION ==================== -->
-    <recordCreates>
-        <name>VS_Create_Session</name>
-        <label>Create Session</label>
-        <locationX>176</locationX>
-        <locationY>350</locationY>
-        <connector>
-            <targetReference>VS_Session_Success_Screen</targetReference>
-        </connector>
-        <faultConnector>
-            <targetReference>VS_Session_Fault_Screen</targetReference>
-        </faultConnector>
-        <inputAssignments>
-            <field>VS_Facility__c</field>
-            <value>
-                <elementReference>VS_Facility_Select</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Service__c</field>
-            <value>
-                <elementReference>VS_Service_Select</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Session_Date__c</field>
-            <value>
-                <elementReference>VS_Session_Date_Input</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Start_Time__c</field>
-            <value>
-                <elementReference>VS_Start_Time_Input</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_End_Time__c</field>
-            <value>
-                <elementReference>VS_End_Time_Input</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Total_Capacity__c</field>
-            <value>
-                <elementReference>VS_Total_Capacity_Input</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Is_Drive_Day__c</field>
-            <value>
-                <elementReference>VS_Drive_Day_Input</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>VS_Status__c</field>
-            <value>
-                <stringValue>Open</stringValue>
-            </value>
-        </inputAssignments>
-        <object>VS_Session__c</object>
-    </recordCreates>
-
-    <!-- ==================== SUCCESS SCREEN ==================== -->
     <screens>
         <name>VS_Session_Success_Screen</name>
         <label>Session Created</label>
@@ -270,8 +237,6 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
-
-    <!-- ==================== FAULT SCREEN ==================== -->
     <screens>
         <name>VS_Session_Fault_Screen</name>
         <label>Session Not Saved</label>
@@ -288,4 +253,20 @@
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>VS_Session_Details_Screen</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>VS_Selected_Facility</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>VS_Facility__c</objectType>
+    </variables>
 </Flow>

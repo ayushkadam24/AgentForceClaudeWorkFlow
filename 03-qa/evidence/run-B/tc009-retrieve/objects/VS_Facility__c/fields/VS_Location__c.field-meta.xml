@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Location__c</fullName>
+    <description>Facility latitude/longitude used to order citizen discovery search results by proximity (REQ-001, VS-15). No person data — facility-level only.</description>
+    <displayLocationInDecimal>true</displayLocationInDecimal>
+    <label>Location</label>
+    <required>false</required>
+    <scale>5</scale>
+    <trackTrending>false</trackTrending>
+    <type>Location</type>
+</CustomField>

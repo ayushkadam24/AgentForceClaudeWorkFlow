@@ -1,0 +1,151 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.Id"
+        },
+        "QualifiedApiName": "Id"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.Owner"
+        },
+        "QualifiedApiName": "OwnerId"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.IsDeleted"
+        },
+        "QualifiedApiName": "IsDeleted"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.Name"
+        },
+        "QualifiedApiName": "Name"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.CreatedDate"
+        },
+        "QualifiedApiName": "CreatedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.CreatedBy"
+        },
+        "QualifiedApiName": "CreatedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.LastModifiedDate"
+        },
+        "QualifiedApiName": "LastModifiedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.LastModifiedBy"
+        },
+        "QualifiedApiName": "LastModifiedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.SystemModstamp"
+        },
+        "QualifiedApiName": "SystemModstamp"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9WhX"
+        },
+        "QualifiedApiName": "VS_Consent_Given__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9WhY"
+        },
+        "QualifiedApiName": "VS_Consent_Timestamp__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9WhZ"
+        },
+        "QualifiedApiName": "VS_Date_Of_Birth__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Wha"
+        },
+        "QualifiedApiName": "VS_Email__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whb"
+        },
+        "QualifiedApiName": "VS_Full_Name__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whc"
+        },
+        "QualifiedApiName": "VS_Gender__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whd"
+        },
+        "QualifiedApiName": "VS_Locality__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whe"
+        },
+        "QualifiedApiName": "VS_Match_Key__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whf"
+        },
+        "QualifiedApiName": "VS_Mobile__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whg"
+        },
+        "QualifiedApiName": "VS_No_Show_Count__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1of.00NgL00004F9Whh"
+        },
+        "QualifiedApiName": "VS_Pincode__c"
+      }
+    ],
+    "totalSize": 20,
+    "done": true
+  },
+  "warnings": []
+}

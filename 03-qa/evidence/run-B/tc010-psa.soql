@@ -1,0 +1,1 @@
+SELECT Assignee.Username, PermissionSet.Name FROM PermissionSetAssignment WHERE PermissionSet.Name LIKE 'VS_%' ORDER BY PermissionSet.Name

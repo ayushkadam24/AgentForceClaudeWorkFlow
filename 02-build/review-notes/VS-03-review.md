@@ -247,3 +247,114 @@ facility/service pairing gap is either accepted as a POC-scope limitation or rou
 validation-rule/flow-rework ticket, (3) the formula fields (`VS_Bookable_Capacity__c`,
 `VS_Walk_In_Reserve_Count__c`) remain untouched by this and every future flow that creates
 `VS_Session__c` rows.
+
+## Element-order fix (deploy-blocker) — 2026-07-12, dev-mid fix-forward pass
+
+devops's 2nd dry-run bisection (`02-build/deployments.md`, 20:10 re-run) surfaced a clean
+Metadata API parse error on this flow: `"Error parsing file: Element {...}recordChoiceSets invalid
+at this location in type Flow"`. Root cause: the top-level Flow XML child elements were not in the
+Metadata API XSD-required sequence — this file was hand-authored (not saved via Flow Builder,
+which auto-normalizes element order), and authoring order followed a "logical build order"
+(variables → choice sets → formulas → screen 1 → get-facility → create → screen 2 → screen 3)
+rather than the schema's required alphabetical-ish sequence. Specifically: `status` appeared
+before `start`; `variables` appeared before `recordChoiceSets`; `formulas`/`recordLookups`/
+`recordCreates` were scattered after the first `screens` block instead of grouped per schema.
+
+**Fix applied:** reordered the top-level sibling elements only, to the Flow metadata XSD sequence
+— `description`, `environments`, `formulas`, `interviewLabel`, `label`, `processType`,
+`recordChoiceSets` (both — see below), `recordCreates`, `recordLookups`, `screens` (all three, in
+original relative order), `start`, `status`, `variables`. **No element's internal content,
+attributes, connectors, validationRules, or the fault path/helpline logic were changed** — this
+was a pure reordering of top-level siblings so the file parses against the XSD. `apiVersion` (a
+top-level attribute-like element outside the alphabetical description sequence, always first)
+was left in place at the top.
+
+**On the "duplicate `recordChoiceSets`" note in the fix-forward instruction:** confirmed by direct
+read — these are **two distinct, real choice-set elements** (`VS_Active_Facility_Choices` and
+`VS_Active_Service_Choices`, backing the Facility and Service dropdowns respectively), not one
+element mis-placed twice. Both were kept, adjacent to each other, immediately after `label` and
+`processType` and before `recordCreates`/`recordLookups` per the XSD sequence. Nothing was dropped
+or duplicated — verified by a before/after top-level element inventory (14 top-level element
+occurrences before, 14 after: 1 description, 1 environments, 1 formulas, 1 interviewLabel, 1
+label, 1 processType, 2 recordChoiceSets, 1 recordCreates, 1 recordLookups, 3 screens, 1 start, 1
+status, 1 variables — counts unchanged).
+
+XML well-formedness re-verified after the reorder (Python `xml.dom.minidom`) — 0 failures, see
+this session's devops-facing summary in the fix-forward run notes. This is still **not** proof of
+Metadata API schema validity beyond well-formedness plus this specific ordering fix — devops's
+next dry-run against the DE org is the authoritative check.
+
+## Choice-set element fix (deploy-blocker, 2nd occurrence) — 2026-07-12, dev-mid fix-forward pass 2
+
+The Phase 2 dry-run (`02-build/deployments.md`, Deploy ID `0AfgL00000Qxf0ASAR`, 2026-07-12 12:20)
+surfaced the SAME element error again after the ordering-only fix above: **`"Error parsing file:
+Element {http://soap.sforce.com/2006/04/metadata}recordChoiceSets invalid at this location in
+type Flow"`**. Root cause this time correctly identified as a NAME/type error, not an ordering
+error: **`<recordChoiceSets>` is not a valid element of the Flow metadata type at all.** A
+record-backed choice set in the current Metadata API must be authored as `<dynamicChoiceSets>`
+(metadata type `FlowDynamicChoiceSet`). The earlier reorder fix moved the element into its
+schema-sequence-correct slot but could never have resolved the failure, because the element's
+NAME was wrong regardless of position.
+
+**Fix applied:** both `<recordChoiceSets>` blocks renamed to `<dynamicChoiceSets>`:
+- `VS_Active_Facility_Choices` (over `VS_Facility__c`)
+- `VS_Active_Service_Choices` (over `VS_Service__c`)
+
+**Mapping (faithful, no loss):** every child element under the old `recordChoiceSets` blocks
+carries over 1:1 to `dynamicChoiceSets` — `name` (kept identical so the two screen fields'
+`choiceReferences` — `VS_Facility_Select` and `VS_Service_Select` — still resolve without any
+change), `dataType` (String, the record Id), `displayField` (Name), `filterLogic` (and),
+`filters` (the `VS_Is_Active__c = true` active-record filter — preserved verbatim on both, not
+dropped), `limit` (200), `object` (`VS_Facility__c` / `VS_Service__c`), `sortField` (Name),
+`sortOrder` (Asc), `valueField` (Id). `FlowRecordChoiceSet` and `FlowDynamicChoiceSet` share this
+child schema, so no child was ambiguous, invented, or dropped — this was a pure element-rename,
+not a semantic rework. **No mapping ambiguity to flag** — every child had a direct equivalent.
+
+**Position:** unchanged — the two `dynamicChoiceSets` elements sit exactly where
+`recordChoiceSets` sat after the prior reorder fix (immediately after `label`/`processType`,
+before `recordCreates`/`recordLookups`), which is also the correct XSD position for
+`dynamicChoiceSets` per the fix-forward instruction's stated sequence
+(`description`/`environments`/`formulas`/`interviewLabel`/`label`/`processMetadataValues`/
+`processType` → `dynamicChoiceSets` → `recordCreates`/`recordLookups`/`recordUpdates`/
+`runInMode`/`screens`/`start`/`status`/`variables`).
+
+**Nothing else touched:** screens, validation rules, the fault connector/helpline text, the
+`VS_Create_Session` DML logic, and the `VS_Get_Selected_Facility` lookup are byte-identical to
+the pre-fix file except for these two element renames.
+
+**Salesforce error this fix addresses (verbatim):**
+`"problem": "Error parsing file: Element {http://soap.sforce.com/2006/04/metadata}recordChoiceSets
+invalid at this location in type Flow"` — Phase 2 dry-run, Deploy ID `0AfgL00000Qxf0ASAR`
+(`02-build/deployments.md`, "Phase 2 dry-run" section).
+
+**Verification this pass:** file re-parsed with Python `xml.dom.minidom` — 0 failures (see this
+run's fix-forward summary). This confirms well-formed XML only, NOT Metadata API schema validity
+— devops's next dry-run against the DE org (Phase 2 re-run) is the authoritative check; not run
+by this agent per this pass's explicit instruction (do not deploy or dry-run).
+
+## Boolean screen-input `isRequired` fix (deploy-blocker, 3rd defect on this flow) — 2026-07-12, dev-mid fix-forward pass 3
+
+The dynamicChoiceSets fix above cleared the choice-set error, but devops's follow-up complete
+sweep surfaced a **new, previously-masked** error on the same flow file: **`"isRequired can't be
+set to false for screen input fields of type boolean"`**, on the `VS_Drive_Day_Input` screen
+field.
+
+**Root cause:** boolean screen input fields are inherently optional in the Flow metadata schema —
+an explicit `<isRequired>` element (even set to `false`, its semantically "correct" value) is
+illegal on a `Boolean`-typed `InputField`. This defect was invisible in every prior dry-run
+because the run always failed earlier on the choice-set element error first; fixing that defect
+let the Metadata API validator reach further into the file and surface this one — not a new
+regression introduced by this agent's own edits.
+
+**Fix applied:** deleted the single line `<isRequired>false</isRequired>` from the
+`VS_Drive_Day_Input` field block. Nothing else on that field (`name`, `dataType`, `fieldText`,
+`fieldType`) or any other screen/element was touched. The field remains optional in behavior —
+removing the illegal explicit-false declaration does not change runtime behavior, since boolean
+inputs are optional by the platform's implicit default regardless of this element's presence.
+
+**Salesforce error this fix addresses (verbatim):**
+`"isRequired can't be set to false for screen input fields of type boolean"` — devops complete
+sweep re-run, 2026-07-12 (`02-build/deployments.md`, latest Errors table entry for this flow).
+
+**Verification this pass:** file re-parsed with Python `xml.dom.minidom` — 0 failures. Not
+deployed/dry-run by this agent; devops re-runs next.

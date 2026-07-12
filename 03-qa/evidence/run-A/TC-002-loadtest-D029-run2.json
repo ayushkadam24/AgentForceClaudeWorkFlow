@@ -1,0 +1,379 @@
+{
+  "summary": {
+    "label": "TC-002-run2",
+    "variant": "walkin",
+    "N": 25,
+    "http200": 25,
+    "onlineSuccess": 0,
+    "walkinSuccess": 1,
+    "totalSuccess": 1,
+    "rejections": {
+      "WALKIN_RESERVE_FULL": 24
+    },
+    "launch_spread_ms": 1116,
+    "total_window_ms": 2428,
+    "peak_concurrent_in_flight": 24
+  },
+  "verify": {
+    "sessionStatus": "Open",
+    "slotStatus": "Open",
+    "walkInReserve": 1,
+    "walkInUsed": 1,
+    "slotCapacity": 3,
+    "slotBookedCount": 0,
+    "apptCount": 1,
+    "sessionId": "a06gL00000TKgVRQA1"
+  },
+  "calls": [
+    {
+      "idx": 1,
+      "ch": "walkin",
+      "start": 1783873908561,
+      "end": 1783873909665,
+      "ttfb": 0.77681,
+      "ttot": 0.776858,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 2,
+      "ch": "walkin",
+      "start": 1783873908593,
+      "end": 1783873909715,
+      "ttfb": 0.726833,
+      "ttot": 0.726892,
+      "http": 200,
+      "resp": {
+        "reason": null,
+        "apptId": "a00gL00001Erbk1QAB",
+        "success": true
+      }
+    },
+    {
+      "idx": 3,
+      "ch": "walkin",
+      "start": 1783873908612,
+      "end": 1783873909722,
+      "ttfb": 0.741317,
+      "ttot": 0.741375,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 4,
+      "ch": "walkin",
+      "start": 1783873908674,
+      "end": 1783873909766,
+      "ttfb": 0.693728,
+      "ttot": 0.693851,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 5,
+      "ch": "walkin",
+      "start": 1783873908740,
+      "end": 1783873909824,
+      "ttfb": 0.825604,
+      "ttot": 0.825656,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 6,
+      "ch": "walkin",
+      "start": 1783873908741,
+      "end": 1783873909846,
+      "ttfb": 0.734261,
+      "ttot": 0.734318,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 9,
+      "ch": "walkin",
+      "start": 1783873908872,
+      "end": 1783873909845,
+      "ttfb": 0.71357,
+      "ttot": 0.713624,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 7,
+      "ch": "walkin",
+      "start": 1783873908873,
+      "end": 1783873909876,
+      "ttfb": 0.811715,
+      "ttot": 0.811773,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 8,
+      "ch": "walkin",
+      "start": 1783873908890,
+      "end": 1783873910005,
+      "ttfb": 0.850371,
+      "ttot": 0.850441,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 11,
+      "ch": "walkin",
+      "start": 1783873908947,
+      "end": 1783873910218,
+      "ttfb": 0.789681,
+      "ttot": 0.789753,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 10,
+      "ch": "walkin",
+      "start": 1783873908964,
+      "end": 1783873909904,
+      "ttfb": 0.600455,
+      "ttot": 0.600519,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 12,
+      "ch": "walkin",
+      "start": 1783873909025,
+      "end": 1783873910451,
+      "ttfb": 0.989217,
+      "ttot": 0.989281,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 13,
+      "ch": "walkin",
+      "start": 1783873909088,
+      "end": 1783873910298,
+      "ttfb": 0.7789,
+      "ttot": 0.778967,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 14,
+      "ch": "walkin",
+      "start": 1783873909203,
+      "end": 1783873910436,
+      "ttfb": 0.768775,
+      "ttot": 0.768837,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 15,
+      "ch": "walkin",
+      "start": 1783873909203,
+      "end": 1783873910304,
+      "ttfb": 0.741199,
+      "ttot": 0.741264,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 18,
+      "ch": "walkin",
+      "start": 1783873909277,
+      "end": 1783873910577,
+      "ttfb": 1.034613,
+      "ttot": 1.034675,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 16,
+      "ch": "walkin",
+      "start": 1783873909292,
+      "end": 1783873910331,
+      "ttfb": 0.746902,
+      "ttot": 0.746965,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 17,
+      "ch": "walkin",
+      "start": 1783873909325,
+      "end": 1783873910364,
+      "ttfb": 0.745252,
+      "ttot": 0.745315,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 20,
+      "ch": "walkin",
+      "start": 1783873909415,
+      "end": 1783873910959,
+      "ttfb": 1.289496,
+      "ttot": 1.289639,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 19,
+      "ch": "walkin",
+      "start": 1783873909435,
+      "end": 1783873910529,
+      "ttfb": 0.785084,
+      "ttot": 0.785189,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 21,
+      "ch": "walkin",
+      "start": 1783873909494,
+      "end": 1783873910497,
+      "ttfb": 0.738274,
+      "ttot": 0.738337,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 23,
+      "ch": "walkin",
+      "start": 1783873909566,
+      "end": 1783873910610,
+      "ttfb": 0.764027,
+      "ttot": 0.764095,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 22,
+      "ch": "walkin",
+      "start": 1783873909602,
+      "end": 1783873910630,
+      "ttfb": 0.813472,
+      "ttot": 0.813534,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 24,
+      "ch": "walkin",
+      "start": 1783873909677,
+      "end": 1783873910989,
+      "ttfb": 0.706717,
+      "ttot": 0.706785,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 25,
+      "ch": "walkin",
+      "start": 1783873909677,
+      "end": 1783873910936,
+      "ttfb": 0.573774,
+      "ttot": 0.573862,
+      "http": 200,
+      "resp": {
+        "reason": "WALKIN_RESERVE_FULL",
+        "apptId": null,
+        "success": false
+      }
+    }
+  ]
+}

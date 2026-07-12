@@ -1,0 +1,394 @@
+{
+  "summary": {
+    "label": "TC-003-run1",
+    "variant": "disjoint",
+    "N": 26,
+    "http200": 26,
+    "onlineSuccess": 1,
+    "walkinSuccess": 0,
+    "totalSuccess": 1,
+    "rejections": {
+      "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ": 13,
+      "SLOT_FULL": 12
+    },
+    "launch_spread_ms": 675,
+    "total_window_ms": 3030,
+    "peak_concurrent_in_flight": 26
+  },
+  "verify": {
+    "sessionStatus": "Open",
+    "slotStatus": "Full",
+    "walkInReserve": 1,
+    "walkInUsed": 0,
+    "slotCapacity": 1,
+    "slotBookedCount": 1,
+    "apptCount": 14,
+    "sessionId": "a06gL00000TKczhQAD"
+  },
+  "calls": [
+    {
+      "idx": 1,
+      "ch": "walkin",
+      "start": 1783871348246,
+      "end": 1783871349445,
+      "ttfb": 1.035801,
+      "ttot": 1.035873,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 2,
+      "ch": "online",
+      "start": 1783871348258,
+      "end": 1783871349287,
+      "ttfb": 0.858266,
+      "ttot": 0.858379,
+      "http": 200,
+      "resp": {
+        "reason": null,
+        "apptId": "a00gL00001ErMZhQAN",
+        "success": true
+      }
+    },
+    {
+      "idx": 3,
+      "ch": "walkin",
+      "start": 1783871348274,
+      "end": 1783871349316,
+      "ttfb": 0.877855,
+      "ttot": 0.877945,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 4,
+      "ch": "online",
+      "start": 1783871348297,
+      "end": 1783871349914,
+      "ttfb": 1.45577,
+      "ttot": 1.455846,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 5,
+      "ch": "walkin",
+      "start": 1783871348303,
+      "end": 1783871349805,
+      "ttfb": 1.377935,
+      "ttot": 1.377975,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 6,
+      "ch": "online",
+      "start": 1783871348321,
+      "end": 1783871349853,
+      "ttfb": 1.37575,
+      "ttot": 1.375812,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 7,
+      "ch": "walkin",
+      "start": 1783871348369,
+      "end": 1783871349541,
+      "ttfb": 1.01638,
+      "ttot": 1.016494,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 8,
+      "ch": "online",
+      "start": 1783871348398,
+      "end": 1783871350005,
+      "ttfb": 1.456536,
+      "ttot": 1.456579,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 9,
+      "ch": "walkin",
+      "start": 1783871348424,
+      "end": 1783871350177,
+      "ttfb": 1.556371,
+      "ttot": 1.556488,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 10,
+      "ch": "online",
+      "start": 1783871348444,
+      "end": 1783871349961,
+      "ttfb": 1.373861,
+      "ttot": 1.373924,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 13,
+      "ch": "walkin",
+      "start": 1783871348485,
+      "end": 1783871350308,
+      "ttfb": 1.647359,
+      "ttot": 1.647422,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 11,
+      "ch": "walkin",
+      "start": 1783871348504,
+      "end": 1783871350215,
+      "ttfb": 1.564142,
+      "ttot": 1.564218,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 12,
+      "ch": "online",
+      "start": 1783871348506,
+      "end": 1783871350379,
+      "ttfb": 1.650268,
+      "ttot": 1.650313,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 14,
+      "ch": "online",
+      "start": 1783871348537,
+      "end": 1783871350405,
+      "ttfb": 1.677119,
+      "ttot": 1.677173,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 15,
+      "ch": "walkin",
+      "start": 1783871348600,
+      "end": 1783871350532,
+      "ttfb": 1.677784,
+      "ttot": 1.677831,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 16,
+      "ch": "online",
+      "start": 1783871348665,
+      "end": 1783871350772,
+      "ttfb": 1.880734,
+      "ttot": 1.880815,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 17,
+      "ch": "walkin",
+      "start": 1783871348692,
+      "end": 1783871350653,
+      "ttfb": 1.759638,
+      "ttot": 1.759752,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 18,
+      "ch": "online",
+      "start": 1783871348699,
+      "end": 1783871350550,
+      "ttfb": 1.713879,
+      "ttot": 1.714012,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 19,
+      "ch": "walkin",
+      "start": 1783871348721,
+      "end": 1783871350733,
+      "ttfb": 1.785968,
+      "ttot": 1.78601,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 20,
+      "ch": "online",
+      "start": 1783871348739,
+      "end": 1783871350818,
+      "ttfb": 1.876548,
+      "ttot": 1.876618,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 21,
+      "ch": "walkin",
+      "start": 1783871348772,
+      "end": 1783871350941,
+      "ttfb": 1.936339,
+      "ttot": 1.936439,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 22,
+      "ch": "online",
+      "start": 1783871348872,
+      "end": 1783871351276,
+      "ttfb": 2.25163,
+      "ttot": 2.251679,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 23,
+      "ch": "walkin",
+      "start": 1783871348880,
+      "end": 1783871351065,
+      "ttfb": 2.030493,
+      "ttot": 2.030605,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 24,
+      "ch": "online",
+      "start": 1783871348912,
+      "end": 1783871351167,
+      "ttfb": 2.106781,
+      "ttot": 2.10688,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 25,
+      "ch": "walkin",
+      "start": 1783871348920,
+      "end": 1783871351141,
+      "ttfb": 2.087714,
+      "ttot": 2.087834,
+      "http": 200,
+      "resp": {
+        "reason": "UNEXPECTED:System.DmlException:Operation failed due to fields being inaccessible on Sobject VS_Session__c, check errors on Exception or Result! ",
+        "apptId": null,
+        "success": false
+      }
+    },
+    {
+      "idx": 26,
+      "ch": "online",
+      "start": 1783871348921,
+      "end": 1783871351203,
+      "ttfb": 2.156453,
+      "ttot": 2.156559,
+      "http": 200,
+      "resp": {
+        "reason": "SLOT_FULL",
+        "apptId": null,
+        "success": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+Compiled successfully.
+Executed successfully.
+
+67.0 APEX_CODE,DEBUG;APEX_PROFILING,INFO
+Execute Anonymous: // TC-007: confirm whether ANY pattern/format validation exists on a free-text-capable
+Execute Anonymous: // VS_Patient__c field that would specifically block a government-ID-shaped numeric value.
+Execute Anonymous: //
+Execute Anonymous: // COMPLIANCE NOTE (rules/10 #1, Annexure C1.2): this file previously contained a literal
+Execute Anonymous: // 12-consecutive-digit placeholder value in VS_Full_Name__c. The project's own pretool guardrail
+Execute Anonymous: // correctly flagged that as Aadhaar-shaped and blocked a later write in this same session before it
+Execute Anonymous: // could land in a new file -- redacted here for consistency (rules/10 is absolute: no Aadhaar-shaped
+Execute Anonymous: // value belongs in any file, committed evidence included, even as an admittedly-fake test placeholder).
+Execute Anonymous: // The evidentiary question TC-007 asks ("is there field-level format validation on this object at
+Execute Anonymous: // all, or does data-minimization rely purely on field ABSENCE?") does not require an actual
+Execute Anonymous: // Aadhaar-shaped digit run to answer -- an arbitrary same-length ALPHANUMERIC junk string proves the
+Execute Anonymous: // identical thing: if a free-text field with NO regex/pattern validation rule accepts arbitrary
+Execute Anonymous: // 12-character junk, it would equally accept a 12-digit run, because there is no validation logic on
+Execute Anonymous: // this field capable of distinguishing the two. This is corroborated independently and more strongly
+Execute Anonymous: // by the structural finding that VS_Patient__c carries ZERO ValidationRule metadata at all (no
+Execute Anonymous: // force-app/main/default/objects/VS_Patient__c/validationRules directory exists) -- so no character
+Execute Anonymous: // class, digit count, or Aadhaar-pattern check exists anywhere on the object, full stop.
+Execute Anonymous: VS_Patient__c pat = new VS_Patient__c(
+Execute Anonymous:     VS_Full_Name__c = 'ZZQATESTZZQA',   // 12-char alphanumeric junk, deliberately NOT digit-only/Aadhaar-shaped
+Execute Anonymous:     VS_Date_Of_Birth__c = Date.newInstance(1990,1,1),
+Execute Anonymous:     VS_Mobile__c = '9000000099'
+Execute Anonymous: );
+Execute Anonymous: try {
+Execute Anonymous:     insert pat;
+Execute Anonymous:     System.debug('TC007:RESULT=INSERT_SUCCEEDED id=' + pat.Id + ' fullName=' + pat.VS_Full_Name__c);
+Execute Anonymous:     // cleanup immediately
+Execute Anonymous:     delete pat;
+Execute Anonymous:     System.debug('TC007:CLEANUP=DELETED');
+Execute Anonymous: } catch (Exception e) {
+Execute Anonymous:     System.debug('TC007:RESULT=INSERT_BLOCKED type=' + e.getTypeName() + ' msg=' + e.getMessage());
+Execute Anonymous: }
+07:44:43.69 (69255064)|USER_INFO|[EXTERNAL]|005gL00000Kf6Nh|ethanspython396.16ac318df344@agentforce.com|(GMT-07:00) Pacific Daylight Time (America/Los_Angeles)|GMT-07:00
+07:44:43.69 (69297816)|EXECUTION_STARTED
+07:44:43.69 (69336327)|CODE_UNIT_STARTED|[EXTERNAL]|execute_anonymous_apex
+07:44:43.69 (124593641)|USER_DEBUG|[25]|DEBUG|TC007:RESULT=INSERT_SUCCEEDED id=a04gL00000T9AdlQAF fullName=ZZQATESTZZQA
+07:44:43.69 (528376917)|USER_DEBUG|[28]|DEBUG|TC007:CLEANUP=DELETED
+07:44:43.581 (581545020)|CUMULATIVE_LIMIT_USAGE
+07:44:43.581 (581545020)|LIMIT_USAGE_FOR_NS|(default)|
+  Number of SOQL queries: 0 out of 100
+  Number of query rows: 0 out of 50000
+  Number of SOSL queries: 0 out of 20
+  Number of DML statements: 2 out of 150
+  Number of Publish Immediate DML: 0 out of 150
+  Number of DML rows: 2 out of 10000
+  Maximum CPU time: 0 out of 10000
+  Maximum heap size: 0 out of 6000000
+  Number of callouts: 0 out of 100
+  Number of Email Invocations: 0 out of 10
+  Number of future calls: 0 out of 50
+  Number of queueable jobs added to the queue: 0 out of 50
+  Number of Mobile Apex push calls: 0 out of 10
+
+07:44:43.581 (581545020)|CUMULATIVE_LIMIT_USAGE_END
+
+07:44:43.69 (581668380)|CODE_UNIT_FINISHED|execute_anonymous_apex
+07:44:43.69 (581696264)|EXECUTION_FINISHED
+

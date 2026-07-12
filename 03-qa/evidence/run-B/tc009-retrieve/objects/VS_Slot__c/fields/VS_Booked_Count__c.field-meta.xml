@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Booked_Count__c</fullName>
+    <defaultValue>0</defaultValue>
+    <description>Running count of confirmed bookings consumed from this slot&apos;s VS_Capacity__c ceiling. CRITICAL (D-020): this is a plain writable Number, deliberately NOT a Roll-Up Summary and NOT a formula -- a roll-up/formula cannot serialize under the parent session&apos;s SELECT ... FOR UPDATE lock and would break the §3.4 no-overbooking guarantee (rules/20 forbids roll-up/trigger maintenance of this counter). Read and incremented ONLY inside VS_Session__c&apos;s lock by VS_BookingService.book() (VS-09, D-019/D-020) -- never by automation in this ticket. Defaults to 0 on creation.</description>
+    <externalId>false</externalId>
+    <label>Booked Count</label>
+    <precision>6</precision>
+    <required>true</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

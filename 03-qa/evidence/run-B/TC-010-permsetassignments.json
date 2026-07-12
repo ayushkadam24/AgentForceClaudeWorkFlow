@@ -1,0 +1,31 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "PermissionSetAssignment",
+          "url": "/services/data/v67.0/sobjects/PermissionSetAssignment/0PagL00000araDbSAI"
+        },
+        "Assignee": {
+          "attributes": {
+            "type": "User",
+            "url": "/services/data/v67.0/sobjects/User/005gL00000KgztCQAR"
+          },
+          "Username": "qa.loadtest.harness.-1326802954311297775@vaccinescheduler.poc.example"
+        },
+        "PermissionSet": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD3WAP"
+          },
+          "Name": "VS_Booking_Engine_Test_Context"
+        }
+      }
+    ],
+    "totalSize": 1,
+    "done": true
+  },
+  "warnings": []
+}

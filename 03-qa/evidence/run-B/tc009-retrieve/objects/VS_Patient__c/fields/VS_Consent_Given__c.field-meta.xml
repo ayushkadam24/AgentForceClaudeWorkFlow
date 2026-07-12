@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Consent_Given__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>DPDP consent flag (REQ-046, design §2.3/§6.7) — true once the patient/booker has affirmatively agreed to the consent notice at registration. THIS TICKET (VS-07) DEFINES THE FIELD ONLY: enforcement that a patient cannot be used for booking without VS_Consent_Given__c = true is built in VS_PatientService.findOrCreate() (VS-10). The consent notice/copy text shown to the citizen is NOT built in this ticket (no screen exists yet); when it is built, per D-024 it must be a Custom Label prefixed &quot;[[DRAFT - pending department approval]]&quot;, never hardcoded text. Default false — consent must be an explicit opt-in, never assumed.</description>
+    <label>Consent Given</label>
+    <trackHistory>true</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

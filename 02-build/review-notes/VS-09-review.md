@@ -284,3 +284,422 @@ only under the session lock; no roll-up), **D-016** (reference generator), **D-0
   `VS_Appointment__c` (permission-set extension deferred to VS-14/VS-20). Not needed for the test run
   (runs as sysadmin).
 - Otherwise: none.
+
+---
+
+## BLOCKER C fix — test FLS/USER_MODE context (dev-senior, 2026-07-12, fix-forward)
+
+**Status of this fix: correct-by-construction, NOT deployed/tested by dev-senior (no deploy from this
+environment). devops re-runs Phase 2 real deploy + RunLocalTests to capture the real numbers.**
+
+### The failure being fixed (from deployments.md Phase 2, Deploy `0AfgL00000QxljtSAB`)
+Metadata deployed 100% clean (86/86), but RunLocalTests returned **24 run / 23 FAILED / 1 passed**,
+identical in dry-run and real deploy (so genuine, not a checkOnly artifact). Two signatures, one root:
+- `System.DmlException: ... fields being inaccessible ... VS_Patient__c / VS_Session__c` (21)
+- `System.QueryException: No such column 'VS_Walk_In_Reserve_Count__c' on entity 'VS_Session__c'` (2)
+
+Root cause: `VS_BookingServiceTest` ran with **no `System.runAs` / no permission-set context**, i.e. as
+the deploying System Administrator, who has **no FLS on the freshly Metadata-API-deployed `VS_` fields**
+(MDAPI custom fields get no profile FLS by default). `VS_BookingService.book()` inserts the appointment
+`insert as user` (USER_MODE, rules/20 §Apex), so the very first USER_MODE write failed **before any
+§3.4 logic ran**. The one pass (`testNegative_nullInput_throws`) throws on null input before any DML.
+
+### What I changed in `VS_BookingServiceTest` (code UNCHANGED — test-only)
+1. `@TestSetup` now also creates a `User` on the **'Standard User'** profile (present in a DE org) and
+   assigns it the permission set **`VS_Booking_Engine_Test_Context`** via `PermissionSetAssignment`.
+   The User+assignment DML is isolated inside `System.runAs(new User(Id=UserInfo.getUserId()))` to
+   avoid `MIXED_DML_OPERATION` with the non-setup Facility/Service inserts.
+2. Every test that calls `book()` now runs its body inside `System.runAs(bookingUser())` so the
+   `insert as user` executes under a realistic FLS-bearing user. State asserts (booked-count/status,
+   the capacity-exhaustion invariant, the mixed online/walk-in §3.4 proof, reference-collision paths)
+   are all preserved verbatim — they now actually EXECUTE instead of dying at FLS setup.
+3. `testNegative_nullInput_throws` deliberately keeps NO `runAs` (it must throw before any DML; that is
+   why it was the single pre-fix pass) — documented inline.
+
+### Permission set assigned and WHY — and the GENUINE GAP found
+`VS_BookingService.book()`'s only USER_MODE operation is `insert as user` on `VS_Appointment__c`
+(fields: Patient/Slot/Session/Facility/Service/Booking_Reference/Booked_Channel/Status). It therefore
+needs **Create on `VS_Appointment__c` + FLS on those fields**. The lock/counter reads/updates on
+Session/Slot run in **system mode** by design (D-020) and need no user grant.
+
+**GENUINE FINDING (routed, NOT papered over): no existing role permission set grants `VS_Appointment__c`
+at all.** VS-04 deferred Patient/Appointment perms to VS-07/08/17/20, so none of `VS_Facility_Staff`,
+`VS_Nurse`, `VS_MO_Facility_Admin`, `VS_District_Admin`, `VS_District_MIS` reference the object. The
+`/dev-implement` instruction's suggestion to "map to `VS_Facility_Staff`/`VS_Nurse`" therefore could not
+be satisfied — those permsets do not (yet) grant booking. **This is a real runtime gap, not just a test
+gap:** until a booking permset granting `VS_Appointment__c` create + FLS is built (VS-08/17/20), NO real
+Portal/staff user can call `book()` under USER_MODE. (This packet's earlier "Manual/setup — Permission
+note" already anticipated it; BLOCKER C makes it concrete.)
+
+**Resolution:** I added a dedicated, clearly-named permission set **`VS_Booking_Engine_Test_Context`**
+(`force-app/main/default/permissionsets/`) granting exactly the USER_MODE surface the booking + slot-gen
+engines exercise — `VS_Appointment__c` (C/R + FLS on the 6 non-required fields), `VS_Slot__c` (C/R),
+and read on `VS_Session__c`/`VS_Service__c`/`VS_Holiday__c` (+ read FLS on the Session formula fields).
+It is assigned ONLY to the test user; it is a TEST/CI harness standing in for the deferred runtime
+grants, **not** a role for real users. This is the "flag the gap, do not silently invent a permset"
+path: it is invented deliberately and documented here. FLS is granted only on non-required, non-MD
+fields (deploy-safe — no FLS-on-required/MD error, the VS-04 trap).
+
+### Reviewer scrutiny points (BLOCKER C)
+- Confirm `VS_Booking_Engine_Test_Context` is added to the Phase 2 deploy manifest (devops — see
+  Manual/setup addendum) BEFORE the re-run, or the `PermissionSetAssignment` query fails at test time.
+- Confirm the runtime booking permset (VS-08/17/20) is the right owner for the real `VS_Appointment__c`
+  grant, and that the test harness permset is acceptable to keep in the org.
+- Expectation for the next run: the FLS fix should let the booking-integrity asserts finally execute.
+  Fixing the FLS context **may unmask previously-hidden logic failures** (asserts that never ran before);
+  treat any such failure as newly-revealed, NOT a regression from this change.
+
+## Manual / setup steps (BLOCKER C addendum)
+
+- **Pre-deploy (devops):** add `VS_Booking_Engine_Test_Context` (PermissionSet) to the Phase 2 delta
+  manifest (`manifest/deltas/SPRINT-1-phase2.xml`) alongside the 5 existing permsets, so it deploys
+  before RunLocalTests executes. Without it the tests' `PermissionSetAssignment` lookup throws.
+- **Post-deploy (human/QA):** the real §3.4 verdict + measured coverage come from devops's Phase 2
+  re-run; this fix is unmeasured by dev-senior.
+- **Runtime (real users, deferred):** a production booking permset granting `VS_Appointment__c` Create +
+  field FLS is still owed by VS-08/17/20 — the test harness permset does NOT satisfy that for real users.
+
+---
+
+## BLOCKER D fix — master-object Read on the harness permset (dev-senior, 2026-07-12)
+
+devops's Phase 2 dry-run after BLOCKER C surfaced ONE metadata error on the new
+`VS_Booking_Engine_Test_Context` permset: *"Permission Read VS_Session__c depends on permission(s):
+Read VS_Facility__c"*. `VS_Session__c` and `VS_Slot__c` are Master-Detail children of `VS_Facility__c`,
+and the platform requires master-object Read before granting detail-object Read — the permset granted
+Read on the details but not the master.
+
+**Fix (the exact block added, nothing else changed):**
+```xml
+<objectPermissions>
+    <object>VS_Facility__c</object>
+    <allowRead>true</allowRead>
+    <allowCreate>false</allowCreate>
+    <allowEdit>false</allowEdit>
+    <allowDelete>false</allowDelete>
+    <viewAllRecords>false</viewAllRecords>
+    <modifyAllRecords>false</modifyAllRecords>
+</objectPermissions>
+```
+Object Read ONLY — NO field grants on `VS_Facility__c` (the engines read it only as the relationship-Id
+on child records; adding FLS would risk re-tripping the required/MD FLS trap). All other object perms
+and the 9 field grants are unchanged (verified: 6 objectPermissions now, 9 fieldPermissions still).
+Well-formed (python minidom, 0 failures); `metadata-lint.js` unchanged (only the 2 pre-existing
+`$CustomMetadata` flags). NOT deployed by dev-senior — devops re-runs Phase 2.
+
+---
+
+## BLOCKER E fix — fixtures moved OUT of runAs (dev-senior, 2026-07-12)
+
+**Status: correct-by-construction, NOT deployed/tested by dev-senior. devops re-runs Phase 2.**
+
+After BLOCKER C/D, metadata is 87/87 clean and the tests now EXECUTE — but 23 still failed at FIXTURE
+CREATION (not §3.4 asserts). Signature for this class: `System.TypeException: DML INSERT not allowed on
+VS_Session__c` at newSession. Root cause: my BLOCKER C edit wrapped the WHOLE test body in
+`System.runAs(bookingUser())`, so the fixture inserts (newSession/newSlot/newPatient) ran as the harness
+user — which INTENTIONALLY lacks Session/Slot/Patient CREATE (that permset is the runtime Appointment/
+Slot surface, not a fixture grant). So the fixtures failed at object-CREATE before book() was ever reached.
+
+**Fix (canonical USER_MODE-test pattern, test-only, code UNCHANGED):**
+- ALL fixture creation (newSession/newSlot/newPatient, and any pre-created patients for loops/mixed
+  cases) now runs in the DEFAULT test context with PLAIN system-mode DML — which ignores CRUD/FLS, so it
+  succeeds unconditionally and does NOT depend on the harness permset.
+- ONLY the `VS_BookingService.book(...)` call — the single USER_MODE path under test — stays inside
+  `System.runAs(bookingUser())`. Where `book()` was previously called with an inline `newPatient(...)`
+  argument (capacity-exhaustion loop, mixed-channel, negatives), the patients are now pre-created as
+  fixtures and their Ids passed in, so no CREATE ever happens under runAs.
+- Every state assert is preserved verbatim: booked-count/status, the capacity-exhaustion invariant
+  (`VS_Booked_Count__c` never exceeds `VS_Capacity__c`, slot flips Full), the mixed online/walk-in §3.4
+  proof (disjoint pools, exactly one per pool, no cross-channel overbooking), reference-collision paths.
+- `testNegative_nullInput_throws` keeps NO runAs and NO fixtures (throws before any DML).
+
+Sharing note: fixtures are owned by the default test user, but `VS_Facility__c` is OWD Public Read and
+`VS_Session__c`/`VS_Slot__c` are ControlledByParent, so the `with sharing` reads inside `book()` (running
+as the harness user) still see them. Appointment lookups to Private `VS_Patient__c` are fine on insert
+(lookups don't require read access to the referenced record).
+
+Braces balanced (58/58); `metadata-lint.js` unchanged (2 pre-existing `$CustomMetadata` flags only).
+
+### Honest expectation for the next run
+With fixtures in system mode and only `book()` under runAs, the fixture-creation wall is gone and the
+§3.4 capacity/mixed-channel asserts should finally EXECUTE. As flagged since BLOCKER C, exercising the
+real logic for the first time MAY unmask previously-hidden LOGIC failures — read any such failure as
+newly-revealed, NOT a regression from this pass.
+
+---
+
+## BLOCKER F fix — org enforces FLS on plain DML; run fixtures under the harness user (dev-senior, 2026-07-12)
+
+**Status: correct-by-construction, NOT deployed/tested by dev-senior. devops re-runs Phase 2.**
+
+### Root cause (diagnostic-pinned)
+This DE org ENFORCES FLS/CRUD on PLAIN Apex DML during deploy-time RunLocalTests (not the usual
+system-mode bypass), and the deploying admin has no FLS on the freshly-deployed OPTIONAL VS_ fields.
+Proof: booking's newSession/newSlot (only required/MD fields → implicit access) pass a plain insert;
+newPatient (sets the OPTIONAL VS_Match_Key__c) and the $CustomMetadata formula reads fail. So the
+BLOCKER E "plain system-mode fixtures" approach cannot win here — the running context needs REAL FLS.
+
+### Fix — PART 1: broadened the TEST-ONLY harness permset
+`VS_Booking_Engine_Test_Context` now grants a test user enough to BUILD fixtures and run the engines:
+- **objectPermissions:** read+create on VS_Facility__c, VS_Service__c, VS_Holiday__c, VS_Patient__c,
+  VS_Appointment__c; read+create+**edit** on VS_Session__c (book() updates the walk-in counter);
+  read+create+**edit+delete** on VS_Slot__c (book() updates the booked counter; the invalid-slot
+  negative deletes a slot).
+- **fieldPermissions (read+edit unless noted):** the 6 non-required VS_Appointment__c fields book()
+  writes; VS_Session__c.VS_Is_Drive_Day__c (optional, fixtures set it); VS_Patient__c.VS_Match_Key__c
+  (optional, newPatient sets it); READ-ONLY on the two formula fields VS_Session__c.VS_Bookable_Capacity__c
+  and VS_Walk_In_Reserve_Count__c.
+- **Confirmed NONE of the FLS entries is required=true or Master-Detail** (Match_Key optional,
+  Is_Drive_Day optional checkbox, two formulas, six optional Appointment fields) — so the VS-04
+  required/MD deploy trap is not re-tripped. Required/MD fields (Slot fields, Status, dates/times,
+  capacity, walk-in-used, all MD/lookup masters) get IMPLICIT access via object-level create/edit only.
+
+### Fix — PART 2: fixtures now run under the harness user
+The harness User is created (setup DML) OUTSIDE runAs in @TestSetup (User first, then the
+PermissionSetAssignment); ALL non-setup fixture DML (Facility/Service in @TestSetup; Session/Slot/Patient
++ the delete in each test) AND the book() call run INSIDE `System.runAs(bookingUser())`. Setup DML
+outside + non-setup inside runAs is the canonical MIXED_DML-safe ordering. Every state assert is
+preserved (capacity-exhaustion invariant, mixed online/walk-in §3.4 proof, reference-collision).
+`testNegative_nullInput_throws` keeps no runAs (throws before any DML).
+
+TEST-ONLY: the broadened permset does NOT resolve the A-018 production-permset gap (a real Portal/staff
+booking permset for VS_Appointment__c create, and a slot-gen automation grant for VS_Slot__c create,
+are still owed) — that stays routed to BA_ARCH_CONFIRM. Braces 57/57; lint unchanged (2 known
+`$CustomMetadata` flags); permset desc 251≤255.
+
+### Honest expectation
+Fixtures now build under real FLS, so the §3.4 asserts should finally execute. As flagged since
+BLOCKER C, first-time execution MAY unmask previously-hidden LOGIC failures — read any as
+newly-revealed, NOT a regression.
+
+---
+
+## BLOCKER G fix — collision detect by status code; category-1 walk-in left org-limited (dev-senior, 2026-07-12)
+
+**Status: correct-by-construction, NOT deployed/tested by dev-senior. devops re-runs Phase 2.**
+
+BLOCKER F made §3.4 ONLINE VERIFIED (testCapacityExhaustion_online_neverOverbooks PASSED,
+VS_BookingService 88% real coverage, VS_ReferenceGenerator 100%). The two remaining booking failures
+were an access-context issue, NOT a logic bug.
+
+**FIX 2 (production robustness, better regardless of org):** `VS_BookingService.isDuplicateReferenceError`
+previously confirmed the collision by reading the conflicting record's field names/message
+(`getDmlFieldNames(i)` / `getDmlMessage(i)`) for `VS_Booking_Reference__c`. Under least privilege the
+colliding record (e.g. another facility's appointment) can be FLS-/sharing-masked from the acting user,
+so that check could return false and the retry contract would break. NEW: detect purely by
+`ex.getDmlType(i) == StatusCode.DUPLICATE_VALUE`. `VS_Booking_Reference__c` is the ONLY unique field this
+service sets on `VS_Appointment__c`, so a DUPLICATE_VALUE on this insert can only be the reference — the
+status code is precise and needs no record visibility.
+- **Contract PRESERVED EXACTLY:** only a DUPLICATE_VALUE (reference collision) triggers the single
+  regenerate-and-retry; the second collision still throws coded `REFERENCE_COLLISION`; every
+  NON-DUPLICATE_VALUE DmlException still returns false and is rethrown untouched (no swallow, rules/20).
+
+**Tests this unblocks (2):** testReferenceCollision_regeneratesAndRetriesOnce_bookingSucceeds,
+testReferenceCollision_twiceInARow_throwsCodedException.
+
+### Category 1 (walk-in) — DELIBERATELY LEFT ORG-LIMITED (per coordinator)
+The walk-in path's `update session` (VS_BookingService ~line 182) increments the REQUIRED field
+`VS_Walk_In_Used_Count__c` in SYSTEM mode by design (D-020: the service is the sole trusted owner of the
+counters; a Portal citizen must not get direct edit on capacity rows). This org abnormally FLS-filters
+even system-mode DML at deploy-time on that required field — and a required field CANNOT carry
+field-FLS (VS-04 trap), so it can't be "granted". Per the coordinator this is left UNTOUCHED: production
+system-mode counter design UNCHANGED, tests UNCHANGED, no fieldPermissions added on the required field.
+The 3 walk-in tests (testHappyPath_walkInBooking, testWalkInReserveExhaustion_neverOverbooks,
+testMixedChannels_sameSession_noOverbooking) are EXPECTED to still fail next run; walk-in §3.4 is being
+handled as a separate deploy-strategy decision (likely the QA parallel load test in §9), not a code fix.
+
+Braces 25/25 (VS_BookingService); lint unchanged (2 known `$CustomMetadata` flags).
+
+---
+
+## BLOCKER H fix — split walk-in tests into their own class (dev-senior, 2026-07-12, D-028/D-028a)
+
+**Status: mechanism-only test split, NOT deployed/tested by dev-senior. devops runs the class-level
+RunSpecifiedTests real deploy next.**
+
+### Why (class-level, not method-level)
+The Metadata DEPLOY API's RunSpecifiedTests accepts CLASS names only — a method-level Class.method
+silently runs 0 tests, so the prior real deploy rolled back on 0% coverage. To run exactly the
+executable methods on deploy, the 3 walk-in methods (which cannot execute under this org's deploy-time
+FLS enforcement of the system-mode counter update on the required VS_Walk_In_Used_Count__c) are moved
+into their own class that is simply NOT named in the RunSpecifiedTests list.
+
+### What moved vs. what stayed
+- CREATED VS_BookingServiceWalkInTest.cls (+ -meta.xml, apiVersion 67.0 like the others). It is
+  SELF-CONTAINED: its own @TestSetup (harness User VSWalkInTest + PermissionSetAssignment, then fixtures
+  under runAs) and COPIES of the helpers the 3 methods use (slotStart, TEST_PERMSET, bookingUser,
+  facilityId, serviceId, newPatient, newSession, newSlot, reloadSlot, reloadSession, apptCount). The 3
+  methods moved VERBATIM: testHappyPath_walkInBooking, testWalkInReserveExhaustion_neverOverbooks,
+  testMixedChannels_sameSession_noOverbooking. Helper duplication with VS_BookingServiceTest is accepted
+  for the POC per D-028a (NOT refactored to a shared class, to keep zero risk to the deploy-run methods).
+- VS_BookingServiceTest.cls: DELETED ONLY those 3 methods. Everything else untouched — the 9 remaining
+  methods (online happy path, capacity-exhaustion §3.4, booking-reference, 2 reference-collision, 4
+  negatives), the full @TestSetup, and ALL helper methods. Two breadcrumb comments mark the move.
+  Production classes, the harness permset, and all other metadata are UNCHANGED.
+
+Braces balanced: VS_BookingServiceTest 45/45, VS_BookingServiceWalkInTest 25/25; lint unchanged (2 known
+$CustomMetadata flags). devops must add VS_BookingServiceWalkInTest to the manifest (so it deploys) but
+must NOT include it in the RunSpecifiedTests class list.
+
+### Honest coverage expectation
+VS_BookingServiceTest alone still exercises the online slot-channel path (online happy + capacity-
+exhaustion), the reference-collision retry/coded-exception path, and all negative/validation branches.
+The only VS_BookingService lines it no longer covers are the walk-in branch (isWalkIn reserve check +
+VS_Walk_In_Used_Count__c increment + the walk-in update session). Coverage was 88% with all methods; my
+EXPECTATION is it stays comfortably >=75% (roughly mid-80s) — but this is my estimate; devops measures
+the real number. The 3 moved walk-in methods are expected not to run on deploy by design (category-1
+org-limited; walk-in overbooking is proven by QA's parallel load test).
+
+## §3.4 load-test harness (temporary) — added 2026-07-12, dev-senior
+
+To finally PROVE the RFP §3.4 **walk-in** no-overbooking guarantee at runtime (TC-002/TC-003 — the one
+thing unit tests + CLI QA could not verify, D-028), a **human-approved, temporary** REST harness was
+built. It is **NOT part of the F-001 product** and is **REMOVED from the org after the load test**.
+
+- **New: `VS_LoadTestEndpoint.cls`** — `@RestResource(urlMapping='/vsLoadTest/*')`, `global without
+  sharing`. Endpoints: `POST /seed` (fresh Facility/Service/active Facility_Service/Open Session/Slot;
+  Total_Capacity=4 so `CEILING(4*25/100)=1` → walk-in reserve == **exactly 1**, un-consumed; variants
+  walkin / online(slot cap 1) / disjoint(slot cap 1 AND reserve 1, D-020)), `POST /book` (fresh
+  `VS_Patient__c` per call → N callers contend as N patients; calls `VS_BookingService.book()`;
+  returns `{success, apptId, reason}` with the **coded** `VS_BookingException` reason, never swallowed),
+  `GET /verify` (system-mode read-back of the invariant), `DELETE /reset` (optional). All harness
+  SOQL/DML is **system-mode (plain)** so it runs as admin with no FLS — the deliberate mechanism that
+  sidesteps D-028 at runtime.
+- **New: `VS_LoadTestEndpoint_Test.cls`** — 16 request/response tests; runs fixtures under the FLS
+  harness user (`runAs`) per the deploy-time-FLS org quirk.
+- **`VS_Booking_Engine_Test_Context` permset**: +1 object grant (`VS_Facility_Service__c`) and +4
+  optional-field FLS grants the harness `seed` writes (three `Is_Active` + facility helpline). **5
+  clearly-commented "revert when the load-test class is removed" lines.** Required/MD fields left
+  implicit (no FLS entry) per the VS-04 trap.
+- **`VS_BookingService` and every other production class are UNCHANGED** — the endpoint only
+  orchestrates (seed + call `book()` + read). No hardcoded IDs; **NO Aadhaar / no 12-digit identifier**
+  anywhere (10-digit fictional mobiles + synthetic match keys only).
+
+### Deploy verification (REAL — validate-only, not committed)
+`sf project deploy start --dry-run -l RunSpecifiedTests -t VS_LoadTestEndpoint_Test` against
+`AgentForceClaudeWorkFlow` (POC DE org):
+- **Status: Succeeded. 16/16 tests PASS. `VS_LoadTestEndpoint` coverage = 87.5%** (Deploy id
+  `0AfgL00000QyzhZSAR`). Notably the ONLINE and (in this check-only run) WALK-IN `book()` paths both
+  succeeded under the harness user.
+- The dry-run caught + I fixed two real defects before the packet: Apex map literals using `,` instead
+  of `=>` (compile), and a missing required `VS_Date_Of_Birth__c` on the seeded patient (would have
+  failed at runtime too).
+- Metadata lint: unchanged 2 known `$CustomMetadata` formula flags (pre-existing, VS-01/D-026); the
+  harness added zero lint issues.
+
+### What the human reviewer should scrutinize
+- The permset edit couples the temporary harness to the permanent booking-test permset. Confirm the
+  "revert" plan is captured in the removal runbook so the 5 lines don't linger post-test.
+- Confirm the harness endpoint/class is genuinely REMOVED after the load test (deployments.md step).
+- `without sharing` + system-mode is intentional and load-test-only; it must never be reused by product
+  code (Portal citizens must not get direct capacity-row edit — see VS_BookingService §Security).
+
+### Manual / setup steps (for the devops runbook)
+- **Pre-deploy:** none (delta compiles standalone; VS-09 + VS-02 CMDT already in the org).
+- **Deploy:** deploy delta `ApexClass:VS_LoadTestEndpoint`, `ApexClass:VS_LoadTestEndpoint_Test`,
+  `PermissionSet:VS_Booking_Engine_Test_Context` to the POC DE org (`AgentForceClaudeWorkFlow` ONLY).
+- **Post-deploy (before load test):** grant the load-driver user Apex-REST access (a system-admin user
+  works out of the box); no VS_ FLS is required at runtime. Optionally smoke-test `POST /vsLoadTest/seed`.
+- **Manual-only:** after the load test completes, **REMOVE** `VS_LoadTestEndpoint` +
+  `VS_LoadTestEndpoint_Test` from the org (destructiveChanges) and **revert the 5 harness lines** in
+  `VS_Booking_Engine_Test_Context`. Record the run evidence + removal in 02-build/deployments.md.
+
+---
+
+## D-029 walk-in counter-persist robustness fix (dev-senior, 2026-07-12)
+
+**Ruling:** D-029 (architect, human-requested; `.claude/memory/decisions.md`). **Classification:**
+IMPLEMENTATION-ROBUSTNESS — PRESERVES the §3.4 design (D-019/D-020), NOT a deviation, no re-drift-check.
+**Phase note:** applied while PIPELINE_STATE is `QA_IN_PROGRESS` — a bounded, architect-GO'd focused fix
+routed back from QA; PIPELINE_STATE YAML left untouched per the D-029 handoff.
+
+### The runtime defect being fixed
+QA §3.4 load test (TC-002 ×3, harness `0AfgL00000Qz29BSAR`) proved the WALK-IN `book()` path throws
+`DmlException: fields being inaccessible on VS_Session__c` at the counter persist (`update session;`).
+Root cause: the `session` sObject was loaded by the `SELECT ... FOR UPDATE` lock query, which (correctly,
+for the reserve ceiling check) carries the read-only `$CustomMetadata` FORMULA field
+`VS_Walk_In_Reserve_Count__c`. This DE org's anomalous runtime FLS-on-system-mode-DML (D-028 extended to
+runtime) treats that formula field as inaccessible for the admin context, so the whole `update session;`
+fails even though the only field being *written* is the REQUIRED `VS_Walk_In_Used_Count__c` (always
+accessible). The online branch's `update slot;` does not carry a formula field today, but it is given the
+same treatment for symmetry / defense-in-depth per D-029.
+
+### The change — ONLY the two counter-PERSIST DML statements (before / after)
+
+**Walk-in branch + online branch persist block, BEFORE:**
+```apex
+// Counter maintenance runs in system mode by design (D-020) ...
+if (updateSession) {
+    update session;
+} else if (updateSlot) {
+    update slot;
+}
+```
+
+**AFTER:**
+```apex
+// Counter maintenance runs in system mode by design (D-020) ...
+// D-029 ROBUSTNESS: persist via a FRESH minimal sObject carrying ONLY Id + the field(s) WRITTEN ...
+if (updateSession) {
+    update new VS_Session__c(
+        Id = session.Id,
+        VS_Walk_In_Used_Count__c = session.VS_Walk_In_Used_Count__c   // = used+1, computed under the lock
+    );
+} else if (updateSlot) {
+    update new VS_Slot__c(
+        Id = slot.Id,
+        VS_Booked_Count__c = slot.VS_Booked_Count__c,   // = booked+1, computed under the lock
+        VS_Status__c = slot.VS_Status__c                // Open | Full, decided under the lock
+    );
+}
+```
+
+Note the persisted VALUES are the ones ALREADY computed under the lock earlier in `book()`
+(`session.VS_Walk_In_Used_Count__c` was set to `used + 1` at the reserve check;
+`slot.VS_Booked_Count__c` was set to `booked + 1` and `slot.VS_Status__c` flipped to `Full` at the
+ceiling). The fresh sObjects simply re-carry those already-mutated in-memory values onto a lean record —
+**no re-query, no recompute.** The fresh `VS_Session__c` does NOT carry `VS_Walk_In_Reserve_Count__c`
+(the FLS-hidden formula, READ-only in `book()`); the fresh `VS_Slot__c` does NOT carry `VS_Capacity__c`
+(READ-only in `book()`). Only the written fields travel.
+
+### Why every §3.4 invariant is preserved (D-019 / D-020 / D-029)
+- **The lock SELECT is UNCHANGED** — still a single `SELECT ... FROM VS_Session__c ... FOR UPDATE` that
+  still loads `VS_Walk_In_Reserve_Count__c` / `VS_Walk_In_Used_Count__c` for the reserve check. Only the
+  UPDATE shape changed.
+- **One method / one lock / one write path, all channels** — unchanged; both branches still persist
+  inside the same lock.
+- **Counter incremented exactly ONCE, from the under-lock value** (`used+1` / `booked+1`) carried on the
+  fresh sObject — **NO second SOQL / NO re-query** (which would break FOR UPDATE serialization / open a
+  TOCTOU window).
+- **Appointment insert stays `insert as user`** (USER_MODE) — untouched.
+- **No roll-up / formula / trigger / flow** introduced; persist stays system-mode (the service remains the
+  sole trusted counter owner).
+- **`VS_Walk_In_Used_Count__c` stays REQUIRED** — no FLS granted, not made optional. The fix works
+  precisely BECAUSE required fields are always accessible, so the fresh-sObject DML references only
+  accessible fields.
+- `book()`'s signature, exception reasons, and the reference-collision regenerate-and-retry-once path are
+  all untouched — the ONLY change is the two counter-persist DML statements.
+
+### Tests
+No test change was required. `VS_BookingServiceTest` and `VS_BookingServiceWalkInTest` re-query the record
+fresh (`reloadSession` / `reloadSlot`) after `book()` and assert on the PERSISTED DB state
+(`VS_Walk_In_Used_Count__c`, `VS_Booked_Count__c`, `VS_Status__c`). The fresh-sObject DML persists those
+exact same values, so every existing assert holds unchanged — none weakened. The walk-in tests remain
+deploy-time un-runnable on this org for the pre-existing D-028 reason (the load test is the runtime proof);
+after this fix, dev/devops may re-check whether `VS_BookingServiceWalkInTest` can fold back into
+RunSpecifiedTests (not required for the D-029 GO).
+
+### Verification done by me
+- Brace/paren balance: 25/25 braces, 106/106 parens (whole class).
+- `node scripts/metadata-lint.js`: only the 2 pre-existing `$CustomMetadata` FAILs
+  (`VS_Session__c.VS_Walk_In_Reserve_Count__c`, `VS_Setting__mdt.VS_Value__c`) — no new issue; my change
+  is Apex-only.
+- **NOT deployed / NOT run by me** — devops re-deploys the fixed class to `AgentForceClaudeWorkFlow` and
+  re-runs the §3.4 load test (D-029 re-verification bar: TC-002 ×3, TC-003 ×3, regression TC-001 ×3).
+
+### Manual / setup steps (D-029)
+- **Pre-deploy:** none.
+- **Deploy:** re-deploy `ApexClass:VS_BookingService` to the POC DE org (`AgentForceClaudeWorkFlow` ONLY).
+- **Post-deploy:** re-run the §3.4 walk-in + mixed-channel + online regression load test per D-029's
+  re-verification bar; record verdicts in `03-qa/test-plan.md` §8 and evidence in `03-qa/evidence/`.
+- **Manual-only:** none.

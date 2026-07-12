@@ -178,10 +178,26 @@ public with sharing class VS_BookingService {
 
         // Counter maintenance runs in system mode by design (D-020): the service is the single trusted
         // owner of these denormalized counters and the capacity rows are not user-editable.
+        //
+        // D-029 ROBUSTNESS: persist the counter(s) via a FRESH minimal sObject carrying ONLY the Id +
+        // the field(s) this method actually WROTE — NOT the record loaded by the FOR UPDATE query. The
+        // loaded `session`/`slot` sObjects carry read-only $CustomMetadata FORMULA fields
+        // (VS_Session__c.VS_Walk_In_Reserve_Count__c) that this DE org's anomalous runtime
+        // FLS-on-system-mode-DML (D-028 at runtime) treats as inaccessible, so `update session;` failed
+        // with "fields being inaccessible". The value carried is the one ALREADY computed UNDER the lock
+        // (used+1 / booked+1 / the Open|Full status decided above) — NO re-query, NO recompute, so the
+        // FOR UPDATE serialization and the single write path are untouched (D-019/D-020).
         if (updateSession) {
-            update session;
+            update new VS_Session__c(
+                Id = session.Id,
+                VS_Walk_In_Used_Count__c = session.VS_Walk_In_Used_Count__c
+            );
         } else if (updateSlot) {
-            update slot;
+            update new VS_Slot__c(
+                Id = slot.Id,
+                VS_Booked_Count__c = slot.VS_Booked_Count__c,
+                VS_Status__c = slot.VS_Status__c
+            );
         }
 
         return appt.Id;
@@ -218,18 +234,19 @@ public with sharing class VS_BookingService {
     }
 
     /**
-     * True only when the DmlException is a DUPLICATE_VALUE on the VS_Booking_Reference__c unique field
-     * — NOT any other DML error. Keeps the retry narrowly scoped so nothing else is ever swallowed.
+     * True only when the DmlException is a DUPLICATE_VALUE on the appointment insert — which can ONLY be
+     * the VS_Booking_Reference__c unique External Id, the sole unique field this service sets on
+     * VS_Appointment__c. Detection is by STATUS CODE, not by reading the conflicting record's field
+     * names/message: the colliding record (e.g. another facility's appointment) can be FLS-/sharing-
+     * masked from the acting user, so requiring field visibility would silently break the
+     * retry-then-REFERENCE_COLLISION contract for real least-privilege users. The status code is precise
+     * here and needs no record visibility. Any NON-DUPLICATE_VALUE DmlException returns false and is
+     * rethrown untouched by the caller (no swallow, rules/20).
      */
     private static Boolean isDuplicateReferenceError(DmlException e) {
         for (Integer i = 0; i < e.getNumDml(); i++) {
             if (e.getDmlType(i) == StatusCode.DUPLICATE_VALUE) {
-                String fields = String.valueOf(e.getDmlFieldNames(i));
-                String msg = e.getDmlMessage(i);
-                if ((fields != null && fields.contains('VS_Booking_Reference__c'))
-                        || (msg != null && msg.contains('VS_Booking_Reference__c'))) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;

@@ -193,6 +193,40 @@ now 12 files (1 object-meta.xml + 11 field-meta.xml).
   instruction; now added (see "Fix applied" section above) — VS-12 will find it on disk when built.
   before VS-12 needs it.
 
+## Description-trim (deploy-limit fix) — 2026-07-12, dev-mid fix-forward pass
+
+devops's 2nd dry-run bisection (`02-build/deployments.md`, 20:10 re-run) found
+`VS_Patient__c.object-meta.xml`'s `<description>` at **1108 chars**, over the CustomObject
+1000-char cap (`skills/sf-data-model/references/metadata-deploy-limits.md`), causing a clean
+component-level deploy failure ("Value too long for field: Description maximum length is:1000").
+Fixed by shortening the XML `<description>` to **845 chars** (under the 1000 cap, with headroom).
+No metadata behavior changed — description-only edit; object structure, fields, OWD,
+`enableHistory`, and all other content on this object are untouched.
+
+**Full original text (1108 chars), preserved here for the record:**
+
+> F-001 slot-booking-core (VS-07, EP-05). The single home for person data in F-001 — exactly the
+> Annexure C1.1 minimum attributes (full name, DOB, gender-optional, mobile, locality/pincode,
+> email-optional) plus the D-011/D-017 de-dup match key and DPDP consent capture fields. NO Aadhaar
+> field, no address beyond locality/pincode, no clinical/diagnosis data anywhere on this object
+> (REQ-043/044/045 — structural, verified by grep as part of this ticket's review packet). Booker is
+> not modeled as a person here — a booker is an authenticated mobile only (design §2.5); one mobile
+> may own many VS_Patient__c records (D-011). OWD is Private (Annexure C5 — person data). Retention
+> class (Annexure C4): linked — 10 yr if the patient has a completed vaccination record, else 3 yr
+> (governed by VS_RetentionPurgeBatch honoring the patient's longest-linked record, design §6.5).
+> Field history tracking enabled at the object level to support the REQ-054 read/change-attribution
+> mechanism (design §6.2/A-006); Shield Event Monitoring for full per-record read audit remains a
+> separate, org-level dependency not built here.
+
+**Why it's safe to trim:** every substantive fact in the original (C1.1 field scope, no-Aadhaar/
+no-clinical confirmation, booker-not-a-person design choice, OWD, retention class, field-history
+rationale) is already captured in full detail elsewhere in this same review packet ("Field list —
+C1 mapping", "Explicit no-Aadhaar structural statement", "OWD confirmation", "Beyond-scope
+compliance additions" sections above). The XML description now states the object's purpose and
+cites the same ticket/design/decision IDs (VS-07, EP-05, Annexure C1.1, D-011/D-017, REQ-043/044/
+045, design §2.5, Annexure C5/C4, design §6.2/A-006, REQ-054) so a reader can still trace to the
+full rationale without the XML itself carrying it.
+
 ## Security note
 No prompt-injection or concealment instruction was encountered while working this ticket. All
 upstream files (rules, jira-log, design, decisions) were read as normal inputs; `ANSWER-KEY-intentional-gaps.md`

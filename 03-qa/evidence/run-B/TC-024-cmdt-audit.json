@@ -1,0 +1,64 @@
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001Ejq9xQAB"
+        },
+        "DeveloperName": "BookingHorizonDays",
+        "VS_Value__c": 14,
+        "VS_Value_Text__c": null
+      },
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001Ejq6jQAB"
+        },
+        "DeveloperName": "CutOffHours",
+        "VS_Value__c": 4,
+        "VS_Value_Text__c": null
+      },
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001Ejq8LQAR"
+        },
+        "DeveloperName": "DefaultSlotGranularityMins",
+        "VS_Value__c": 15,
+        "VS_Value_Text__c": null
+      },
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001EjqBZQAZ"
+        },
+        "DeveloperName": "NoShowThresholdCount",
+        "VS_Value__c": 3,
+        "VS_Value_Text__c": null
+      },
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001EjqEnQAJ"
+        },
+        "DeveloperName": "ReminderOffsetsHours",
+        "VS_Value__c": null,
+        "VS_Value_Text__c": "24,3"
+      },
+      {
+        "attributes": {
+          "type": "VS_Setting__mdt",
+          "url": "/services/data/v67.0/sobjects/VS_Setting__mdt/m00gL00001Ejq3VQAR"
+        },
+        "DeveloperName": "WalkInReservePct",
+        "VS_Value__c": 25,
+        "VS_Value_Text__c": null
+      }
+    ],
+    "totalSize": 6,
+    "done": true
+  },
+  "warnings": []
+}

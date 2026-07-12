@@ -1,0 +1,1 @@
+SELECT SetupEntityId, SetupEntityType, ParentId, Parent.Name FROM SetupEntityAccess WHERE SetupEntityType='CustomPermission'

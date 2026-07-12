@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Dose_Number__c</fullName>
+    <description>Which dose in the course this appointment represents (e.g. 1 for first dose, 2 for second), paired with VS_Service__c.VS_Dose_Count__c to show progress through a multi-dose vaccination course. Reserved as the enabling seam for the deferred next-dose recall feature (design §2.3); not consumed by any F-001 automation in this ticket -- set by the booking flow/service that creates the appointment.</description>
+    <externalId>false</externalId>
+    <label>Dose Number</label>
+    <precision>2</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

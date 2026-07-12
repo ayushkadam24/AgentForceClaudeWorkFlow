@@ -1,0 +1,151 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.Id"
+        },
+        "QualifiedApiName": "Id"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.Owner"
+        },
+        "QualifiedApiName": "OwnerId"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.IsDeleted"
+        },
+        "QualifiedApiName": "IsDeleted"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.Name"
+        },
+        "QualifiedApiName": "Name"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.CreatedDate"
+        },
+        "QualifiedApiName": "CreatedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.CreatedBy"
+        },
+        "QualifiedApiName": "CreatedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.LastModifiedDate"
+        },
+        "QualifiedApiName": "LastModifiedDate"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.LastModifiedBy"
+        },
+        "QualifiedApiName": "LastModifiedById"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.SystemModstamp"
+        },
+        "QualifiedApiName": "SystemModstamp"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9Wh7"
+        },
+        "QualifiedApiName": "VS_Booked_By_Mobile__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9Wh8"
+        },
+        "QualifiedApiName": "VS_Booked_Channel__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9Wh9"
+        },
+        "QualifiedApiName": "VS_Booking_Reference__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhA"
+        },
+        "QualifiedApiName": "VS_Cancelled_At__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhB"
+        },
+        "QualifiedApiName": "VS_Dose_Number__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhC"
+        },
+        "QualifiedApiName": "VS_Facility__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhD"
+        },
+        "QualifiedApiName": "VS_Patient__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhE"
+        },
+        "QualifiedApiName": "VS_Service__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhF"
+        },
+        "QualifiedApiName": "VS_Session__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhG"
+        },
+        "QualifiedApiName": "VS_Slot__c"
+      },
+      {
+        "attributes": {
+          "type": "EntityParticle",
+          "url": "/services/data/v67.0/tooling/sobjects/EntityParticle/01IgL000006h1ob.00NgL00004F9WhH"
+        },
+        "QualifiedApiName": "VS_Status__c"
+      }
+    ],
+    "totalSize": 20,
+    "done": true
+  },
+  "warnings": []
+}

@@ -1,0 +1,1 @@
+SELECT QualifiedApiName FROM EntityParticle WHERE EntityDefinition.QualifiedApiName='VS_Patient__c'

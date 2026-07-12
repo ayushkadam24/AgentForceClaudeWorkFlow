@@ -1,0 +1,113 @@
+ »   Warning: @salesforce/cli update available from 2.140.6 to 2.142.7.
+{
+  "status": 0,
+  "result": {
+    "records": [
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFFQQ4"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD3WAP"
+          },
+          "Name": "VS_Booking_Engine_Test_Context"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": true,
+        "PermissionsEdit": true,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFLQQ4"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD4WAP"
+          },
+          "Name": "VS_District_Admin"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": false,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFRQQ4"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD5WAP"
+          },
+          "Name": "VS_District_MIS"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": false,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFXQQ4"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD6WAP"
+          },
+          "Name": "VS_Facility_Staff"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": false,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFdQQO"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD7WAP"
+          },
+          "Name": "VS_MO_Facility_Admin"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": true,
+        "PermissionsEdit": true,
+        "PermissionsDelete": false
+      },
+      {
+        "attributes": {
+          "type": "ObjectPermissions",
+          "url": "/services/data/v67.0/sobjects/ObjectPermissions/110gL0000CnGRFjQQO"
+        },
+        "Parent": {
+          "attributes": {
+            "type": "PermissionSet",
+            "url": "/services/data/v67.0/sobjects/PermissionSet/0PSgL00000IMCD8WAP"
+          },
+          "Name": "VS_Nurse"
+        },
+        "PermissionsRead": true,
+        "PermissionsCreate": false,
+        "PermissionsEdit": false,
+        "PermissionsDelete": false
+      }
+    ],
+    "totalSize": 6,
+    "done": true
+  },
+  "warnings": []
+}

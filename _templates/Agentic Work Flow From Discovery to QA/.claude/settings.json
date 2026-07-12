@@ -1,0 +1,59 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./ANSWER-KEY-intentional-gaps.md)",
+      "Edit(./00-inputs/**)",
+      "Write(./00-inputs/**)",
+      "Edit(./ANSWER-KEY-intentional-gaps.md)",
+      "Write(./ANSWER-KEY-intentional-gaps.md)",
+      "Edit(./.claude/rules/**)",
+      "Write(./.claude/rules/**)",
+      "Edit(./.claude/hooks/**)",
+      "Write(./.claude/hooks/**)",
+      "Edit(./.claude/settings.json)",
+      "Write(./.claude/settings.json)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pretool-guard.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pretool-guard.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/stop-guard.js"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/stop-guard.js"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility__c</fullName>
+    <description>Master-Detail to VS_Facility__c: the facility this session belongs to. Master-Detail (not Lookup) because a session is meaningless without its facility, inherits Facility&apos;s sharing, and cascades on facility lifecycle (design §2.4).</description>
+    <label>Facility</label>
+    <referenceTo>VS_Facility__c</referenceTo>
+    <relationshipLabel>Sessions</relationshipLabel>
+    <relationshipName>VS_Sessions</relationshipName>
+    <relationshipOrder>0</relationshipOrder>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <trackTrending>false</trackTrending>
+    <type>MasterDetail</type>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+</CustomField>
