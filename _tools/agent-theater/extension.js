@@ -69,7 +69,9 @@ function openPanel(context) {
     return;
   }
 
-  if (panel) { panel.reveal(); pushState(root); return; }
+  if (panel) { panel.reveal(); pushState(root, null, true); return; }
+
+  lastSnapshotKey = null; // fresh panel = fresh webview; never dedupe its first snapshot
 
   panel = vscode.window.createWebviewPanel(
     "agentTheater", "Agent Theater", vscode.ViewColumn.Beside,
@@ -87,7 +89,10 @@ function openPanel(context) {
 
   panel.webview.onDidReceiveMessage((msg) => {
     if (!msg) return;
-    if (msg.type === "refresh") pushState(root);
+    // force=true: webview-requested refreshes must always be answered, even if the
+    // snapshot is unchanged — the initial pushState can be dropped while the webview
+    // is still loading, and the dedupe key must not swallow the retry.
+    if (msg.type === "refresh") pushState(root, null, true);
     if (msg.type === "health") runHealthCheck(root);
   }, null, context.subscriptions);
 
@@ -433,16 +438,16 @@ function collectState(root, changedFile) {
 }
 
 let lastSnapshotKey = null;
-function pushState(root, changedFile) {
+function pushState(root, changedFile, force) {
   if (!panel) return;
   try {
     const data = collectState(root, changedFile);
     data.baton = pendingBaton;
     pendingBaton = null;
     applyStatusBar(data);
-    // Skip identical snapshots (polling produces many) — unless a baton must be delivered.
+    // Skip identical snapshots (polling produces many) — unless forced or a baton must be delivered.
     const key = JSON.stringify({ ...data, generatedAt: 0, changedFile: 0 });
-    if (!data.baton && key === lastSnapshotKey) return;
+    if (!force && !data.baton && key === lastSnapshotKey) return;
     lastSnapshotKey = key;
     panel.webview.postMessage({ type: "state", data });
   } catch (e) {
