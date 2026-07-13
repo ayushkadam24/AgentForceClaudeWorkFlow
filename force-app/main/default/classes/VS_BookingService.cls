@@ -360,8 +360,11 @@ public with sharing class VS_BookingService {
     }
 
     /**
-     * Locks the one or two session rows a reschedule touches in a SINGLE FOR UPDATE, ORDERED BY Id so
-     * every transaction acquires them in the same global order (deadlock-safe, §4.5). A same-session
+     * Locks the one or two session rows a reschedule touches in a SINGLE FOR UPDATE so every transaction
+     * acquires them in the same global order (deadlock-safe, §4.5). The ordering is Id-ascending and
+     * IMPLICIT: Apex forbids an explicit ORDER BY on a locking query ("Explicit ORDER BY not allowed when
+     * locking rows (Id order is implied)") precisely because FOR UPDATE already locks rows in ascending-Id
+     * order — which is exactly the global order this method relies on for deadlock safety. A same-session
      * reschedule collapses the Set to one Id -> exactly one row locked (AC-4).
      */
     private static Map<Id, VS_Session__c> lockSessionsOrdered(Id oldSessionId, Id newSessionId) {
@@ -370,7 +373,6 @@ public with sharing class VS_BookingService {
             SELECT Id, VS_Walk_In_Reserve_Count__c, VS_Walk_In_Used_Count__c
             FROM VS_Session__c
             WHERE Id IN :sessionIds
-            ORDER BY Id
             FOR UPDATE
         ];
         return new Map<Id, VS_Session__c>(locked);

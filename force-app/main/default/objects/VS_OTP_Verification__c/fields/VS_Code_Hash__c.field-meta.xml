@@ -7,5 +7,4 @@
     <length>128</length>
     <required>false</required>
     <unique>false</unique>
-    <caseSensitive>true</caseSensitive>
 </CustomField>

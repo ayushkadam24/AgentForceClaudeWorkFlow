@@ -87,9 +87,9 @@ public with sharing class VS_OtpService {
             SELECT Id, VS_Mobile__c, VS_Code_Hash__c, VS_Expiry__c, VS_Attempts__c, VS_Verified__c
             FROM VS_OTP_Verification__c
             WHERE VS_Mobile__c = :mobile
+            WITH USER_MODE
             ORDER BY CreatedDate DESC
             LIMIT 1
-            WITH USER_MODE
         ];
         if (rows.isEmpty()) {
             throw VS_OtpException.of(

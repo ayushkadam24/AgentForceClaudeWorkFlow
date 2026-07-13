@@ -133,3 +133,9 @@ standard semantics say the current code is correct.
 
 MINOR-1 (non-duplicate-DmlException negative test) and NIT-1 (VS-07 field-doc wording) are carried
 to a follow-up per the fix-2-blockers scope.
+
+## ORG-VERIFIED (2026-07-13, AgentForceClaudeWorkFlow) — BLOCKER-1 false-positive CONFIRMED
+Validate-only deploy (RunLocalTests) = **Succeeded**, 54 tests / 0 failures / 0 coverage warnings.
+`VS_PatientServiceTest` create-path tests PASS with the permset **unchanged** — proving BLOCKER-1
+was a false positive (required fields don't need/allow FLS; writable under insert-as-user).
+VS_PatientService coverage 93%. The org-confirm item flagged above is now CLOSED-CONFIRMED.

@@ -85,3 +85,12 @@ No blocker: all ACs met, write path is single + user-mode, OWD Private, hash-not
 lint-clean on VS-13 files. Batch M-1 (concurrency lockout) and N-2 (stub-default guard) before this seam
 backs a real citizen-auth journey; N-1 needs an architect ruling on the field name. Human runs the
 verdict; orchestrator must still run the delta dry-run + apex tests to clear the UNVERIFIED banner.
+
+## ORG-VERIFIED (2026-07-13) + two deploy-fixes (surfaced only at org compile)
+Validate-only deploy (RunLocalTests) against AgentForceClaudeWorkFlow = **Succeeded**,
+54 tests / 0 failures; VS_OtpService coverage 97%.
+1. `VS_OTP_Verification__c.VS_Code_Hash__c` had `<caseSensitive>true</caseSensitive>` without
+   `unique` — invalid ("CaseSensitive can only be set for fields with unique also set"). Removed it;
+   the hash comparison is a case-sensitive Apex String equality regardless of the DB-field setting.
+2. `VS_OtpService.verify()` SOQL had `WITH USER_MODE` AFTER `ORDER BY`/`LIMIT` (parse error). Moved
+   it to the correct clause position (immediately after WHERE, before ORDER BY).

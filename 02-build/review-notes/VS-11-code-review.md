@@ -113,3 +113,14 @@ untested — needs an injectable-config seam), N-1 (walk-in cancel branch → QA
 N-2/N-3/N-4 → BA confirm / QA / packet wording. Deployability remains **org-UNVERIFIED** — the
 consolidated `sf project deploy start --dry-run` + `sf apex run test` against the DE alias is the
 gate before this may be called buildable.
+
+## ORG-VERIFIED (2026-07-13) + one additional deploy-fix
+Validate-only deploy (RunLocalTests) against AgentForceClaudeWorkFlow = **Succeeded**,
+54 tests / 0 failures / 0 coverage warnings; VS_BookingService 93%. The B-1 fix and all
+cancel/reschedule + VS-09 booking/walk-in regression tests pass.
+
+DEPLOY-FIX (the offline review missed this — it only surfaces at org compile): `lockSessionsOrdered`
+used `ORDER BY Id ... FOR UPDATE`, which Apex rejects ("Explicit ORDER BY not allowed when locking
+rows (Id order is implied)"). Removed the explicit `ORDER BY Id`; FOR UPDATE already locks rows in
+ascending-Id order, so the deadlock-safe global ordering AC-3 relies on is preserved (now implicit).
+Method doc updated. This is the only change to the reschedule lock path; B-1 fix unaffected.
