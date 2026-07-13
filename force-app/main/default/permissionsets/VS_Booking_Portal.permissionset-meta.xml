@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>F-001 least-privilege citizen portal booking (D-030). Read availability; Create+FLS on Patient/Appointment/OTP; Apex access to VS_BookingController; NO edit on Session/Slot (D-020).</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>VS Booking Portal</label>
+    <classAccesses>
+        <apexClass>VS_BookingController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <objectPermissions>
+        <object>VS_Facility__c</object>
+        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Service__c</object>
+        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Facility_Service__c</object>
+        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Session__c</object>
+        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Slot__c</object>
+        <allowCreate>false</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Patient__c</object>
+        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Appointment__c</object>
+        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>false</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_OTP_Verification__c</object>
+        <allowCreate>true</allowCreate><allowDelete>false</allowDelete><allowEdit>true</allowEdit>
+        <allowRead>true</allowRead><modifyAllRecords>false</modifyAllRecords><viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <!-- Read-only on the walk-in reserve formula: book()'s FOR UPDATE query selects it for ALL channels,
+         and this DE org enforces FLS even in system mode (D-028), so the query needs read here. -->
+    <fieldPermissions><field>VS_Session__c.VS_Walk_In_Reserve_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Match_Key__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Consent_Given__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Consent_Timestamp__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Patient__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Session__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Facility__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Service__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_Channel__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booking_Reference__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_OTP_Verification__c.VS_Mobile__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_OTP_Verification__c.VS_Code_Hash__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_OTP_Verification__c.VS_Expiry__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_OTP_Verification__c.VS_Attempts__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>VS_OTP_Verification__c.VS_Verified__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+</PermissionSet>

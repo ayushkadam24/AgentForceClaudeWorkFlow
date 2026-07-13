@@ -1,0 +1,80 @@
+<template>
+    <lightning-card title="Book a Vaccination Appointment" icon-name="custom:custom57">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-box slds-theme_error slds-m-bottom_small" role="alert">{error}</div>
+            </template>
+
+            <!-- Confirmation -->
+            <template if:true={bookingReference}>
+                <div class="slds-box slds-theme_success" role="status">
+                    <h2 class="slds-text-heading_small">Appointment confirmed</h2>
+                    <p>Your booking reference is <strong>{bookingReference}</strong>. Please keep it for your records.</p>
+                </div>
+            </template>
+
+            <!-- Wizard (hidden once booked) -->
+            <template if:false={bookingReference}>
+                <!-- 1. Choose -->
+                <lightning-combobox label="Facility" options={facilityOptions} value={facilityId}
+                    onchange={handleFacility} placeholder="Select a facility"></lightning-combobox>
+                <lightning-combobox label="Service" options={serviceOptions} value={serviceId}
+                    onchange={handleService} placeholder="Select a service" class="slds-m-top_x-small"></lightning-combobox>
+                <lightning-input type="date" label="Date" value={day} onchange={handleDay}
+                    class="slds-m-top_x-small"></lightning-input>
+                <lightning-button label="Find available slots" variant="brand" onclick={findSlots}
+                    disabled={loading} class="slds-m-top_small" data-guard={canSearch}></lightning-button>
+
+                <!-- 2. Slots -->
+                <template if:true={hasSlots}>
+                    <fieldset class="slds-m-top_medium">
+                        <legend class="slds-text-title_caps">Available times</legend>
+                        <div class="slds-grid slds-wrap slds-gutters_x-small">
+                            <template for:each={slots} for:item="s">
+                                <div key={s.id} class="slds-col slds-p-around_xx-small">
+                                    <button type="button" data-id={s.id} onclick={handleSlot}
+                                        class="slds-button slds-button_neutral">
+                                        {s.label} ({s.remaining} left)
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </fieldset>
+                </template>
+
+                <!-- 3. Citizen details + OTP -->
+                <template if:true={slotId}>
+                    <div class="slds-m-top_medium">
+                        <lightning-input label="Full name" value={fullName} onchange={handleName}></lightning-input>
+                        <lightning-input type="date" label="Date of birth" value={dob} onchange={handleDob}
+                            class="slds-m-top_x-small"></lightning-input>
+                        <lightning-input type="tel" label="Mobile" value={mobile} onchange={handleMobile}
+                            class="slds-m-top_x-small"></lightning-input>
+
+                        <template if:false={otpVerified}>
+                            <lightning-button label="Send OTP" onclick={requestOtp} disabled={loading}
+                                class="slds-m-top_small"></lightning-button>
+                            <template if:true={otpSent}>
+                                <lightning-input label="Enter OTP" value={otpCode} onchange={handleOtpCode}
+                                    class="slds-m-top_x-small"></lightning-input>
+                                <lightning-button label="Verify OTP" onclick={confirmOtp} disabled={loading}
+                                    class="slds-m-top_x-small"></lightning-button>
+                            </template>
+                        </template>
+
+                        <template if:true={otpVerified}>
+                            <div class="slds-text-color_success slds-m-top_x-small">Mobile verified &#10003;</div>
+                            <lightning-button label="Confirm booking" variant="brand" onclick={confirmBooking}
+                                disabled={loading} class="slds-m-top_small"></lightning-button>
+                        </template>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

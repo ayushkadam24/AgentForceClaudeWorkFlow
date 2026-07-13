@@ -27,12 +27,18 @@
  * The two pools are disjoint but guarded by the SAME session lock, so neither can be overbooked and
  * neither channel can consume the other's capacity.
  *
- * === Security ===
- * `with sharing`; the appointment insert is executed WITH USER_MODE (`insert as user`) so CRUD/FLS is
- * enforced on the record the acting user creates (rules/20). The lock/counter reads and the counter
- * updates on VS_Session__c/VS_Slot__c run in system mode by design: those denormalized counters are
- * owned and maintained solely by this service under the lock (D-020) and a Portal citizen must NOT be
- * granted direct edit on capacity rows (least privilege). This split is called out in the review packet.
+ * === Security (D-030) ===
+ * `inherited sharing`: this class runs in the SHARING mode of its CALLER, and defaults to `with sharing`
+ * when it is the entry point (secure-by-default). Internal/service/test callers are `with sharing`, so
+ * their behaviour is unchanged. The SINGLE exception is the citizen-portal path: VS_BookingController
+ * invokes book() from a dedicated `without sharing` wrapper (gated by a server-side OTP identity check,
+ * Annexure C9), so a least-privilege citizen can ACQUIRE the FOR UPDATE lock and let the service update
+ * the service-owned counters — WITHOUT being granted direct edit on VS_Session__c/VS_Slot__c (the D-020
+ * red line; that edit grant is TEST-ONLY, VS_Booking_Engine_Test_Context). The appointment insert stays
+ * WITH USER_MODE (`insert as user`) so CRUD/FLS is always enforced on the citizen's own record. Sharing
+ * changes only record VISIBILITY — the lock target, single-lock discipline, disjoint pools and D-029
+ * fresh-sObject counter writes are unchanged. INVARIANT: the ONLY `without sharing` caller of book/
+ * cancel/reschedule is that named portal wrapper; any new one is a security-review item (D-030).
  *
  * Concurrency-test honesty: an Apex UNIT test runs in ONE transaction and cannot spawn truly parallel
  * transactions, so the unit tests prove the capacity-CEILING LOGIC (check-then-insert rejects the
@@ -42,7 +48,7 @@
  * Traceability: REQ-002, REQ-006, REQ-007, REQ-008, REQ-062 (session-scoped) / EP-03 /
  *               D-019, D-020, D-016, D-009.
  */
-public with sharing class VS_BookingService {
+public inherited sharing class VS_BookingService {
 
     // Channels that draw from a slot's bookable ceiling (as opposed to the session walk-in reserve).
     private static final String CHANNEL_WALK_IN = 'WalkIn';

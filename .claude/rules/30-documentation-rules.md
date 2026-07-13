@@ -25,3 +25,6 @@
    append-only via atomic appends. Parallel subagents NEVER read-modify-write these files —
    the orchestrator serializes shared-log writes; reviewer-type agents write only their own
    report file plus their run line.
+9. every agent run appends a line to agent-runs.log AT START in the same format with result 
+   STARTED and note = what it's about to do (e.g. 2026-07-13 20:05 | dev-senior | /dev-implement VS-14-guest | DONE-phase | - | - | STARTED | building VS_BookingController + vsSlotPicker for citizen site). 
+   The final OK/PARTIAL/BLOCKED line at the end remains mandatory. Start doing this immediately, including for the currently running work.
