@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Booked_Appointments</fullName>
+    <columns>NAME</columns>
+    <columns>VS_Patient__c</columns>
+    <columns>VS_Slot__c</columns>
+    <columns>VS_Booked_Channel__c</columns>
+    <columns>VS_Booking_Reference__c</columns>
+    <columns>VS_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>VS_Status__c</field>
+        <operation>equals</operation>
+        <value>Booked</value>
+    </filters>
+    <label>Booked Appointments</label>
+</ListView>

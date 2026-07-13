@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#0B5CAB</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <description>Citizen Appointment &amp; Vaccination Scheduling System (F-001 POC). Navigate sessions, slots, patients and appointments; manage facilities, services, holidays; view SMS/OTP/error logs.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Vaccine Scheduler</label>
+    <navType>Standard</navType>
+    <tabs>standard-home</tabs>
+    <tabs>VS_Session__c</tabs>
+    <tabs>VS_Slot__c</tabs>
+    <tabs>VS_Appointment__c</tabs>
+    <tabs>VS_Patient__c</tabs>
+    <tabs>VS_Facility__c</tabs>
+    <tabs>VS_Service__c</tabs>
+    <tabs>VS_Facility_Service__c</tabs>
+    <tabs>VS_Holiday__c</tabs>
+    <tabs>VS_Notification_Log__c</tabs>
+    <tabs>VS_OTP_Verification__c</tabs>
+    <tabs>VS_Error_Log__c</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>

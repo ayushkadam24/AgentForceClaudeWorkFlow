@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>F-001 app-access: makes the Vaccine Scheduler Lightning app and its object tabs VISIBLE. Grants NO record CRUD/FLS (that comes from the role permsets + VS_Booking_Capability). Assign alongside a least-privilege role permset.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>VS Vaccine Scheduler App</label>
+    <applicationVisibilities>
+        <application>VS_Vaccine_Scheduler</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+    <tabSettings>
+        <tab>VS_Session__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Slot__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Appointment__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Patient__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Facility__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Service__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Facility_Service__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Holiday__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Notification_Log__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_OTP_Verification__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>VS_Error_Log__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+</PermissionSet>

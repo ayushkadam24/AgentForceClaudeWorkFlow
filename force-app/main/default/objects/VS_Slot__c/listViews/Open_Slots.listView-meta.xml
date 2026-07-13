@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Open_Slots</fullName>
+    <columns>NAME</columns>
+    <columns>VS_Session__c</columns>
+    <columns>VS_Slot_Start__c</columns>
+    <columns>VS_Capacity__c</columns>
+    <columns>VS_Booked_Count__c</columns>
+    <columns>VS_Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>VS_Status__c</field>
+        <operation>equals</operation>
+        <value>Open</value>
+    </filters>
+    <label>Open Slots</label>
+</ListView>
