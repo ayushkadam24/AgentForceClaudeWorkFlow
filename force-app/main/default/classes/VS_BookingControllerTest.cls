@@ -153,6 +153,11 @@ private class VS_BookingControllerTest {
         System.assert(String.isNotBlank(ref), 'a booking reference is returned');
         System.assertEquals(1, [SELECT COUNT() FROM VS_Appointment__c WHERE VS_Slot__c = :slotId()],
             'exactly one appointment created');
+        // VS-16: the OTP-verified booker mobile is stamped as the IDOR ownership field.
+        System.assertEquals(mobile,
+            [SELECT VS_Booked_By_Mobile__c FROM VS_Appointment__c WHERE VS_Slot__c = :slotId() LIMIT 1]
+                .VS_Booked_By_Mobile__c,
+            'VS_Booked_By_Mobile__c stamped with the OTP-verified booker mobile (ownership field)');
       }
     }
 

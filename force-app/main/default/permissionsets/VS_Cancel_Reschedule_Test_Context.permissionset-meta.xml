@@ -3,6 +3,11 @@
     <description>F-001 TEST-ONLY harness for VS-11 cancel/reschedule: grants the test user Edit on VS_Appointment__c and FLS on VS_Cancelled_At__c so cancel()'s fresh-minimal status write runs under the DE org deploy-time DML check (D-028).</description>
     <fieldPermissions>
         <editable>true</editable>
+        <field>VS_Appointment__c.VS_Booked_By_Mobile__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>VS_Appointment__c.VS_Cancelled_At__c</field>
         <readable>true</readable>
     </fieldPermissions>

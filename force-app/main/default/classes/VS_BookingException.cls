@@ -63,4 +63,17 @@ public class VS_BookingException extends Exception {
      * Custom Metadata, never hardcoded). Surfaces as an admin-actionable configuration error.
      */
     public static final String CUTOFF_CONFIG_MISSING = 'CUTOFF_CONFIG_MISSING';
+
+    // ---- Citizen self-service authorization (VS-16, EP-06) ------------------------------------
+
+    /**
+     * IDOR GUARD (VS-16, D-030 residual MUST-FIX): the OTP-verified mobile requesting a
+     * cancel/reschedule is NOT the owner of the target appointment — it matches neither the patient's
+     * own VS_Patient__r.VS_Mobile__c nor the booker's VS_Booked_By_Mobile__c. A citizen must never be
+     * able to change another citizen's booking by guessing/enumerating its Id, so the controller REJECTS
+     * with this code BEFORE elevating into the §3.4 booking service. User-actionable: the LWC maps this
+     * to "This booking is not linked to your mobile number." Deliberately does NOT reveal whether the
+     * appointment exists (returned identically to a genuinely-missing row from the citizen's view).
+     */
+    public static final String NOT_APPOINTMENT_OWNER = 'NOT_APPOINTMENT_OWNER';
 }

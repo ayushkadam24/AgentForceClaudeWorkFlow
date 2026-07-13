@@ -1,0 +1,154 @@
+<template>
+    <lightning-card title={label.VS_Manage_Title} icon-name="standard:events">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text={label.VS_Loading} size="small"></lightning-spinner>
+            </template>
+
+            <template lwc:if={error}>
+                <div class="slds-box slds-theme_error slds-m-bottom_small" role="alert" data-testid="error">
+                    {error}
+                </div>
+            </template>
+
+            <template lwc:if={successMessage}>
+                <div class="slds-box slds-theme_success slds-m-bottom_small" role="status" aria-live="polite"
+                    data-testid="success">
+                    <p>{successMessage}</p>
+                    <template lwc:if={newReference}>
+                        <p class="slds-m-top_xx-small">
+                            <strong>{label.VS_Reference_Label}:</strong>
+                            <span data-testid="new-reference">{newReference}</span>
+                        </p>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Step: authenticate by mobile + OTP -->
+            <template lwc:if={isAuth}>
+                <p class="slds-m-bottom_small">{label.VS_Manage_Intro}</p>
+                <lightning-input type="tel" label={label.VS_Field_Mobile} value={mobile}
+                    onchange={handleMobile} required data-testid="mobile"></lightning-input>
+                <lightning-button label={label.VS_Btn_Send_Otp} onclick={requestOtp}
+                    disabled={sendOtpDisabled} class="slds-m-top_small" data-testid="send-otp"></lightning-button>
+                <template lwc:if={otpSent}>
+                    <lightning-input label={label.VS_Field_Otp} value={otpCode} onchange={handleOtpCode}
+                        class="slds-m-top_x-small" data-testid="otp-code"></lightning-input>
+                    <lightning-button label={label.VS_Btn_View_Bookings} variant="brand" onclick={confirmOtp}
+                        disabled={loading} class="slds-m-top_x-small" data-testid="verify-otp"></lightning-button>
+                </template>
+            </template>
+
+            <!-- Step: list my appointments -->
+            <template lwc:if={isList}>
+                <template lwc:if={hasAppointments}>
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer" aria-label={label.VS_Manage_Title}>
+                        <thead>
+                            <tr class="slds-line-height_reset">
+                                <th scope="col">{label.VS_Col_Reference}</th>
+                                <th scope="col">{label.VS_Col_Facility}</th>
+                                <th scope="col">{label.VS_Col_Service}</th>
+                                <th scope="col">{label.VS_Col_When}</th>
+                                <th scope="col">{label.VS_Col_Status}</th>
+                                <th scope="col"><span class="slds-assistive-text">{label.VS_Btn_Cancel}</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={appointments} for:item="a">
+                                <tr key={a.id} data-testid="appt-row">
+                                    <th scope="row" data-testid="cell-reference">{a.reference}</th>
+                                    <td>{a.facilityName}</td>
+                                    <td>{a.serviceName}</td>
+                                    <td>
+                                        <lightning-formatted-date-time value={a.slotStart}
+                                            year="numeric" month="short" day="2-digit"
+                                            hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                                    </td>
+                                    <!-- Status as TEXT, never colour alone (REQ-057) -->
+                                    <td><span class="slds-badge" data-testid="cell-status">{a.statusText}</span></td>
+                                    <td>
+                                        <lightning-button label={label.VS_Btn_Reschedule} data-id={a.id}
+                                            onclick={startReschedule} class="slds-m-right_xx-small"
+                                            data-testid="reschedule"></lightning-button>
+                                        <lightning-button label={label.VS_Btn_Cancel} data-id={a.id}
+                                            variant="destructive-text" onclick={startCancel}
+                                            data-testid="cancel"></lightning-button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </template>
+                <template lwc:if={noAppointments}>
+                    <p class="slds-text-color_weak" role="status" data-testid="no-bookings">
+                        {label.VS_No_Bookings}
+                    </p>
+                </template>
+            </template>
+
+            <!-- Step: confirm cancel -->
+            <template lwc:if={isConfirmCancel}>
+                <div class="slds-box" role="group" aria-label={label.VS_Btn_Cancel}>
+                    <p>{label.VS_Cancel_Confirm}</p>
+                    <p class="slds-m-top_x-small slds-text-body_small">
+                        {selected.reference} &mdash; {selected.facilityName}
+                    </p>
+                    <div class="slds-m-top_small">
+                        <lightning-button label={label.VS_Btn_Confirm_Cancel} variant="destructive"
+                            onclick={confirmCancel} disabled={loading} data-testid="confirm-cancel"></lightning-button>
+                        <lightning-button label={label.VS_Btn_Keep} onclick={keepAppointment}
+                            class="slds-m-left_x-small" data-testid="keep"></lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step: reschedule — pick a new slot (reuses the availability service) -->
+            <template lwc:if={isReschedule}>
+                <p class="slds-m-bottom_small">{label.VS_Reschedule_Pick}</p>
+                <lightning-combobox label={label.VS_Field_Facility} options={facilityOptions}
+                    value={facilityId} onchange={handleFacility}
+                    placeholder={label.VS_Field_Facility_Placeholder} data-testid="rs-facility"></lightning-combobox>
+                <lightning-combobox label={label.VS_Field_Service} options={serviceOptions}
+                    value={serviceId} onchange={handleService}
+                    placeholder={label.VS_Field_Service_Placeholder} class="slds-m-top_x-small"
+                    data-testid="rs-service"></lightning-combobox>
+                <lightning-input type="date" label={label.VS_Field_Date} value={day}
+                    onchange={handleDay} class="slds-m-top_x-small" data-testid="rs-date"></lightning-input>
+                <lightning-button label={label.VS_Btn_Find_Slots} variant="brand" onclick={findSlots}
+                    disabled={searchDisabled} class="slds-m-top_small" data-testid="rs-find"></lightning-button>
+
+                <template lwc:if={hasSlots}>
+                    <fieldset class="slds-m-top_medium">
+                        <legend class="slds-text-title_caps">{label.VS_Available_Times}</legend>
+                        <ul class="slds-grid slds-wrap slds-gutters_x-small" role="list">
+                            <template for:each={slots} for:item="s">
+                                <li key={s.id} class="slds-col slds-p-around_xx-small" role="listitem">
+                                    <button type="button" data-id={s.id} onclick={handleNewSlot}
+                                        aria-label={s.ariaLabel} class="slds-button slds-button_neutral vs-slot-btn"
+                                        data-testid="rs-slot">
+                                        {s.label}
+                                        <span class="slds-text-body_small slds-m-left_xx-small">
+                                            ({s.remaining} {label.VS_Slots_Left})
+                                        </span>
+                                    </button>
+                                </li>
+                            </template>
+                        </ul>
+                    </fieldset>
+                </template>
+                <template lwc:if={noSlots}>
+                    <p class="slds-m-top_medium slds-text-color_weak" role="status">{label.VS_No_Slots}</p>
+                </template>
+
+                <div class="slds-m-top_medium">
+                    <lightning-button label={label.VS_Btn_Confirm_Reschedule} variant="brand"
+                        onclick={confirmReschedule} disabled={confirmRescheduleDisabled}
+                        data-testid="confirm-reschedule"></lightning-button>
+                    <lightning-button label={label.VS_Btn_Back} onclick={backToList}
+                        class="slds-m-left_x-small" data-testid="back"></lightning-button>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

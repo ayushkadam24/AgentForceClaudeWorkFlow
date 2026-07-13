@@ -1,0 +1,12 @@
+<template>
+    <!-- One accessible tabset: "Book" (new appointment) and "Manage" (view/cancel/reschedule). Both tabs
+         and the child components are fully keyboard-operable (lightning-tabset ships roving tab focus). -->
+    <lightning-tabset variant="scoped">
+        <lightning-tab label={label.VS_Tab_Book} title={label.VS_Tab_Book} data-testid="tab-book">
+            <c-vs-slot-picker></c-vs-slot-picker>
+        </lightning-tab>
+        <lightning-tab label={label.VS_Tab_Manage} title={label.VS_Tab_Manage} data-testid="tab-manage">
+            <c-vs-my-bookings></c-vs-my-bookings>
+        </lightning-tab>
+    </lightning-tabset>
+</template>

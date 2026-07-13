@@ -2,8 +2,8 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>62.0</apiVersion>
     <isExposed>true</isExposed>
-    <masterLabel>VS Slot Picker</masterLabel>
-    <description>Citizen self-service vaccination booking: pick facility/service/date, choose an open slot, verify mobile by OTP, book, and print an accessible confirmation. Custom-Label driven (VS-16, REQ-060).</description>
+    <masterLabel>VS My Bookings</masterLabel>
+    <description>Citizen self-service: verify mobile by OTP, view upcoming appointments, then cancel or reschedule (OTP-gated + IDOR-safe). Custom-Label driven (VS-16, REQ-060).</description>
     <targets>
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>

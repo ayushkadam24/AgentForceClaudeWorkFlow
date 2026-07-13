@@ -59,6 +59,9 @@
     <fieldPermissions><field>VS_Appointment__c.VS_Service__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_Appointment__c.VS_Booked_Channel__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_Appointment__c.VS_Booking_Reference__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <!-- VS-16: booker mobile stamped post-book / post-reschedule as the stable IDOR ownership field. FLS
+         (not object edit) so the citizen's OWN appointment carries it; NO Session/Slot edit (D-020 held). -->
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_By_Mobile__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_OTP_Verification__c.VS_Mobile__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_OTP_Verification__c.VS_Code_Hash__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
     <fieldPermissions><field>VS_OTP_Verification__c.VS_Expiry__c</field><readable>true</readable><editable>true</editable></fieldPermissions>

@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  F-001 VS-16 citizen booking-journey Custom Labels (REQ-060 / EP-06).
+  EVERY citizen-facing string in the vsSlotPicker / vsMyBookings / vsBookingJourney LWCs resolves from a
+  label here so Marathi/Hindi are an ADDITIVE translation later (no code change). English (en_US) values
+  only at launch. Categories group them for the translator. Prefix VS_ per rules/20.
+-->
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+
+    <!-- ==== Journey shell / tabs ==== -->
+    <labels>
+        <fullName>VS_Journey_Title</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Journey card title</shortDescription>
+        <value>Vaccination Appointments</value>
+    </labels>
+    <labels>
+        <fullName>VS_Tab_Book</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Book tab label</shortDescription>
+        <value>Book an appointment</value>
+    </labels>
+    <labels>
+        <fullName>VS_Tab_Manage</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Manage tab label</shortDescription>
+        <value>Manage my bookings</value>
+    </labels>
+
+    <!-- ==== Book flow (vsSlotPicker) ==== -->
+    <labels>
+        <fullName>VS_Book_Title</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Book card title</shortDescription>
+        <value>Book a Vaccination Appointment</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Facility</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Facility field label</shortDescription>
+        <value>Facility</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Facility_Placeholder</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Facility placeholder</shortDescription>
+        <value>Select a facility</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Service</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Service field label</shortDescription>
+        <value>Vaccine / service</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Service_Placeholder</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Service placeholder</shortDescription>
+        <value>Select a service</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Date</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Date field label</shortDescription>
+        <value>Date</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Find_Slots</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Find slots button</shortDescription>
+        <value>Find available times</value>
+    </labels>
+    <labels>
+        <fullName>VS_Available_Times</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Available times legend</shortDescription>
+        <value>Available times</value>
+    </labels>
+    <labels>
+        <fullName>VS_Slots_Left</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Remaining places suffix</shortDescription>
+        <value>places left</value>
+    </labels>
+    <labels>
+        <fullName>VS_No_Slots</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No slots message</shortDescription>
+        <value>No open times were found for this facility, service and date. Please try another date.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Full_Name</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Full name label</shortDescription>
+        <value>Full name</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_DOB</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Date of birth label</shortDescription>
+        <value>Date of birth</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Mobile</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Mobile label</shortDescription>
+        <value>Mobile number</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Send_Otp</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Send OTP button</shortDescription>
+        <value>Send OTP</value>
+    </labels>
+    <labels>
+        <fullName>VS_Field_Otp</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Enter OTP label</shortDescription>
+        <value>Enter the OTP sent to your mobile</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Verify_Otp</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Verify OTP button</shortDescription>
+        <value>Verify OTP</value>
+    </labels>
+    <labels>
+        <fullName>VS_Mobile_Verified</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Mobile verified message</shortDescription>
+        <value>Mobile verified</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Confirm_Booking</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm booking button</shortDescription>
+        <value>Confirm booking</value>
+    </labels>
+    <labels>
+        <fullName>VS_Booking_Confirmed</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Booking confirmed heading</shortDescription>
+        <value>Appointment confirmed</value>
+    </labels>
+    <labels>
+        <fullName>VS_Reference_Label</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reference label</shortDescription>
+        <value>Booking reference</value>
+    </labels>
+    <labels>
+        <fullName>VS_Keep_Reference</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Keep reference note</shortDescription>
+        <value>Please keep this reference for your records. You can show it at the facility.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Print</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Print button</shortDescription>
+        <value>Print this confirmation</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Book_Another</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Book another button</shortDescription>
+        <value>Book another appointment</value>
+    </labels>
+
+    <!-- ==== Manage flow (vsMyBookings) ==== -->
+    <labels>
+        <fullName>VS_Manage_Title</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Manage card title</shortDescription>
+        <value>Manage my bookings</value>
+    </labels>
+    <labels>
+        <fullName>VS_Manage_Intro</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Manage intro text</shortDescription>
+        <value>Enter your mobile number and verify it with an OTP to see your upcoming appointments.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_View_Bookings</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>View my bookings button</shortDescription>
+        <value>View my bookings</value>
+    </labels>
+    <labels>
+        <fullName>VS_No_Bookings</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>No bookings message</shortDescription>
+        <value>You have no upcoming appointments for this mobile number.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Col_Reference</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reference column</shortDescription>
+        <value>Reference</value>
+    </labels>
+    <labels>
+        <fullName>VS_Col_Facility</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Facility column</shortDescription>
+        <value>Facility</value>
+    </labels>
+    <labels>
+        <fullName>VS_Col_Service</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Service column</shortDescription>
+        <value>Vaccine / service</value>
+    </labels>
+    <labels>
+        <fullName>VS_Col_When</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Date-time column</shortDescription>
+        <value>Date &amp; time</value>
+    </labels>
+    <labels>
+        <fullName>VS_Col_Status</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status column</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Cancel</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Cancel button</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Reschedule</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reschedule button</shortDescription>
+        <value>Reschedule</value>
+    </labels>
+    <labels>
+        <fullName>VS_Cancel_Confirm</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Cancel confirm prompt</shortDescription>
+        <value>Are you sure you want to cancel this appointment? This frees the place for someone else.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Confirm_Cancel</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm cancel button</shortDescription>
+        <value>Yes, cancel it</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Keep</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Keep appointment button</shortDescription>
+        <value>No, keep it</value>
+    </labels>
+    <labels>
+        <fullName>VS_Cancelled_Success</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Cancel success message</shortDescription>
+        <value>Your appointment has been cancelled.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Reschedule_Pick</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reschedule pick prompt</shortDescription>
+        <value>Choose a new date and time for this appointment.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Confirm_Reschedule</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Confirm reschedule button</shortDescription>
+        <value>Confirm new time</value>
+    </labels>
+    <labels>
+        <fullName>VS_Reschedule_Success</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reschedule success message</shortDescription>
+        <value>Your appointment has been rescheduled. Your new reference is shown below.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Btn_Back</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Back button</shortDescription>
+        <value>Back to my bookings</value>
+    </labels>
+
+    <!-- ==== Status text labels (never colour alone — REQ-057) ==== -->
+    <labels>
+        <fullName>VS_Status_Booked</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status Booked</shortDescription>
+        <value>Booked</value>
+    </labels>
+    <labels>
+        <fullName>VS_Status_WalkIn</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status WalkIn</shortDescription>
+        <value>Walk-in</value>
+    </labels>
+
+    <!-- ==== Shared / status ==== -->
+    <labels>
+        <fullName>VS_Loading</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Loading text</shortDescription>
+        <value>Loading, please wait</value>
+    </labels>
+    <labels>
+        <fullName>VS_Choose_All</fullName>
+        <categories>VS_Booking</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Choose all fields message</shortDescription>
+        <value>Please choose a facility, service and date.</value>
+    </labels>
+
+    <!-- ==== Error code -> friendly message (booking service coded reasons) ==== -->
+    <labels>
+        <fullName>VS_Err_Generic</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Generic error</shortDescription>
+        <value>Something went wrong. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_SLOT_FULL</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Slot full</shortDescription>
+        <value>Sorry, that time has just filled up. Please choose another time.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_WALKIN_RESERVE_FULL</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Walk-in reserve full</shortDescription>
+        <value>Sorry, the walk-in reserve for this session is full.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_WITHIN_CUTOFF</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Within cut-off</shortDescription>
+        <value>This appointment can no longer be changed online. Please contact the facility helpline.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_ALREADY_CANCELLED</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Already cancelled</shortDescription>
+        <value>This appointment has already been cancelled.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_NOT_APPOINTMENT_OWNER</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Not owner</shortDescription>
+        <value>This booking is not linked to your mobile number.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_APPOINTMENT_NOT_FOUND</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Appointment not found</shortDescription>
+        <value>We could not find that appointment.</value>
+    </labels>
+    <labels>
+        <fullName>VS_Err_SESSION_NOT_OPEN</fullName>
+        <categories>VS_Errors</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Session not open</shortDescription>
+        <value>That session is no longer open for booking.</value>
+    </labels>
+</CustomLabels>

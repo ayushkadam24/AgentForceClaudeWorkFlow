@@ -3,6 +3,11 @@
     <description>F-001 TEST/CI FLS harness (VS-06/09): grants a test user CRUD+FLS to build fixtures and run the USER_MODE booking/slot-gen engines (this DE org enforces FLS on plain Apex DML in deploy tests). TEST-ONLY; does NOT resolve the A-018 runtime permset gap.</description>
     <fieldPermissions>
         <editable>true</editable>
+        <field>VS_Appointment__c.VS_Booked_By_Mobile__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>VS_Appointment__c.VS_Booked_Channel__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -57,7 +62,7 @@
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
-        <allowEdit>false</allowEdit>
+        <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
         <modifyAllRecords>false</modifyAllRecords>
         <object>VS_Appointment__c</object>

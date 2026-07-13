@@ -1,76 +1,110 @@
 <template>
-    <lightning-card title="Book a Vaccination Appointment" icon-name="custom:custom57">
-        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+    <lightning-card title={label.VS_Book_Title} icon-name="custom:custom57">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium vs-book">
 
-            <template if:true={loading}>
-                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            <template lwc:if={loading}>
+                <lightning-spinner alternative-text={label.VS_Loading} size="small"></lightning-spinner>
             </template>
 
-            <template if:true={error}>
-                <div class="slds-box slds-theme_error slds-m-bottom_small" role="alert">{error}</div>
+            <!-- Errors are announced to assistive tech (role=alert) and are never a raw stack trace -->
+            <template lwc:if={error}>
+                <div class="slds-box slds-theme_error slds-m-bottom_small vs-no-print" role="alert" data-testid="error">
+                    {error}
+                </div>
             </template>
 
-            <!-- Confirmation -->
-            <template if:true={bookingReference}>
-                <div class="slds-box slds-theme_success" role="status">
-                    <h2 class="slds-text-heading_small">Appointment confirmed</h2>
-                    <p>Your booking reference is <strong>{bookingReference}</strong>. Please keep it for your records.</p>
+            <!-- Confirmation (printable section — see @media print) -->
+            <template lwc:if={bookingReference}>
+                <section class="slds-box slds-theme_success vs-print-area" aria-live="polite" data-testid="confirmation">
+                    <h2 class="slds-text-heading_small">{label.VS_Booking_Confirmed}</h2>
+                    <dl class="slds-m-top_x-small">
+                        <dt class="slds-text-title">{label.VS_Reference_Label}</dt>
+                        <dd class="slds-text-heading_medium" data-testid="reference">{bookingReference}</dd>
+                    </dl>
+                    <p class="slds-m-top_x-small">{label.VS_Keep_Reference}</p>
+                </section>
+                <div class="slds-m-top_small vs-no-print">
+                    <lightning-button label={label.VS_Btn_Print} icon-name="utility:print"
+                        onclick={handlePrint} data-testid="print"></lightning-button>
+                    <lightning-button label={label.VS_Btn_Book_Another} variant="brand"
+                        onclick={handleBookAnother} class="slds-m-left_x-small"></lightning-button>
                 </div>
             </template>
 
             <!-- Wizard (hidden once booked) -->
-            <template if:false={bookingReference}>
-                <!-- 1. Choose -->
-                <lightning-combobox label="Facility" options={facilityOptions} value={facilityId}
-                    onchange={handleFacility} placeholder="Select a facility"></lightning-combobox>
-                <lightning-combobox label="Service" options={serviceOptions} value={serviceId}
-                    onchange={handleService} placeholder="Select a service" class="slds-m-top_x-small"></lightning-combobox>
-                <lightning-input type="date" label="Date" value={day} onchange={handleDay}
-                    class="slds-m-top_x-small"></lightning-input>
-                <lightning-button label="Find available slots" variant="brand" onclick={findSlots}
-                    disabled={loading} class="slds-m-top_small" data-guard={canSearch}></lightning-button>
+            <template lwc:else>
+                <lightning-combobox label={label.VS_Field_Facility} options={facilityOptions}
+                    value={facilityId} onchange={handleFacility}
+                    placeholder={label.VS_Field_Facility_Placeholder} data-testid="facility"></lightning-combobox>
+                <lightning-combobox label={label.VS_Field_Service} options={serviceOptions}
+                    value={serviceId} onchange={handleService}
+                    placeholder={label.VS_Field_Service_Placeholder} class="slds-m-top_x-small"
+                    data-testid="service"></lightning-combobox>
+                <lightning-input type="date" label={label.VS_Field_Date} value={day}
+                    onchange={handleDay} class="slds-m-top_x-small" data-testid="date"></lightning-input>
+                <lightning-button label={label.VS_Btn_Find_Slots} variant="brand" onclick={findSlots}
+                    disabled={searchDisabled} class="slds-m-top_small" data-testid="find"></lightning-button>
 
-                <!-- 2. Slots -->
-                <template if:true={hasSlots}>
+                <!-- Slots: a real button list; each option describes itself with an aria-label -->
+                <template lwc:if={hasSlots}>
                     <fieldset class="slds-m-top_medium">
-                        <legend class="slds-text-title_caps">Available times</legend>
-                        <div class="slds-grid slds-wrap slds-gutters_x-small">
+                        <legend class="slds-text-title_caps">{label.VS_Available_Times}</legend>
+                        <ul class="slds-grid slds-wrap slds-gutters_x-small slds-list_horizontal" role="list">
                             <template for:each={slots} for:item="s">
-                                <div key={s.id} class="slds-col slds-p-around_xx-small">
+                                <li key={s.id} class="slds-col slds-p-around_xx-small" role="listitem">
                                     <button type="button" data-id={s.id} onclick={handleSlot}
-                                        class="slds-button slds-button_neutral">
-                                        {s.label} ({s.remaining} left)
+                                        aria-label={s.ariaLabel}
+                                        class="slds-button slds-button_neutral vs-slot-btn"
+                                        data-testid="slot">
+                                        {s.label}
+                                        <span class="slds-text-body_small slds-m-left_xx-small">
+                                            ({s.remaining} {label.VS_Slots_Left})
+                                        </span>
                                     </button>
-                                </div>
+                                </li>
                             </template>
-                        </div>
+                        </ul>
                     </fieldset>
                 </template>
 
-                <!-- 3. Citizen details + OTP -->
-                <template if:true={slotId}>
+                <template lwc:if={noSlots}>
+                    <p class="slds-m-top_medium slds-text-color_weak" role="status" data-testid="no-slots">
+                        {label.VS_No_Slots}
+                    </p>
+                </template>
+
+                <!-- Citizen details + OTP -->
+                <template lwc:if={slotChosen}>
                     <div class="slds-m-top_medium">
-                        <lightning-input label="Full name" value={fullName} onchange={handleName}></lightning-input>
-                        <lightning-input type="date" label="Date of birth" value={dob} onchange={handleDob}
-                            class="slds-m-top_x-small"></lightning-input>
-                        <lightning-input type="tel" label="Mobile" value={mobile} onchange={handleMobile}
-                            class="slds-m-top_x-small"></lightning-input>
+                        <lightning-input label={label.VS_Field_Full_Name} value={fullName}
+                            onchange={handleName} required data-testid="name"></lightning-input>
+                        <lightning-input type="date" label={label.VS_Field_DOB} value={dob}
+                            onchange={handleDob} class="slds-m-top_x-small" required data-testid="dob"></lightning-input>
+                        <lightning-input type="tel" label={label.VS_Field_Mobile} value={mobile}
+                            onchange={handleMobile} class="slds-m-top_x-small" required
+                            data-testid="mobile"></lightning-input>
 
-                        <template if:false={otpVerified}>
-                            <lightning-button label="Send OTP" onclick={requestOtp} disabled={loading}
-                                class="slds-m-top_small"></lightning-button>
-                            <template if:true={otpSent}>
-                                <lightning-input label="Enter OTP" value={otpCode} onchange={handleOtpCode}
-                                    class="slds-m-top_x-small"></lightning-input>
-                                <lightning-button label="Verify OTP" onclick={confirmOtp} disabled={loading}
-                                    class="slds-m-top_x-small"></lightning-button>
-                            </template>
+                        <template lwc:if={otpVerified}>
+                            <p class="slds-text-color_success slds-m-top_x-small" role="status">
+                                <lightning-icon icon-name="utility:success" size="x-small"
+                                    alternative-text={label.VS_Mobile_Verified}
+                                    class="slds-m-right_xx-small"></lightning-icon>
+                                {label.VS_Mobile_Verified}
+                            </p>
+                            <lightning-button label={label.VS_Btn_Confirm_Booking} variant="brand"
+                                onclick={confirmBooking} disabled={loading} class="slds-m-top_small"
+                                data-testid="confirm-booking"></lightning-button>
                         </template>
-
-                        <template if:true={otpVerified}>
-                            <div class="slds-text-color_success slds-m-top_x-small">Mobile verified &#10003;</div>
-                            <lightning-button label="Confirm booking" variant="brand" onclick={confirmBooking}
-                                disabled={loading} class="slds-m-top_small"></lightning-button>
+                        <template lwc:else>
+                            <lightning-button label={label.VS_Btn_Send_Otp} onclick={requestOtp}
+                                disabled={loading} class="slds-m-top_small" data-testid="send-otp"></lightning-button>
+                            <template lwc:if={otpSent}>
+                                <lightning-input label={label.VS_Field_Otp} value={otpCode}
+                                    onchange={handleOtpCode} class="slds-m-top_x-small"
+                                    data-testid="otp-code"></lightning-input>
+                                <lightning-button label={label.VS_Btn_Verify_Otp} onclick={confirmOtp}
+                                    disabled={loading} class="slds-m-top_x-small" data-testid="verify-otp"></lightning-button>
+                            </template>
                         </template>
                     </div>
                 </template>

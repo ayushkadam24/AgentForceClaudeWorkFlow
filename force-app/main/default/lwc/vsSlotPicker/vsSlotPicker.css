@@ -1,0 +1,21 @@
+/* SLDS 2 global styling hooks only (no hardcoded hex/px for themeable properties, no $tokens). */
+
+.vs-slot-btn {
+    min-height: 2.75rem; /* ~44px touch target (P4 one-thumb on a shared tablet) */
+}
+
+/* Visible focus for keyboard users (never remove the outline without a replacement). */
+.vs-slot-btn:focus {
+    outline: 2px solid var(--slds-g-color-border-brand-1, currentColor);
+    outline-offset: 2px;
+}
+
+/* Printable confirmation: on print, show ONLY the confirmation area (REQ-028 printable). */
+@media print {
+    .vs-no-print {
+        display: none !important;
+    }
+    .vs-print-area {
+        border: 1px solid var(--slds-g-color-border-1, currentColor);
+    }
+}
