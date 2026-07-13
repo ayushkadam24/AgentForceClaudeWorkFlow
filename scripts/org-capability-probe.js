@@ -22,7 +22,9 @@ if (!alias) {
   process.exit(2);
 }
 
-const sf = (args) => execFileSync('sf', args, { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+// shell:true so Windows resolves the `sf.cmd` shim (bare execFileSync('sf') ENOENTs on win32,
+// since `sf` is not an .exe). Args here are fixed flags + an alias with no shell metacharacters.
+const sf = (args) => execFileSync('sf', args, { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, shell: true });
 const findings = [];   // { probe, result, detail }
 const rec = (probe, result, detail) => { findings.push({ probe, result, detail }); console.log(`  [${result}] ${probe} — ${detail}`); };
 
@@ -38,8 +40,12 @@ try {
   console.log('== probe aborted: cannot reach org ==');
   process.exit(1);
 }
-const edition = org.edition || 'Unknown';
-const isDE = /developer/i.test(edition);
+// `edition` is the primary signal, but some DE/trial orgs return it blank from `sf org display`
+// (this target does). Fall back to the instance host: `...-dev-ed.` is a reliable Developer-Edition
+// marker, so the D-027/D-028 quirk flags fire even when edition is empty.
+const isDEHost = /(^|[.-])dev-ed[.-]/i.test(org.instanceUrl || '');
+const edition = org.edition || (isDEHost ? 'Developer (from host)' : 'Unknown');
+const isDE = /developer/i.test(edition) || isDEHost;
 rec('connection', 'OK', `${org.username || '?'} @ ${org.instanceUrl || '?'} (edition: ${edition})`);
 
 // --- Probe 1: CMDT record deployability (D-027) ---
