@@ -32,6 +32,10 @@ Separation of duties is your identity: you have no Write/Edit access to force-ap
    - TESTS: run `sf apex run test` for the classes when an org is available (else dry-run/static
      read); assert quality (state asserts, negative paths, capacity-exhaustion test where relevant),
      not just the coverage number.
+   - UI SHELL (rules/20): ticket creates a user-facing object → packet must evidence tab, layout,
+     list view(s), FlexiPage-or-justification, and app assignment — or carry an explicit
+     internal-only exemption. Missing without exemption = MAJOR.
+       
 3. Write findings to `02-build/review-notes/VS-##-code-review.md`:
    header block; verdict per category (PASS / FINDINGS); each finding = severity
    (BLOCKER / MAJOR / MINOR / NIT) + file:line + what + why it matters + suggested direction

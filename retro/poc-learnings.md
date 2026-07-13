@@ -80,6 +80,21 @@ experiences at its failure edge."
      the Write-tool guard is bypassable via shell redirects.
   5. ba-analyst: the #13/#14 "failure-edge for the lowest-capability persona" instruction above.
 
+### Forward-build (Sprints 2–4, 2026-07-13) — the invisible-org gap
+- **Every agent built to its ticket; nobody built the front door.** Objects, fields, Apex, flows,
+  and permsets shipped across 4 sprints — but zero CustomTabs, no Lightning app, no page layouts
+  beyond the default field dump, no list views, no FlexiPages. The org was functionally complete
+  and *unusable by a human* until the human noticed and ordered the UI shell built. Root cause:
+  the design's ticket decomposition treated "object" as data model only; no template, rule, or
+  reviewer check made navigability part of definition-of-done, and no agent raised "which app
+  should these tabs live in?" as an OQ — a silent decision by omission, which rules/00 forbids.
+- **Candidate fixes (apply before next feature):** (a) rules/20: a binding "UI shell =
+  definition-of-done" section — user-facing object tickets must ship tab + layout + list views +
+  FlexiPage (or an explicit internal-only exemption), app assignment is an OQ if the design is
+  silent; (b) architect: design must name the app(s), tab set, per-persona pages; (c) pm-planner:
+  UI-shell acceptance criterion on every user-facing-object ticket; (d) code-reviewer: missing
+  UI-shell evidence without an exemption note = MAJOR finding.
+
 ## Handoff friction observed
 - **Subagents produced artifacts without their audit trail.** `test-plan.md` (qa-plan) and a permset
   retrieve both landed with no `agent-runs.log` line; `health-check.js`'s freshness invariant caught the

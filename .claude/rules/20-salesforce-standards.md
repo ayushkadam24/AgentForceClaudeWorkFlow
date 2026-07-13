@@ -48,3 +48,23 @@ Apex/triggers: skills/sf-apex-patterns (incl. references/) · LWC+SLDS2: skills/
    a designed field/element to satisfy a narrower instruction.
 5. Fix in batches: after a failed dry-run is triaged, fix ALL captured failures, then dry-run
    once — never one-defect-per-round.
+
+## UI shell = part of definition-of-done (added 2026-07-13 from forward-build post-mortem — binding)
+An object a human is expected to open is NOT done when its fields deploy. Learned the hard way:
+Sprints 1–4 shipped objects/fields/Apex with no tabs, layouts, or app — the org was invisible to
+a user until the human intervened.
+1. Every ticket that creates a user-facing custom object MUST also ship its UI shell:
+   CustomTab, page layout (fields grouped logically, not the default dump), at least one useful
+   list view beyond "All" (e.g. today's sessions, my facility's appointments), and a Lightning
+   record page (FlexiPage) when the layout alone isn't adequate.
+2. App assignment is NEVER decided silently: if the design doesn't name the target Lightning app,
+   raise an OQ-### to the human ("which app should these tabs live in?") — building tabs that
+   belong to no app is the same defect as building objects with no tabs.
+3. If no Lightning app exists yet, the FIRST UI-shell ticket creates one
+   (`VS_<AppName>` CustomApplication) with the nav items ordered for the primary persona.
+4. Internal-only objects (pure config/log objects a human never opens, e.g. VS_Setting__mdt)
+   are exempt — the ticket says so explicitly instead of staying silent.
+5. Architect: technical design §UI must name the app(s), tab set, and per-persona home/record
+   pages. pm-planner: every user-facing-object ticket carries a "UI shell" acceptance criterion;
+   plans with none are incomplete. Reviewer: a packet for a user-facing object with no UI-shell
+   evidence (or exemption note) is a MAJOR finding.
