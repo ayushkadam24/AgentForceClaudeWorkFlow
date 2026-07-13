@@ -6,7 +6,7 @@ no deps) except `org-setup.sh`. Run from the **project root**.
 | Script | Purpose | Run |
 |---|---|---|
 | `health-check.js` | Pipeline invariants: phase validity, artifact presence, citation integrity, log freshness, no-Aadhaar source scan | `node scripts/health-check.js` (via `/health`) |
-| `metadata-lint.js` | Metadata deploy-limit linter — description caps, illegal `__mdt` elements, `$CustomMetadata` formula coupling, **FLS on required/MD fields**, **MD-detail read without master read** | `node scripts/metadata-lint.js` (before any review packet claims "buildable") |
+| `metadata-lint.js` | Metadata + Apex deploy-trap linter — description caps, illegal `__mdt` elements, `$CustomMetadata` formula coupling, FLS on required/MD fields, MD-detail read without master read, `caseSensitive` without `unique`, and Apex SOQL traps (**`ORDER BY` on a `FOR UPDATE` query**, **`WITH USER_MODE` mis-ordered after `ORDER BY`/`LIMIT`**) | `node scripts/metadata-lint.js` (before any review packet claims "buildable") |
 | `check-no-aadhaar.js` | Scans **staged** content for Aadhaar-shaped 12-digit runs — catches Bash-redirect writes the PreToolUse Write-guard can't see. Runs at commit-time and is CI-usable | `node scripts/check-no-aadhaar.js` |
 | `org-capability-probe.js` | On first connect to any org: detect edition + flag the two DE deploy quirks (D-027 CMDT records, D-028 FLS on system-mode DML); records to `.claude/memory/org-capabilities.md` | `node scripts/org-capability-probe.js -o <alias>` |
 | `org-setup.sh` | Scratch/DE org skeleton setup | `bash scripts/org-setup.sh` |
