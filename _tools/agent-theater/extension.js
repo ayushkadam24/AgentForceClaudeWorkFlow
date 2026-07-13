@@ -191,7 +191,7 @@ function parseRunLog(txt) {
     if (parts.length < 3) continue;
     const agent = normalizeActor(parts[1]);
     if (!agent) continue;
-    const result = parts.find((p) => /^(OK|PARTIAL|BLOCKED)$/i.test(p)) || null;
+    const result = parts.find((p) => /^(OK|PARTIAL|BLOCKED|STARTED|WIP)$/i.test(p)) || null;
     const t = parseTs(parts[0]);
     events.push({
       ts: t.ts, dateOnly: t.dateOnly, seq: seq++, source: "run-log", agent,
@@ -367,6 +367,7 @@ function collectState(root, changedFile) {
     if (ev) {
       if (ev.result === "BLOCKED") status = "blocked";
       else if (ev.result === "PARTIAL") status = "partial";
+      else if (ev.result === "STARTED" || ev.result === "WIP") status = "active"; // live heartbeat
       else status = "done";
       if (star && star.agent === a) status = "active";
       if (now - ev.ts > staleMs && status !== "blocked") status = "sleeping";
@@ -516,6 +517,7 @@ function getHtml(webview, mediaUri) {
     <button id="refresh" title="Re-read pipeline files">⟳ Refresh</button>
   </header>
   <div id="phase-track"></div>
+  <div id="sprint-strip"></div>
   <div id="gate-banner" class="hidden"></div>
   <div id="deploy-banner" class="hidden"></div>
   <div id="deploy-strip"></div>

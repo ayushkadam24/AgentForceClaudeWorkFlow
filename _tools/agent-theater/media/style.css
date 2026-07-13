@@ -42,6 +42,17 @@ header h1 { font-size: 18px; margin: 0; }
 }
 .hidden { display: none; }
 
+/* Sprint progress strip */
+#sprint-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 0 8px; }
+.spchip {
+  font-size: 11px; padding: 2px 9px; border-radius: 10px; cursor: default;
+  border: 1px solid var(--border); white-space: nowrap;
+}
+.spchip b { margin-left: 2px; }
+.sp-done    { background: rgba(46, 204, 113, 0.22);  border-color: #2ecc71; }
+.sp-active  { background: rgba(78, 140, 255, 0.20);  border-color: #4e8cff; font-weight: 600; animation: pulse 2s infinite; }
+.sp-pending { opacity: 0.55; }
+
 /* Deploy history strip */
 #deploy-strip { padding: 2px 0 8px; font-size: 15px; letter-spacing: 2px; }
 .dchip { cursor: default; }

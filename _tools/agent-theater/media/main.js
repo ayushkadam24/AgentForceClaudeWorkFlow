@@ -127,6 +127,30 @@
 </div>`;
   }
 
+  // ---- Sprint rollup: group tickets by sprint, classify done/active/pending ----
+  const TERMINAL_TICKET = { "Approved": 1, "Done": 1, "Deployed": 1 };
+  function renderSprints(tickets) {
+    if (!tickets || !tickets.length) return "";
+    const by = {};
+    for (const t of tickets) {
+      const k = String(t.sprint || "?").trim() || "?";
+      (by[k] = by[k] || []).push(t);
+    }
+    const keys = Object.keys(by).sort(
+      (a, b) => (parseInt(a, 10) || 99) - (parseInt(b, 10) || 99));
+    return keys.map((k) => {
+      const items = by[k];
+      const done = items.filter((t) => TERMINAL_TICKET[t.status]).length;
+      const started = items.some((t) => t.status !== "Backlog");
+      const cls = done === items.length ? "sp-done" : started ? "sp-active" : "sp-pending";
+      const icon = cls === "sp-done" ? "✅" : cls === "sp-active" ? "🔨" : "⬜";
+      const label = cls === "sp-done" ? "complete" : cls === "sp-active" ? "in progress" : "not started";
+      const tip = `Sprint ${k} — ${label} (${done}/${items.length} tickets done)\n` +
+        items.map((t) => `${t.id} · ${t.status}`).join("\n");
+      return `<span class="spchip ${cls}" title="${esc(tip)}">${icon} Sprint ${esc(k)} <b>${done}/${items.length}</b></span>`;
+    }).join("") + '<span class="dlabel">sprint progress (from jira-log ticket statuses)</span>';
+  }
+
   function computeAgentsAt(events, uptoIdx) {
     const latest = {};
     for (let i = 0; i < uptoIdx; i++) {
@@ -258,6 +282,9 @@ ${oqRows ? `<table class="oq"><thead><tr><th>ID</th><th>Question</th><th>Severit
       return `<span class="dchip d-${d.cls}" title="${esc(d.date)} — ${esc(d.scope)}
 ${esc(d.result)}">${icon}</span>`;
     }).join("") + ((data.deploys || []).length ? '<span class="dlabel">deploy attempts</span>' : "");
+
+    const sprintStrip = document.getElementById("sprint-strip");
+    if (sprintStrip) sprintStrip.innerHTML = renderSprints(data.tickets);
 
     document.getElementById("tab-stage").innerHTML =
       `<div class="stage-grid">${renderStage(data.agents, data.star, data.gate)}</div>`;
