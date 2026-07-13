@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Facility Share Seed Context</label>
+    <description>F-001 TEST-ONLY (VS-20): object Modify-All on Appointment/Patient so the recompute sees all rows in tests. __Share INSERT needs system Modify-All-Data (undeployable here) so it fail-safes to no-op; share creation is a standard-org runtime gate.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <objectPermissions>
+        <object>VS_Appointment__c</object>
+        <allowCreate>true</allowCreate><allowRead>true</allowRead><allowEdit>true</allowEdit><allowDelete>true</allowDelete>
+        <viewAllRecords>true</viewAllRecords><modifyAllRecords>true</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Patient__c</object>
+        <allowCreate>true</allowCreate><allowRead>true</allowRead><allowEdit>true</allowEdit><allowDelete>true</allowDelete>
+        <viewAllRecords>true</viewAllRecords><modifyAllRecords>true</modifyAllRecords>
+    </objectPermissions>
+</PermissionSet>

@@ -105,4 +105,25 @@
     <fieldPermissions><field>VS_Session__c.VS_Walk_In_Reserve_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 
     <fieldPermissions><field>VS_Holiday__c.VS_Description__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+
+    <!-- VS-20 (REQ-053/C5.1/D-031 MAJOR-4): read-only FLS on the C1 person + appointment fields a
+         district MIS/reporting user is permitted to read. View-All grants row access; without FLS the
+         fields render blank. Required fields (always visible, cannot carry FLS) are omitted
+         (metadata-lint check-4). Match_Key (internal de-dup key) intentionally not exposed. -->
+    <fieldPermissions><field>VS_Patient__c.VS_Gender__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Locality__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Pincode__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Email__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_No_Show_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Consent_Given__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+
+    <fieldPermissions><field>VS_Appointment__c.VS_Patient__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Facility__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Session__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Service__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_Channel__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_By_Mobile__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Dose_Number__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Cancelled_At__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booking_Reference__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 </PermissionSet>

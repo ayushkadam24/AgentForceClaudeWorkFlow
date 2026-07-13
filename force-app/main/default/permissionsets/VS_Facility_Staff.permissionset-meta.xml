@@ -59,6 +59,31 @@
         <viewAllRecords>false</viewAllRecords>
         <modifyAllRecords>false</modifyAllRecords>
     </objectPermissions>
+    <!-- VS-20 (REQ-053/C5.1/D-031): READ on Patient/Appointment so facility staff can see their OWN
+         facility's citizens/appointments. Row visibility is gated by Apex managed sharing
+         (VS_Facility_Access__c), NOT by these object perms — without object+field read the sharing would
+         be meaningless (records stay invisible) and the SHIP-BAR test could not prove scoping. viewAll
+         stays false (that is the District mechanism). Read-only: staff-initiated create/cancel/check-in
+         is a later ticket; the appointment share is Edit-capable but the permset caps effective access at
+         Read for now (least-privilege). NOTE: VS-04 deferred these grants to VS-20; this is that grant. -->
+    <objectPermissions>
+        <object>VS_Patient__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>false</allowCreate>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Appointment__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>false</allowCreate>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
 
     <fieldPermissions><field>VS_Facility__c.VS_External_Id__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
     <fieldPermissions><field>VS_Facility__c.VS_Helpline_Number__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
@@ -82,4 +107,25 @@
     <fieldPermissions><field>VS_Session__c.VS_Walk_In_Reserve_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 
     <fieldPermissions><field>VS_Holiday__c.VS_Description__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+
+    <!-- VS-20 (REQ-053/C5.1): read FLS on the Patient/Appointment fields facility staff read for their
+         OWN facility's citizens (row visibility gated by managed sharing). Required fields (Patient
+         Full_Name/DOB/Mobile, Appointment Status/Slot) are always visible and cannot carry FLS. Needed so
+         SOQL that SELECTs/filters these fields does not fail FLS on this D-028 org. Match_Key not exposed. -->
+    <fieldPermissions><field>VS_Patient__c.VS_Gender__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Locality__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Pincode__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Email__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_No_Show_Count__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Patient__c.VS_Consent_Given__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+
+    <fieldPermissions><field>VS_Appointment__c.VS_Patient__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Facility__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Session__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Service__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_Channel__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booked_By_Mobile__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Dose_Number__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Cancelled_At__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
+    <fieldPermissions><field>VS_Appointment__c.VS_Booking_Reference__c</field><readable>true</readable><editable>false</editable></fieldPermissions>
 </PermissionSet>

@@ -16,6 +16,12 @@ private class VS_BookingControllerTest {
 
     @TestSetup
     static void makeData() {
+        // VS-20: keep the facility/appointment sharing triggers out of this booking-controller fixture.
+        // They never touch VS_Slot__c/VS_Session__c (only Group/GroupMember/__Share + the facility's
+        // VS_Sharing_Group_Id__c), so getAvailableSlots is functionally unaffected on the live site — this
+        // bypass only removes a test-harness async/setup interaction that perturbed testReads.
+        VS_FacilityTriggerHandler.bypass = true;
+        VS_AppointmentTriggerHandler.bypass = true;
         Profile p = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
         User u = newUser('VSBookCtrl', 'vsbc');
         User portal = newUser('VSPortal', 'vspt');
@@ -65,11 +71,17 @@ private class VS_BookingControllerTest {
 
     @IsTest
     static void testReads_returnReferenceData() {
+        // Use the session's ACTUAL stored date, not a recomputed Date.today().addDays(2): @TestSetup
+        // builds the data inside runAs(Asia/Kolkata) while this method runs as the admin (a different
+        // TZ), so recomputing "today+2" here can land on a different calendar day near a TZ midnight
+        // boundary and miss the filter (a latent flaky test, not a getAvailableSlots defect — proven
+        // working against real org data).
+        Date sessionDay = [SELECT VS_Session_Date__c FROM VS_Session__c LIMIT 1].VS_Session_Date__c;
         Test.startTest();
         List<VS_Facility__c> fac = VS_BookingController.getFacilities();
         List<VS_Service__c> svc = VS_BookingController.getServices();
         List<VS_BookingController.SlotView> slots =
-            VS_BookingController.getAvailableSlots(facilityId(), serviceId(), Date.today().addDays(2));
+            VS_BookingController.getAvailableSlots(facilityId(), serviceId(), sessionDay);
         Test.stopTest();
         System.assertEquals(1, fac.size(), 'active facility returned');
         System.assertEquals(1, svc.size(), 'active service returned');

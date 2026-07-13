@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Facility__c</fullName>
+    <label>Home Facility</label>
+    <description>VS-20/REQ-053/D-031 facility-scoped sharing. A facility staffer's HOME facility Id. Held as Text (not a Lookup: the User standard object rejects a custom Lookup to VS_Facility__c — "Invalid data type" — so the 18-char VS_Facility__c record Id is stored directly; the Apex only ever reads it as an Id value, never traverses a relationship). VS_FacilityShareService.syncGroupMembership() keeps the user's membership in that facility's public Group (VS_Facility__c.VS_Sharing_Group_Id__c) in sync, granting record-level visibility via managed sharing. District users leave this blank (they use View-All). Admin-managed system field, not PII.</description>
+    <type>Text</type>
+    <length>18</length>
+    <required>false</required>
+    <unique>false</unique>
+</CustomField>
