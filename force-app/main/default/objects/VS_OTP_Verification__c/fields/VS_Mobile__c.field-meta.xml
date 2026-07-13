@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Mobile__c</fullName>
+    <label>Mobile</label>
+    <description>The mobile number this OTP challenge was issued to (design section 2.3/6.4, D-013). Set by VS_OtpService.issue() and used by verify() to locate the active challenge for a citizen. This is the ONLY personal attribute stored on the record -- no name, DOB, email, or Aadhaar (data-minimization, design section 2.5, rules/10). Kept optional (not required) so the field can carry field-level security on the test-context permission set and so system-mode DML is never performed on a required field (D-028).</description>
+    <type>Phone</type>
+    <required>false</required>
+</CustomField>

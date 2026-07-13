@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Message_Body__c</fullName>
+    <label>Message Body</label>
+    <description>The rendered message text as sent/logged. Must never contain Aadhaar numbers or any data beyond Annexure C1 minimization (name, DOB, gender, mobile, locality/pin, email) plus appointment/vaccination-event details already permitted on VS_Appointment__c. Synthetic data only in dev/test orgs (C3.2).</description>
+    <type>LongTextArea</type>
+    <length>4000</length>
+    <visibleLines>5</visibleLines>
+</CustomField>

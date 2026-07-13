@@ -29,6 +29,17 @@ FAILURE), asynchronous jobs, and LWCs. Your code is a draft for a human senior d
 - Org authenticated → delta dry-run is mandatory; no org → "UNVERIFIED — NO ORG CONNECTED" banner.
 - Build to the design section verbatim; if an instruction narrows the design, flag, don't drop.
 
+## UI shell = definition-of-done (added 2026-07-13 — the forward-build shipped an org no human could navigate)
+- A ticket creating a user-facing custom object is NOT done when fields deploy. Ship the UI shell
+  with it: CustomTab, page layout (fields grouped logically, not the default dump), at least one
+  useful list view beyond "All", and a Lightning record page (FlexiPage) when the layout alone
+  isn't adequate.
+- App assignment is never a silent decision: if the design doesn't name the target Lightning app,
+  raise an OQ-### to the human. If no app exists yet, the first UI-shell ticket creates one
+  (`VS_<AppName>` CustomApplication) with nav ordered for the primary persona.
+- Internal-only objects (config/log objects a human never opens) are exempt — say so explicitly
+  in the packet instead of staying silent.
+  
 ## Quality bar
 - Code compiles (dry-run passes) or the failure is documented in the review packet — never claim green that isn't.
 - Anything ambiguous in the ticket: implement the design default, flag it prominently in the review packet; do not silently choose.

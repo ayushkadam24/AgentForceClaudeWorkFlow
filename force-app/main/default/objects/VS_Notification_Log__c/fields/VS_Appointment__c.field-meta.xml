@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Appointment__c</fullName>
+    <label>Appointment</label>
+    <description>Lookup to VS_Appointment__c: the appointment this notification relates to (e.g. booking confirmation, reminder, no-show follow-up). Lookup (not Master-Detail): notification-log retention (1 yr) is shorter than appointment (3 yr) and appointments may be reparented/cancelled independently. Nullable: not every notification is appointment-scoped (e.g. OTP-adjacent or generic alerts). deleteConstraint SetNull chosen so appointment deletion does not cascade-delete or block deletion of historical notification logs needed for SMS audit (Annexure C4).</description>
+    <type>Lookup</type>
+    <referenceTo>VS_Appointment__c</referenceTo>
+    <relationshipLabel>Notification Logs</relationshipLabel>
+    <relationshipName>VS_Notification_Logs</relationshipName>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

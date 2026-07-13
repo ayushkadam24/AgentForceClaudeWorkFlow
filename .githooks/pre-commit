@@ -1,0 +1,7 @@
+#!/bin/sh
+# Vaccine Scheduler POC — pre-commit guard (version-controlled; activated via core.hooksPath).
+# Blocks Aadhaar-like content from entering git history, including anything written via Bash
+# redirects/tee/sed that never passed through the Write-tool guard.
+#
+# Activate once per clone:  git config core.hooksPath .githooks
+node scripts/check-no-aadhaar.js || exit 1

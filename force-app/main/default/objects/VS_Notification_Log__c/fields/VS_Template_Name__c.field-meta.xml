@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Template_Name__c</fullName>
+    <label>Template Name</label>
+    <description>Name/reference of the DLT-registered transactional template used for this message (Annexure C7). Free text in the POC log-only seam; the eventual live SMS provider integration will validate this against the DLT-registered template catalogue.</description>
+    <type>Text</type>
+    <length>120</length>
+    <required>false</required>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Verified__c</fullName>
+    <label>Verified</label>
+    <description>True once the citizen has presented the correct code for this challenge (design section 2.3/6.4, D-013). Set by VS_OtpService.verify() on a successful hash match; a caller (booking/registration journey) treats this flag as proof the mobile was OTP-verified. Default false -- verification must be earned, never assumed. TrackHistory disabled to keep the record transient (purged daily, design section 6.5).</description>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+    <trackHistory>false</trackHistory>
+</CustomField>

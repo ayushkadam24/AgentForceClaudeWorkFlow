@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Code_Hash__c</fullName>
+    <label>Code Hash</label>
+    <description>A one-way SHA-256 HASH (hex, salted with the mobile) of the OTP code -- the plaintext code is NEVER stored anywhere on the platform (D-013, hard requirement). VS_OtpService.issue() computes and stores this; verify() hashes the citizen-supplied code the same way and compares hashes, never plaintext. 64 hex characters for SHA-256; stored at length 128 to leave headroom for a future salt/algorithm change without a schema migration. Optional (not required) so it can carry FLS on the test-context permission set and avoid required-field system-mode DML (D-028).</description>
+    <type>Text</type>
+    <length>128</length>
+    <required>false</required>
+    <unique>false</unique>
+</CustomField>

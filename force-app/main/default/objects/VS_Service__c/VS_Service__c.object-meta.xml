@@ -3,6 +3,7 @@
     <label>VS Service</label>
     <pluralLabel>VS Services</pluralLabel>
     <description>F-001 slot-booking-core (VS-01, EP-01). Generic service catalogue (vaccination in F-001; a service-type field keeps OPD additive later per D-012 — build nothing OPD-specific). OWD Public Read Only (design §2.2). Retention class (Annexure C4): permanent reference — never purged by VS_RetentionPurgeBatch.</description>
+    <compactLayoutAssignment>VS_Service_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>Read</sharingModel>
     <enableActivities>false</enableActivities>

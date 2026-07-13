@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS Notification Log</label>
+    <pluralLabel>VS Notification Logs</pluralLabel>
+    <description>F-001 slot-booking-core (VS-17, EP-07). Log-only target for the SMS/notification seam (D-014): every notification write (booking confirmation, reminder, OTP-adjacent) is recorded here regardless of whether a real provider is wired up. OWD Private per design §2.2/§2.5 table row 9 (facility-staff visibility is not implied by relationship; access governed separately, Annexure C5). Retention class (Annexure C4): SMS logs 1 yr. No Aadhaar or extra person data stored (§2.5) — only references to Patient/Appointment plus message metadata.</description>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>Private</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>true</enableReports>
+    <enableSearch>true</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <nameField>
+        <displayFormat>NLOG-{00000}</displayFormat>
+        <label>Notification Log Name</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+</CustomObject>

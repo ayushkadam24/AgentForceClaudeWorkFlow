@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Expiry__c</fullName>
+    <label>Expiry</label>
+    <description>The instant this OTP challenge stops being valid (design section 2.3/6.4, D-013). Set by VS_OtpService.issue() to now plus the configured validity window (VS_Setting__mdt.OtpExpiryMinutes, falling back to a safe default -- never a hardcoded magic number, rules/20). verify() rejects any code presented at or after this time with a user-actionable EXPIRED message, independent of the attempt counter. NOTE: design section 2.3 names this field VS_Expires_At__c; this ticket (VS-13) AC specifies VS_Expiry__c -- built to the AC and flagged for reviewer reconciliation. Optional (not required) so it can carry FLS on the test-context permission set (D-028).</description>
+    <type>DateTime</type>
+    <required>false</required>
+</CustomField>

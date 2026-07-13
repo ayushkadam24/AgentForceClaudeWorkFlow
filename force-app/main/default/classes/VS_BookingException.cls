@@ -40,4 +40,27 @@ public class VS_BookingException extends Exception {
      * (m-1). A caller/LWC can safely present "please retry" — a fresh attempt gets a fresh reference.
      */
     public static final String REFERENCE_COLLISION = 'REFERENCE_COLLISION';
+
+    // ---- Cancel / Reschedule coded reasons (VS-11, §4.5) --------------------------------------
+
+    /** No VS_Appointment__c exists (or is visible to the acting user) for the supplied Id. */
+    public static final String APPOINTMENT_NOT_FOUND = 'APPOINTMENT_NOT_FOUND';
+
+    /** The appointment is already Cancelled — cancel/reschedule is a no-op and is rejected. */
+    public static final String ALREADY_CANCELLED = 'ALREADY_CANCELLED';
+
+    /**
+     * cancel()/reschedule() was attempted INSIDE the configured cut-off window of the slot start
+     * (VS_Setting__mdt.CutOffHours, D-010) — REQ-003/REQ-015. User-actionable: the caller/LWC maps this
+     * to "This appointment can no longer be changed online — please contact the facility helpline."
+     */
+    public static final String WITHIN_CUTOFF = 'WITHIN_CUTOFF';
+
+    /**
+     * The VS_Setting__mdt.CutOffHours configuration record is absent or has no numeric value, so the
+     * cut-off window cannot be evaluated. Fail-CLOSED (the change is rejected) rather than silently
+     * falling back to a hardcoded window — the cut-off is an integrity control (rules/20: config in
+     * Custom Metadata, never hardcoded). Surfaces as an admin-actionable configuration error.
+     */
+    public static final String CUTOFF_CONFIG_MISSING = 'CUTOFF_CONFIG_MISSING';
 }

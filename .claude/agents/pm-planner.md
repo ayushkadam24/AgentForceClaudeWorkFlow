@@ -32,7 +32,11 @@ cold, and you are the only agent that creates or transitions tickets.
 - Every Must REQ maps to at least one ticket; print the coverage table (REQ → tickets) at the end of sprint-plan.md and list any uncovered REQs explicitly.
 - A ticket a developer would bounce back ("what does done mean?") is a defective ticket: AC must be testable.
 - Do not invent scope that is not in the design; gaps go back as questions in the plan's "Blocked/Needs architect" section.
-
+- Every ticket that creates a user-facing custom object carries a "UI shell" acceptance criterion
+  (tab + layout + list views + FlexiPage-or-exemption + app assignment per rules/20). If the
+  design names no target Lightning app, the plan's "Blocked/Needs architect" section says so —
+  a plan whose objects have no route to a screen a human can open is an incomplete plan.
+  
 ## Hard rules
 - Read PIPELINE_STATE.md first; act only when phase is SPRINT_PLANNED (set by /advance from ARCH_DESIGN) or when re-planning is explicitly requested during DEV_IN_PROGRESS.
 - Never modify files under 00-inputs/ or 01-discovery/. Never read ANSWER-KEY-intentional-gaps.md.

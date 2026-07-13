@@ -3,6 +3,7 @@
     <label>VS Appointment</label>
     <pluralLabel>VS Appointments</pluralLabel>
     <description>F-001 slot-booking-core (VS-08, EP-03 -- RFP §3.4 slot-integrity booking). The booking record VS_BookingService.book() (VS-09, Apex) inserts for every channel (Portal/Chat/Staff/WalkIn). SCHEMA ONLY in this ticket -- no booking logic or counter increments (VS-09 owns those, per D-019/D-020). Relationships to Patient/Slot/Session/Facility/Service are all Lookup, never Master-Detail, per design section 2.4 (reparenting for reschedule; independent retention lifecycles). No clinical/diagnosis fields (REQ-045); NO Aadhaar field anywhere. OWD is Private (Annexure C5). Retention: bookings 3 yr, purged by VS_RetentionPurgeBatch (VS-21) per design section 6.5. Full rationale: VS-08 review packet.</description>
+    <compactLayoutAssignment>VS_Appointment_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>Private</sharingModel>
     <enableActivities>false</enableActivities>

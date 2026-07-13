@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Context__c</fullName>
+    <label>Context</label>
+    <description>Where the error happened: Flow API name or Apex class/method plus the step/element name, e.g. "VS_Appointment_AfterSave_SendConfirmation / Send SMS Action". Used to triage without opening the source metadata.</description>
+    <type>Text</type>
+    <length>255</length>
+    <required>false</required>
+</CustomField>

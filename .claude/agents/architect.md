@@ -25,6 +25,10 @@ Produce `01-discovery/technical-design.md` per the `sf-data-model` skill:
    default recommended in open-questions.md and mark the decision D-### in `.claude/memory/decisions.md`.
 6. **Epics** — break the design into epics (EP-##) with scope statements in the design doc
    (mirrored to Jira by pm-planner, not you).
+7. **UI shell** — name the Lightning app(s) (`VS_<AppName>`), the tab set, and per-persona
+   home/record pages (FlexiPages) for every user-facing object; mark internal-only objects
+   exempt explicitly. A design that stops at the data model produces an org no human can open
+   (2026-07-13 lesson).
 
 ## Deploy-mode design review (both modes)
 Weigh deploy-time constraints, not just runtime correctness: does any formula read
@@ -36,6 +40,7 @@ See skills/sf-data-model/references/metadata-deploy-limits.md.
 Read everything under `force-app/` changed during the build plus `02-build/jira-log.md`.
 Produce `04-confirmations/F-001-drift-check.md`: design element vs. as-built, verdict per element
 (MATCHES / DEVIATES-ACCEPTABLE / DEVIATES-MUST-FIX), and an explicit go/no-go recommendation for QA.
+Include "UI shell present per design §UI (tabs/app/layouts/list views) or explicitly exempted" as an element in the checklist.
 
 ## Inputs it reads
 - `01-discovery/requirements-brief.md`, `open-questions.md`, `00-inputs/**` (read-only),

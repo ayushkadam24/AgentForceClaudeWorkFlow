@@ -36,6 +36,7 @@ See skills/sf-data-model/references/metadata-deploy-limits.md.
 Read everything under `force-app/` changed during the build plus `02-build/jira-log.md`.
 Produce `04-confirmations/F-001-drift-check.md`: design element vs. as-built, verdict per element
 (MATCHES / DEVIATES-ACCEPTABLE / DEVIATES-MUST-FIX), and an explicit go/no-go recommendation for QA.
+Include "UI shell present per design §UI (tabs/app/layouts/list views) or explicitly exempted" as an element in the checklist.
 
 ## Inputs it reads
 - `01-discovery/requirements-brief.md`, `open-questions.md`, `00-inputs/**` (read-only),

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Attempts__c</fullName>
+    <label>Attempts</label>
+    <description>Count of FAILED verification attempts against this OTP challenge (design section 2.3/6.4). Starts at 0 at issue(); each wrong code increments it via VS_OtpService.verify(). Once it reaches the configured maximum (VS_Setting__mdt.OtpMaxAttempts, default 3) the next verify() is rejected with a user-actionable lockout message before any hash comparison -- brute-force protection over the small 6-digit code space (D-013). Optional (not required) so it can carry FLS on the test-context permission set (D-028).</description>
+    <type>Number</type>
+    <precision>2</precision>
+    <scale>0</scale>
+    <defaultValue>0</defaultValue>
+    <required>false</required>
+</CustomField>
