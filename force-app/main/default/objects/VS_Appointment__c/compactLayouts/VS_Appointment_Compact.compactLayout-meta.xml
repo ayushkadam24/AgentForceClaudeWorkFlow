@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Appointment_Compact</fullName>
+    <fields>Name</fields>
+    <fields>VS_Patient__c</fields>
+    <fields>VS_Slot__c</fields>
+    <fields>VS_Status__c</fields>
+    <fields>VS_Booked_Channel__c</fields>
+    <fields>VS_Booking_Reference__c</fields>
+    <label>VS Appointment Highlights</label>
+</CompactLayout>

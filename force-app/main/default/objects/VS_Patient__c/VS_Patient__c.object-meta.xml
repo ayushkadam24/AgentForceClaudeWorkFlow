@@ -3,6 +3,7 @@
     <label>VS Patient</label>
     <pluralLabel>VS Patients</pluralLabel>
     <description>F-001 slot-booking-core (VS-07, EP-05). The single home for person data in F-001 -- Annexure C1.1 minimum attributes only (full name, DOB, gender-optional, mobile, locality/pincode, email-optional) plus the D-011/D-017 de-dup match key and DPDP consent fields. NO Aadhaar field, no address beyond locality/pincode, no clinical/diagnosis data (REQ-043/044/045). Booker is not a person record here -- authenticated mobile only (design section 2.5); one mobile may own many VS_Patient__c records (D-011). OWD is Private (Annexure C5). Retention (Annexure C4): 10 yr if vaccinated, else 3 yr, via VS_RetentionPurgeBatch (design section 6.5). Field history tracking enabled for REQ-054 read/change attribution (design section 6.2/A-006); Shield Event Monitoring is a separate org-level dependency, not built here. Full rationale: VS-07 review packet.</description>
+    <compactLayoutAssignment>VS_Patient_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>Private</sharingModel>
     <enableActivities>false</enableActivities>

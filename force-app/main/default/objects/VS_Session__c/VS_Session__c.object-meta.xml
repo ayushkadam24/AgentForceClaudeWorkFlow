@@ -3,6 +3,7 @@
     <label>VS Session</label>
     <pluralLabel>VS Sessions</pluralLabel>
     <description>F-001 slot-booking-core (VS-01, EP-01). The atomic capacity unit (D-007) and the single §3.4 SELECT ... FOR UPDATE lock target for every booking type (D-019/D-020, implemented in VS-09/VS-11 — no Apex/lock logic in this ticket). Authors VS_Total_Capacity__c and, via formulas, the walk-in reserve/bookable split (D-009). OWD is ControlledByParent (inherits Facility's Public Read Only, design §2.2). Retention class (Annexure C4): bookings 3 yr.</description>
+    <compactLayoutAssignment>VS_Session_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>ControlledByParent</sharingModel>
     <enableActivities>false</enableActivities>

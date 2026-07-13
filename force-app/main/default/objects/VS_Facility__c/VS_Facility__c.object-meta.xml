@@ -3,6 +3,7 @@
     <label>VS Facility</label>
     <pluralLabel>VS Facilities</pluralLabel>
     <description>F-001 slot-booking-core (VS-01, EP-01). PHC/CHC/District Hospital reference record — discoverable by citizens (REQ-001) and the parent of Session/Facility_Service/Holiday. OWD Public Read Only (design §2.2). Retention class (Annexure C4): permanent reference — never purged by VS_RetentionPurgeBatch.</description>
+    <compactLayoutAssignment>VS_Facility_Compact</compactLayoutAssignment>
     <deploymentStatus>Deployed</deploymentStatus>
     <sharingModel>Read</sharingModel>
     <enableActivities>false</enableActivities>

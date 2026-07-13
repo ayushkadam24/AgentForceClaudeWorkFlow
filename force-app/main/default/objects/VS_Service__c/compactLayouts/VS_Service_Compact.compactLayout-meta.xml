@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Service_Compact</fullName>
+    <fields>Name</fields>
+    <fields>VS_Service_Type__c</fields>
+    <fields>VS_Vaccine_Name__c</fields>
+    <fields>VS_Dose_Count__c</fields>
+    <label>VS Service Highlights</label>
+</CompactLayout>
