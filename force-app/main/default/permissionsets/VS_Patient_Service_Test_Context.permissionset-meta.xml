@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>F-001 TEST/CI FLS harness (VS-10): grants a test user Create+Read on VS_Patient__c plus FLS on the de-dup/consent/optional fields so VS_PatientService.findOrCreate USER_MODE fixtures run under this DE org D-028 FLS-on-plain-DML. TEST-ONLY.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>VS Patient Service Test Context</label>
+    <license>Salesforce</license>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>VS_Patient__c</object>
+        <viewAllFields>false</viewAllFields>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Match_Key__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Consent_Given__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Consent_Timestamp__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Email__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Gender__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Locality__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>VS_Patient__c.VS_Pincode__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+</PermissionSet>

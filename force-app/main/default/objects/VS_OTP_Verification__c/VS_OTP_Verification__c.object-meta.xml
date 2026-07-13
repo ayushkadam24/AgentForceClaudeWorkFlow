@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>VS OTP Verification</label>
+    <pluralLabel>VS OTP Verifications</pluralLabel>
+    <description>F-001 citizen OTP auth seam (VS-13, EP-06 -- design section 6.4, D-013). Backs VS_OtpService: on issue() one row is written per OTP challenge holding ONLY the mobile, a SHA-256 HASH of the code (NEVER plaintext, D-013), the expiry, an attempt counter, and a verified flag. No password, no clinical data, and NO Aadhaar field ever (REQ-044, rules/10); holds no personal attribute beyond the mobile (design section 2.5). OWD Private (Annexure C5). Retention: transient -- purged DAILY by VS_RetentionPurgeBatch (design section 6.5, class OTP). The POC ships a STUB provider (VS_OtpStubProvider) that issues a fixed documented test code with no live SMS; a real gateway swaps in behind VS_IOtpProvider with zero caller change (A-004). Full rationale: VS-13 review packet.</description>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>Private</sharingModel>
+    <enableActivities>false</enableActivities>
+    <enableBulkApi>true</enableBulkApi>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableLicensing>false</enableLicensing>
+    <enableReports>false</enableReports>
+    <enableSearch>false</enableSearch>
+    <enableSharing>true</enableSharing>
+    <enableStreamingApi>true</enableStreamingApi>
+    <nameField>
+        <displayFormat>OTP-{00000000}</displayFormat>
+        <label>OTP Challenge</label>
+        <trackHistory>false</trackHistory>
+        <type>AutoNumber</type>
+    </nameField>
+</CustomObject>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Patient__c</fullName>
+    <label>Patient</label>
+    <description>Lookup to VS_Patient__c: the patient this notification concerns. Lookup (not Master-Detail) because notification-log retention (1 yr, Annexure C4) is shorter and independent of patient retention (up to 10 yr) — cascade delete would be wrong. Nullable: some notifications (e.g. generic system alerts) may not be patient-scoped. deleteConstraint SetNull chosen so deleting a patient does not block/cascade-delete historical notification logs; the log row survives with this lookup cleared for audit continuity.</description>
+    <type>Lookup</type>
+    <referenceTo>VS_Patient__c</referenceTo>
+    <relationshipLabel>Notification Logs</relationshipLabel>
+    <relationshipName>VS_Notification_Logs</relationshipName>
+    <deleteConstraint>SetNull</deleteConstraint>
+</CustomField>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Provider__c</fullName>
+    <label>Provider</label>
+    <description>Name of the SMS/Email provider that handled (or would handle) this notification, e.g. "LogOnly" in the POC (D-014, vendor undecided per Annexure C7). Kept as plain text so the eventual VS_ISmsProvider implementation can be swapped without a schema change.</description>
+    <type>Text</type>
+    <length>80</length>
+    <required>false</required>
+</CustomField>

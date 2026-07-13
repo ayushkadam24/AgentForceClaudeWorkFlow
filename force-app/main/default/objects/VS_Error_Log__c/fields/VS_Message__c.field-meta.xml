@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Message__c</fullName>
+    <label>Message</label>
+    <description>The error message or fault detail captured from the flow fault connector or Apex exception. Must never contain Aadhaar or other personal data beyond what the platform error text itself includes (Annexure C1) — callers should sanitize before logging.</description>
+    <type>LongTextArea</type>
+    <length>32768</length>
+    <visibleLines>10</visibleLines>
+    <required>false</required>
+</CustomField>

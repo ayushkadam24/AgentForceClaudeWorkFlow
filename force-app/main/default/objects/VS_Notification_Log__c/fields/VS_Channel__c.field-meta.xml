@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Channel__c</fullName>
+    <label>Channel</label>
+    <description>Delivery channel for this notification. Values match design exactly: SMS, Email. SMS is default because SMS is the primary citizen-facing channel (Annexure C7).</description>
+    <type>Picklist</type>
+    <required>true</required>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>SMS</fullName>
+                <default>true</default>
+                <label>SMS</label>
+            </value>
+            <value>
+                <fullName>Email</fullName>
+                <default>false</default>
+                <label>Email</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

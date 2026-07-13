@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>VS_Helpline_Included__c</fullName>
+    <label>Helpline Included</label>
+    <description>Checked when the helpline number is present in the message body, as required for every actionable transactional SMS template (Annexure C7.3). Defaults to false; templates that omit it are a compliance defect.</description>
+    <type>Checkbox</type>
+    <defaultValue>false</defaultValue>
+</CustomField>

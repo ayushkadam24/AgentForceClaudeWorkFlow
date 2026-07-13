@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <label>VS District Admin</label>
-    <description>F-001 (VS-04). District admin: Create/Edit Facility, Service, Facility_Service, Holiday. READ-ONLY on Session/Slot. No Delete. No Bulk Export (District MIS only). View All on Patient/Appointment deferred to VS-20. External_Id fields read-only.</description>
+    <description>F-001 (VS-04/VS-20). District admin: Create/Edit Facility, Service, Facility_Service, Holiday. READ-ONLY Session/Slot. No Delete. No Bulk Export. View All (read-only) on Patient/Appointment (REQ-053). External_Id fields read-only.</description>
     <hasActivationRequired>false</hasActivationRequired>
     <license>Salesforce</license>
 
@@ -57,6 +57,24 @@
         <allowEdit>true</allowEdit>
         <allowDelete>false</allowDelete>
         <viewAllRecords>false</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Patient__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>false</allowCreate>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>false</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>VS_Appointment__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>false</allowCreate>
+        <allowEdit>false</allowEdit>
+        <allowDelete>false</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
         <modifyAllRecords>false</modifyAllRecords>
     </objectPermissions>
 
